@@ -1,0 +1,301 @@
+pid,choice,pass_a,pass_b,tie_break,note
+000_omerli_20200524,ndwi,ndwi,ndwi,,
+001_omerli_20190530,ndwi,ndwi,ndwi,,
+002_omerli_20170503,ndwi,ndwi,ndwi,,
+003_omerli_20170629,ndwi,ndwi,ndwi,,
+004_omerli_20200628,ndwi,ndwi,ndwi,,
+005_omerli_20220527,ndwi,ndwi,ndwi,,
+006_omerli_20180609,dark_nir,dark_nir,dark_nir,,"hazy scene; ndwi/mndwi only catch speckles at bottom, dark_nir matches the dark false-colour water shape; Hazy scene; index masks miss most water, dark_nir matches false-colour water"
+007_omerli_20210512,ndwi,ndwi,ndwi,,
+008_omerli_20191002,ndwi,ndwi,ndwi,,
+009_omerli_20171114,ndwi,ndwi,ndwi,,
+010_omerli_20180831,ndwi,ndwi,ndwi,,hazy water but extent clear in false colour
+011_omerli_20171020,ndwi,ndwi,ndwi,,
+012_omerli_20190803,ndwi,ndwi,ndwi,,
+013_omerli_20190729,ndwi,ndwi,ndwi,,
+014_omerli_20170920,ndwi,ndwi,ndwi,ndwi,
+015_omerli_20201011,ndwi,ndwi,ndwi,,"no open water; dry stream bed; ndwi near-empty; No open water; winding feature is dry bed, ndwi near-empty"
+016_omerli_20180413,dark_nir,dark_nir,ndwi,dark_nir,ndwi under-covers right-hand inlet tongue and top-left strip that are dark in false colour; dark_nir closer; ndwi/union fit; dark_nir widens the right arm into shadowed land; ndwi misses clear-water pixels (NIR<0.05) on the right arm and the tongue tail; dark_nir adds only about 1% of mixed edge pixels
+017_omerli_20170902,ndwi,ndwi,ndwi,ndwi,
+018_omerli_20210519,ndwi,ndwi,ndwi,,
+019_omerli_20200812,ndwi,ndwi,ndwi,,
+020_omerli_20220601,ndwi,ndwi,ndwi,,
+021_omerli_20201016,ndwi,ndwi,ndwi,,
+022_omerli_20210713,ndwi,ndwi,ndwi,,
+023_omerli_20170304,ndwi,ndwi,ndwi,,
+024_omerli_20220728,ndwi,ndwi,ndwi,,
+025_omerli_20231230,ndwi,ndwi,ndwi,,
+026_omerli_20230502,ndwi,ndwi,ndwi,ndwi,same row as 026_omerli_20230502
+027_omerli_20230802,ndwi,ndwi,ndwi,,
+028_omerli_20230914,ndwi,ndwi,ndwi,ndwi,
+029_omerli_20220817,ndwi,ndwi,ndwi,,
+030_darlik_20180609,dark_nir,dark_nir,dark_nir,,"ndwi/intersection empty on dark water; dark_nir follows false-colour shoreline with clean edges; Hazy; ndwi empty, dark_nir matches water"
+031_darlik_20220623,ndwi,ndwi,ndwi,,
+032_darlik_20200524,ndwi,ndwi,ndwi,,
+033_darlik_20180515,dark_nir,dark_nir,dark_nir,,"ndwi has holes in hazy/glinty water at bottom-left; dark_nir fills them with fine edges; ndwi has holes in bottom water near bright spot; dark_nir and union both fill it, dark_nir edges slightly closer"
+034_darlik_20210613,ndwi,ndwi,ndwi,ndwi,
+035_darlik_20200628,ndwi,ndwi,ndwi,,
+036_darlik_20190624,ndwi,ndwi,ndwi,,
+037_darlik_20170520,ndwi,ndwi,ndwi,,
+038_darlik_20191206,ndwi,ndwi,ndwi,,"winter scene; dark strip at top mixes water and hill shadow, ndwi may miss a little water at top-left"
+039_darlik_20201016,ndwi,ndwi,ndwi,,
+040_darlik_20201230,ndwi,ndwi,ndwi,,
+041_darlik_20190813,ndwi,ndwi,ndwi,,
+042_darlik_20181101,ndwi,ndwi,ndwi,,
+043_darlik_20170912,dark_nir,dark_nir,dark_nir,,"ndwi misses most water; dark_nir follows the dark false-colour water with smooth edges; Hazy; ndwi near-empty, dark_nir matches false-colour water"
+044_darlik_20170907,ndwi,ndwi,ndwi,,
+045_darlik_20191002,ndwi,ndwi,ndwi,,
+046_darlik_20180415,ndwi,ndwi,ndwi,,
+047_darlik_20220325,ndwi,ndwi,ndwi,,
+048_darlik_20190803,ndwi,ndwi,ndwi,,
+049_darlik_20190729,union,dark_nir,union,union,"thin dark arm (~3-4% of patch) missed by ndwi, only partly by union; dark_nir gets the arm but adds ~1-2% false patches on land; Thin channel (~3% of patch); ndwi empty, union catches top part only, dark_nir adds land blobs; ndwi is empty and misses the thin arm (~2-3%); union gets the top part, so it misses ~2%; dark_nir adds ~6% land blobs"
+050_darlik_20210817,ndwi,ndwi,ndwi,ndwi,same row as 050_darlik_20210817
+051_darlik_20170902,ndwi,ndwi,ndwi,ndwi,
+052_darlik_20190301,ndwi,ndwi,ndwi,,
+053_darlik_20170430,dark_nir,dark_nir,ndwi,dark_nir,ndwi covers only a thin sliver of the lower arm; dark_nir covers its full width; ndwi covers only about half the width of the lower arm; dark_nir follows the dark channel
+054_darlik_20230723,ndwi,ndwi,ndwi,,
+055_darlik_20221026,ndwi,ndwi,ndwi,,
+056_darlik_20221001,ndwi,ndwi,ndwi,,
+057_darlik_20221110,ndwi,ndwi,ndwi,,
+058_darlik_20230713,ndwi,ndwi,ndwi,,
+059_darlik_20240114,ndwi,ndwi,ndwi,,
+060_elmali_20170503,ndwi,ndwi,ndwi,ndwi,no water in patch; ndwi correctly empty; No open water; white area is quarry/bare ground; same row as 060_elmali_20170503; no water
+061_elmali_20220524,ndwi,dark_nir,ndwi,ndwi,ndwi misses most of top-left inlet; dark_nir covers it with only a tiny false blob at bottom
+062_elmali_20210611,ndwi,union,ndwi,ndwi,"glinty arm tips partly missed by ndwi; union covers more; east tail near edge still partly missed; ndwi misses parts of the glinty upper arms and east tip (~3-5%); dark_nir adds highway and land; real pid is 062_elmali_20210611; glinty arms missed ~4%, borderline reject"
+063_elmali_20190624,ndwi,ndwi,ndwi,,
+064_elmali_20180503,ndwi,ndwi,ndwi,,"Bright-green patches (top-left, bottom) are pink in false colour, so probably floating algae or vegetation. ndwi leaves them out; they are under 5% of the patch."
+065_elmali_20210514,ndwi,ndwi,ndwi,,
+066_elmali_20180607,reject,reject,reject,,"ndwi/mndwi/union miss much of the dark upper channel; dark_nir floods forest land; Every index mask misses parts of the black channel (top right and middle left), about 5-7%. dark_nir covers the channel but adds forest patches at top centre and a blob at bottom right."
+067_elmali_20180604,union,union,ndwi,union,"small water strip at top; ndwi covers only a thin edge, union/mndwi capture more of the channel; dark_nir garbage; The narrow grey stream bed that runs down the centre is left out, about 1-3%. It may be shallow water or wet mud.; union also covers the dark channel below the top strip, which ndwi leaves out; the grey stream further down (~1%) is in no mask"
+068_elmali_20170915,ndwi,ndwi,ndwi,,no water (dry bed); ndwi empty is correct
+069_elmali_20200901,ndwi,ndwi,ndwi,,
+070_elmali_20171012,ndwi,ndwi,ndwi,,no water; ndwi empty is correct
+071_elmali_20211203,ndwi,ndwi,ndwi,,"The black band on the left is hill shadow (December), not water. dark_nir wrongly includes it."
+072_elmali_20170907,ndwi,ndwi,ndwi,ndwi,
+073_elmali_20180831,ndwi,ndwi,ndwi,,
+074_elmali_20201001,ndwi,ndwi,ndwi,,
+075_elmali_20170905,ndwi,ndwi,ndwi,,
+076_elmali_20180823,ndwi,ndwi,ndwi,,
+077_elmali_20190813,ndwi,ndwi,ndwi,,
+078_elmali_20170722,ndwi,ndwi,ndwi,,"green channel is red/pink in false colour (vegetated bed), almost no open water; ndwi near-empty"
+079_elmali_20180717,dark_nir,dark_nir,dark_nir,,The index masks miss the hazy west end of the channel and the arm running down to the bottom. dark_nir covers the whole black channel.
+080_elmali_20200812,ndwi,ndwi,ndwi,,
+081_elmali_20170912,ndwi,ndwi,ndwi,,no water in patch; ndwi correctly empty
+082_elmali_20190811,ndwi,ndwi,ndwi,,dark region at right edge looks like shadow on land rather than water; dark_nir includes part of it
+083_elmali_20180316,ndwi,ndwi,ndwi,,
+084_elmali_20230721,ndwi,ndwi,ndwi,,"The light blue-grey margin around the dark channel (shallow water or wet mud) is left out, about 2-3%."
+085_elmali_20231218,ndwi,ndwi,ndwi,,
+086_elmali_20230716,ndwi,ndwi,ndwi,,
+087_elmali_20220721,ndwi,ndwi,ndwi,,
+088_elmali_20230726,ndwi,ndwi,ndwi,,
+089_elmali_20221001,ndwi,ndwi,ndwi,,
+090_terkos_20220517,ndwi,ndwi,ndwi,,
+091_terkos_20180513,ndwi,ndwi,ndwi,,
+092_terkos_20200621,ndwi,ndwi,ndwi,,
+093_terkos_20190528,ndwi,ndwi,ndwi,,tiny speckle holes only
+094_terkos_20210512,ndwi,ndwi,ndwi,,misses small inner pond (~1%); dark_nir wrongly adds the vegetated shore belt
+095_terkos_20220601,ndwi,ndwi,ndwi,,
+096_terkos_20220512,ndwi,ndwi,ndwi,,
+097_terkos_20210522,ndwi,ndwi,ndwi,,
+098_terkos_20211108,ndwi,ndwi,ndwi,,
+099_terkos_20201004,ndwi,ndwi,ndwi,,
+100_terkos_20201014,ndwi,ndwi,ndwi,,
+101_terkos_20171020,ndwi,ndwi,ndwi,,
+102_terkos_20201024,dark_nir,ndwi,union,dark_nir,"dark ambiguous margins top-centre and left edge (shallow water vs wet shadowed shore); ndwi misses the dark inlet at top centre and the left/bottom-left margins, about 5%. union recovers most of this but still has small holes.; ndwi misses ~8-10% of dark near-shore water (top inlet, left margin); dark_nir covers it and leaves out reed patches that union adds in the top-left"
+103_terkos_20200924,ndwi,ndwi,ndwi,,
+104_terkos_20200202,ndwi,ndwi,ndwi,,
+105_terkos_20180910,dark_nir,dark_nir,dark_nir,,"ndwi misses the right lobe of dark water; dark_nir excludes the pink-NIR algae/vegetation best; ndwi misses the eastern lobe of the black water. dark_nir fills the black water best. The pink-in-false-colour green patches are probably floating vegetation, so excluding them is correct."
+106_terkos_20180607,dark_nir,ndwi,dark_nir,dark_nir,ndwi leaves out the dark water strips along the shore. dark_nir follows the shoreline cleanly.; ndwi leaves out the dark (shadowed) water strip along the shore; dark_nir follows the shoreline
+107_terkos_20210701,dark_nir,dark_nir,ndwi,dark_nir,ndwi leaves a gap of water below the reed fringe; dark_nir reaches the shoreline and excludes bright-NIR reeds; ndwi misses the dark water band below the reed fringe and the left-edge strip (>5%); dark_nir reaches the fringe and leaves out the pink reeds
+108_terkos_20190707,ndwi,ndwi,ndwi,,
+109_terkos_20180627,ndwi,ndwi,ndwi,,
+110_terkos_20170602,ndwi,ndwi,ndwi,,
+111_terkos_20170915,ndwi,ndwi,ndwi,,
+112_terkos_20171010,ndwi,ndwi,ndwi,,
+113_terkos_20190319,ndwi,ndwi,ndwi,,
+114_terkos_20230924,ndwi,ndwi,ndwi,,
+115_terkos_20230830,ndwi,ndwi,ndwi,,ndwi excludes the floating streak that is bright red in false colour; mndwi/union include it; Floating algae scum (red in false colour) is excluded. The excluded area may be slightly wider than the scum itself.
+116_terkos_20230701,ndwi,ndwi,ndwi,,
+117_terkos_20220919,ndwi,ndwi,ndwi,,
+118_terkos_20231218,ndwi,ndwi,ndwi,,
+119_terkos_20240206,ndwi,ndwi,ndwi,,
+120_alibey_20210519,ndwi,ndwi,ndwi,ndwi,same row as 120_alibey_20210519
+121_alibey_20200628,reject,reject,reject,,"quarry/mine site; every candidate fills large grey bare-ground areas around the small ponds; Quarry site. Every candidate counts large areas of grey and white quarry ground around the ponds as water, well over 5%."
+122_alibey_20200524,ndwi,ndwi,ndwi,,
+123_alibey_20190624,ndwi,ndwi,ndwi,,
+124_alibey_20190523,ndwi,ndwi,ndwi,,
+125_alibey_20170629,ndwi,ndwi,ndwi,,
+126_alibey_20220514,ndwi,ndwi,ndwi,,
+127_alibey_20220601,ndwi,ndwi,ndwi,,
+128_alibey_20200701,ndwi,ndwi,ndwi,,
+129_alibey_20211203,ndwi,ndwi,ndwi,,
+130_alibey_20200427,ndwi,ndwi,union,ndwi,"pinkish swirl in upper-left looks like wet exposed bed with strandlines; ndwi excludes it, mndwi/union include it (~4%); ndwi misses whitish sediment swirl in upper-left bay; union covers it, though part may be shallow mud; the pinkish swirl in the upper-left has moderate NIR and strandlines, which look like wet exposed bed; ndwi leaves it out"
+131_alibey_20200802,ndwi,ndwi,ndwi,,
+132_alibey_20200723,ndwi,ndwi,ndwi,,no water; dry bed; ndwi empty; no open water visible; empty mask correct
+133_alibey_20210817,ndwi,ndwi,ndwi,,
+134_alibey_20200830,ndwi,ndwi,ndwi,,
+135_alibey_20200706,ndwi,ndwi,ndwi,,
+136_alibey_20180614,ndwi,ndwi,ndwi,,
+137_alibey_20190707,ndwi,ndwi,ndwi,,
+138_alibey_20220512,ndwi,ndwi,ndwi,,
+139_alibey_20200621,ndwi,ndwi,ndwi,,
+140_alibey_20220409,ndwi,ndwi,ndwi,,
+141_alibey_20210728,ndwi,ndwi,ndwi,,
+142_alibey_20190902,ndwi,ndwi,ndwi,ndwi,
+143_alibey_20210926,ndwi,ndwi,ndwi,,
+144_alibey_20231021,ndwi,ndwi,ndwi,,
+145_alibey_20220728,ndwi,ndwi,ndwi,,
+146_alibey_20230830,ndwi,ndwi,ndwi,,
+147_alibey_20220723,ndwi,ndwi,ndwi,,
+148_alibey_20231220,ndwi,ndwi,ndwi,,
+149_alibey_20230723,ndwi,ndwi,ndwi,,
+150_buyukcekmece_20200502,ndwi,ndwi,ndwi,ndwi,same row as 150_buyukcekmece_20200502
+151_buyukcekmece_20170602,ndwi,ndwi,ndwi,,
+152_buyukcekmece_20210613,ndwi,ndwi,ndwi,,
+153_buyukcekmece_20200509,ndwi,ndwi,ndwi,,
+154_buyukcekmece_20220601,ndwi,ndwi,ndwi,,
+155_buyukcekmece_20200621,union,mndwi,union,union,ndwi has holes in hazy near-shore water; mndwi fills to shore but may include a reed band; ndwi leaves gaps in glinty water along the shore; union fills to shoreline; the near-shore band ndwi misses (~11%) has water-like NIR 0.085 / SWIR 0.03; union (= mndwi) fills it to the shore; dark_nir adds land
+156_buyukcekmece_20190503,ndwi,ndwi,ndwi,ndwi,same row as 156_buyukcekmece_20190503
+157_buyukcekmece_20210606,ndwi,ndwi,ndwi,,
+158_buyukcekmece_20200805,union,ndwi,union,union,"turbid near-shore water under slight haze; ndwi stops short of shore, union reaches it; ndwi misses the turbid near-shore strip and the hazy top-right corner (~2-3%); union reaches the shore"
+159_buyukcekmece_20200807,union,union,union,,"ndwi misses dark water near shore; haze over the shoreline makes the edge uncertain; hazy/cloud plume over shore unmasked; ndwi misses dark water patch mid-bay, union covers it"
+160_buyukcekmece_20211108,ndwi,ndwi,ndwi,,
+161_buyukcekmece_20200110,ndwi,ndwi,ndwi,,
+162_buyukcekmece_20200728,ndwi,ndwi,ndwi,,
+163_buyukcekmece_20200825,ndwi,ndwi,ndwi,,
+164_buyukcekmece_20200113,ndwi,ndwi,ndwi,,
+165_buyukcekmece_20200901,dark_nir,ndwi,dark_nir,dark_nir,"dark-red (some NIR) patch at bottom-left looks like aquatic vegetation; ndwi excludes it, mndwi/union include it. If it is open water, union is better; dark patch in bottom-left water (likely submerged vegetation) excluded by ndwi; dark_nir/union include it; real pid is 165_buyukcekmece_20200901; the dark-red bottom-left patch (~8%) has very low SWIR, so it is submerged vegetation in water; ndwi leaves it out; dark_nir and union include it"
+166_buyukcekmece_20171206,ndwi,ndwi,ndwi,,
+167_buyukcekmece_20200616,union,union,union,,"dark weedy patches near shore are water in false colour; ndwi leaves holes there, union fills to the shoreline; dark speckled patches (submerged/algal) in water near shore excluded by ndwi; union includes them"
+168_buyukcekmece_20201001,ndwi,ndwi,ndwi,,
+169_buyukcekmece_20181109,ndwi,ndwi,ndwi,,
+170_buyukcekmece_20180604,ndwi,ndwi,ndwi,,
+171_buyukcekmece_20210805,ndwi,ndwi,ndwi,ndwi,
+172_buyukcekmece_20200628,ndwi,ndwi,ndwi,,small holes at top-right only
+173_buyukcekmece_20190722,ndwi,ndwi,ndwi,,
+174_buyukcekmece_20231225,ndwi,ndwi,ndwi,ndwi,same row as 174_buyukcekmece_20231225
+175_buyukcekmece_20221024,ndwi,ndwi,ndwi,,
+176_buyukcekmece_20220728,ndwi,ndwi,ndwi,,"top-right inlet is a mix of water and floating vegetation; ndwi excludes veg blobs and road, mndwi includes road; floating vegetation (red dots) and reedy pond top-right; ndwi excludes vegetation best but extent uncertain"
+177_buyukcekmece_20230820,ndwi,ndwi,ndwi,,
+178_buyukcekmece_20230216,ndwi,ndwi,ndwi,,
+179_buyukcekmece_20230201,ndwi,ndwi,ndwi,,all-water patch
+180_sazlidere_20210519,ndwi,ndwi,ndwi,,
+181_sazlidere_20170622,ndwi,ndwi,ndwi,,
+182_sazlidere_20220616,ndwi,ndwi,ndwi,,
+183_sazlidere_20220527,ndwi,ndwi,ndwi,,
+184_sazlidere_20220517,ndwi,dark_nir,ndwi,ndwi,ndwi misses the whitish water east of the causeway; dark_nir covers both parts cleanly; same row as 184_sazlidere_20220517; ndwi does include the whitish water east of the causeway
+185_sazlidere_20190607,ndwi,ndwi,ndwi,,
+186_sazlidere_20220512,ndwi,ndwi,ndwi,,
+187_sazlidere_20170629,ndwi,ndwi,ndwi,,
+188_sazlidere_20201004,ndwi,ndwi,ndwi,,
+189_sazlidere_20210810,ndwi,ndwi,ndwi,ndwi,same row as 189_sazlidere_20210810
+190_sazlidere_20181027,ndwi,dark_nir,ndwi,ndwi,"ndwi has holes/streaks inside water and gaps at edges; dark_nir most complete, with tiny false positives at top-left; only thin streak holes (<1%); dark_nir adds part of the island and some land blobs"
+191_sazlidere_20180717,ndwi,ndwi,ndwi,,
+192_sazlidere_20201024,ndwi,ndwi,ndwi,,
+193_sazlidere_20180704,ndwi,ndwi,ndwi,,
+194_sazlidere_20200815,union,union,union,,"upper pond is green algal water (dark purple in false colour); ndwi omits it, union includes it cleanly; green rectangular pond at top is dark purple in false colour, so it is algal water; ndwi misses it, union includes both water bodies"
+195_sazlidere_20210305,ndwi,ndwi,ndwi,,
+196_sazlidere_20220514,ndwi,ndwi,ndwi,,
+197_sazlidere_20170920,dark_nir,dark_nir,dark_nir,,ndwi leaves holes in dark water above the bridge; dark_nir fills them cleanly
+198_sazlidere_20180702,ndwi,ndwi,ndwi,,
+199_sazlidere_20180515,ndwi,ndwi,ndwi,,
+200_sazlidere_20171012,ndwi,ndwi,ndwi,,
+201_sazlidere_20210731,ndwi,ndwi,ndwi,,
+202_sazlidere_20190902,ndwi,ndwi,ndwi,,
+203_sazlidere_20201001,ndwi,ndwi,ndwi,,
+204_sazlidere_20231024,union,union,union,,"ndwi stops short of the shallow green water at the top edge; union/mndwi reach it; ndwi stops short of the shallow, lighter upper tip of the channel; union/mndwi follow the false-colour water further up"
+205_sazlidere_20230924,ndwi,ndwi,ndwi,,
+206_sazlidere_20221110,ndwi,ndwi,ndwi,,
+207_sazlidere_20220703,ndwi,ndwi,ndwi,ndwi,
+208_sazlidere_20231021,ndwi,ndwi,ndwi,,
+209_sazlidere_20230716,ndwi,ndwi,ndwi,,
+210_kazandere_20200621,ndwi,ndwi,ndwi,,no water apart from a tiny stream; ndwi empty; no open water apart from a very thin stream; empty mask is correct
+211_kazandere_20190503,dark_nir,dark_nir,dark_nir,,ndwi covers only part of the winding channel's width; dark_nir matches the channel better; ndwi makes the narrow channel too thin; dark_nir matches its false-colour width
+212_kazandere_20210621,ndwi,dark_nir,ndwi,ndwi,ndwi lower channel too narrow; dark_nir closer; ndwi misses a one-pixel edge ring; the lower channel is still mostly covered
+213_kazandere_20180612,ndwi,ndwi,dark_nir,ndwi,dark_nir captures more of the bottom-right arm; a small dark top-left corner is in no mask
+214_kazandere_20220512,ndwi,ndwi,ndwi,,
+215_kazandere_20200522,ndwi,ndwi,ndwi,,
+216_kazandere_20190612,ndwi,ndwi,ndwi,,
+217_kazandere_20210606,ndwi,ndwi,ndwi,,
+218_kazandere_20191109,ndwi,ndwi,ndwi,,"exposed lake bed, no water; ndwi correctly empty; dry, no water; empty mask is correct"
+219_kazandere_20200731,ndwi,ndwi,ndwi,,"dry bed, no water; ndwi correctly empty; white exposed bed, bright in NIR; no water"
+220_kazandere_20200202,ndwi,ndwi,ndwi,,
+221_kazandere_20190930,ndwi,ndwi,ndwi,,
+222_kazandere_20200721,ndwi,union,ndwi,ndwi,ndwi leaves a gap along the left-edge whitish water; union fills it; difference small; union adds only 0.2% at the left edge
+223_kazandere_20200303,ndwi,ndwi,ndwi,,
+224_kazandere_20191010,ndwi,ndwi,ndwi,,
+225_kazandere_20200313,ndwi,ndwi,ndwi,,"mostly dry bed; thin stream only partly captured, but under 5% of patch; only thin streams hold water; ndwi has small fragments of them, well under 5%"
+226_kazandere_20190523,dark_nir,ndwi,dark_nir,dark_nir,ndwi makes the channel too thin; dark_nir matches it; ndwi makes the narrow winding channel visibly too thin; dark_nir matches its width
+227_kazandere_20210731,ndwi,ndwi,ndwi,,
+228_kazandere_20180712,ndwi,ndwi,ndwi,,cloud halo extends beyond the red mask; water near cloud is hazy; the cloud fringe outside the red outline hides the water edge around the cloud
+229_kazandere_20210721,ndwi,ndwi,ndwi,,
+230_kazandere_20201024,ndwi,ndwi,ndwi,ndwi,dry bed with only a thin stream; ndwi empty is acceptable; dry bed with a thin stream; empty mask is correct; dry bed with a thin stream; the empty mask is correct
+231_kazandere_20180513,ndwi,ndwi,ndwi,ndwi,same row as 231_kazandere_20180513
+232_kazandere_20200810,ndwi,ndwi,ndwi,,no open water; two small dark spots are under 2% of the patch
+233_kazandere_20180423,ndwi,ndwi,dark_nir,ndwi,ndwi makes the lower-left channels too narrow; ndwi misses a one-pixel edge ring; the channels are still wide enough
+234_kazandere_20220909,ndwi,ndwi,ndwi,,
+235_kazandere_20220701,ndwi,ndwi,ndwi,,
+236_kazandere_20230830,dark_nir,dark_nir,dark_nir,,"ndwi has holes in the top-left inner arm, which is dark in false colour; arm could be shallow water or wet mud; ndwi leaves holes in the dark top-left arm; dark_nir fills it, but part of that arm may be shadow"
+237_kazandere_20230726,ndwi,ndwi,ndwi,,no water; empty mask is correct
+238_kazandere_20230601,ndwi,ndwi,ndwi,,ndwi leaves a thin light strip along the left shore unmasked; it may be shallow turbid water (small area)
+239_kazandere_20230402,ndwi,ndwi,ndwi,,
+240_pabucdere_20190518,ndwi,ndwi,ndwi,,
+241_pabucdere_20200611,ndwi,ndwi,ndwi,,
+242_pabucdere_20170622,ndwi,ndwi,ndwi,,
+243_pabucdere_20210606,ndwi,ndwi,ndwi,,
+244_pabucdere_20220621,ndwi,ndwi,ndwi,,
+245_pabucdere_20220512,ndwi,ndwi,ndwi,,
+246_pabucdere_20190523,ndwi,ndwi,ndwi,,
+247_pabucdere_20220601,ndwi,ndwi,ndwi,,
+248_pabucdere_20190930,ndwi,ndwi,ndwi,,"mostly exposed bed; only a small water area in the bottom-right; mostly exposed mud; only a small water sliver at the bottom edge, and ndwi's placement of it is approximate"
+249_pabucdere_20200113,union,union,union,,"water strip along the right edge; ndwi misses the upper braided part; dark_nir adds hill shadow; turbid water strip at top right; ndwi leaves holes, union covers it more fully"
+250_pabucdere_20191109,ndwi,ndwi,ndwi,,
+251_pabucdere_20200914,ndwi,ndwi,reject,ndwi,"no water; ndwi empty; smooth bright-green body at the bottom is pinkish (fairly bright NIR) in false colour; it may be bloom-covered water that every mask misses, or vegetation; too ambiguous; the bright-green body has NIR ~0.4 and SWIR ~0.25, so it is vegetation, not water; the empty mask is correct"
+252_pabucdere_20200924,ndwi,ndwi,ndwi,,no water; ndwi empty; no water; empty mask is correct
+253_pabucdere_20210102,ndwi,ndwi,ndwi,,
+254_pabucdere_20191020,ndwi,ndwi,ndwi,,no water; ndwi empty; no open water; empty mask is correct
+255_pabucdere_20210805,ndwi,ndwi,ndwi,,no water; ndwi empty; no open water; empty mask is correct
+256_pabucdere_20190324,ndwi,ndwi,ndwi,,
+257_pabucdere_20211113,ndwi,ndwi,ndwi,,"exposed bed, no open water; thin dark band along bottom bank likely shadow, ndwi empty; no open water apart from a possible thin dark strip along the bottom shore; dark_nir adds a lot of land"
+258_pabucdere_20170905,ndwi,ndwi,ndwi,,no water; ndwi empty
+259_pabucdere_20210412,ndwi,ndwi,ndwi,,
+260_pabucdere_20171030,ndwi,ndwi,ndwi,,
+261_pabucdere_20180403,ndwi,ndwi,ndwi,,
+262_pabucdere_20200407,ndwi,ndwi,ndwi,,
+263_pabucdere_20211223,ndwi,ndwi,ndwi,,
+264_pabucdere_20221024,ndwi,ndwi,ndwi,,
+265_pabucdere_20230601,ndwi,ndwi,ndwi,,
+266_pabucdere_20230402,ndwi,ndwi,ndwi,,no open water; ndwi empty is correct
+267_pabucdere_20220721,ndwi,ndwi,ndwi,,
+268_pabucdere_20230721,ndwi,ndwi,ndwi,,
+269_pabucdere_20230726,ndwi,ndwi,ndwi,,
+270_istrancalar_20220512,ndwi,ndwi,ndwi,,
+271_istrancalar_20220621,ndwi,dark_nir,ndwi,ndwi,ndwi misses the grey upper end of the water body; dark_nir covers it; ndwi misses the small grey upper tip (~1%); dark_nir adds an edge ring and a stray blob
+272_istrancalar_20210611,ndwi,ndwi,ndwi,,"clouds and shadows are not in the no-data mask; only a tiny pond is water, ndwi near-empty and correct; unmasked clouds and cloud shadows; no real water besides a tiny blob"
+273_istrancalar_20210517,union,union,union,ndwi,"small pond; ndwi covers only part, union fills it better; same row as 273_istrancalar_20210517"
+274_istrancalar_20170503,dark_nir,dark_nir,dark_nir,dark_nir,dark_nir also catches the narrow inlet channel that the others miss; same row as 274_istrancalar_20170503
+275_istrancalar_20180508,ndwi,ndwi,ndwi,,
+276_istrancalar_20200522,union,union,union,,"small pond partly under cloud and shadow; edges uncertain; cloudy, small pond partly hidden by the cloud mask; union/mndwi cover more of the dark pond than ndwi"
+277_istrancalar_20190523,ndwi,ndwi,ndwi,,"small pond; ndwi and union about equal, both slightly underfill it"
+278_istrancalar_20201004,ndwi,ndwi,ndwi,,
+279_istrancalar_20201019,ndwi,ndwi,ndwi,,
+280_istrancalar_20210924,ndwi,ndwi,ndwi,,
+281_istrancalar_20200924,ndwi,ndwi,ndwi,,
+282_istrancalar_20200716,ndwi,ndwi,ndwi,,
+283_istrancalar_20210820,ndwi,ndwi,ndwi,,ndwi misses the narrow western neck (~2%); dark_nir covers it but overreaches slightly
+284_istrancalar_20191209,ndwi,ndwi,ndwi,ndwi,
+285_istrancalar_20190801,ndwi,ndwi,ndwi,ndwi,misses the thin top-left inlet tail (~1-2%); dark_nir adds bottom-left land
+286_istrancalar_20220427,dark_nir,dark_nir,dark_nir,,ndwi and mndwi miss the lower-left fork of water; dark_nir follows the full false-colour water shape; dark_nir fills the southern arms down to the edge better than ndwi
+287_istrancalar_20171005,ndwi,union,ndwi,ndwi,union joins the top-left pond lobe that ndwi only partly covers; dark_nir adds land; same row as 287_istrancalar_20171005
+288_istrancalar_20220211,ndwi,ndwi,ndwi,ndwi,
+289_istrancalar_20200427,reject,reject,reject,,heavy cloud and haze over most of the patch; too hazy to judge; heavy cloud and haze; the small water strip is only partly detected and the scene is too hazy to judge
+290_istrancalar_20220328,ndwi,ndwi,ndwi,,
+291_istrancalar_20191214,ndwi,ndwi,ndwi,,
+292_istrancalar_20190607,ndwi,ndwi,ndwi,,
+293_istrancalar_20210512,ndwi,ndwi,dark_nir,ndwi,misses thin left arm and right stream (~2%); dark_nir gets them but overreaches on the right shore; dark_nir includes the western channel and the river running down the right side that the others miss; ndwi misses the thin left arm and the right river (~3%); dark_nir gets them but adds a similar area of bank on the right shore
+294_istrancalar_20230601,ndwi,ndwi,ndwi,,
+295_istrancalar_20230102,ndwi,ndwi,ndwi,,
+296_istrancalar_20230711,ndwi,ndwi,ndwi,,
+297_istrancalar_20231218,ndwi,ndwi,ndwi,,
+298_istrancalar_20230117,ndwi,ndwi,ndwi,,haze over bottom-left land; water inlet itself clear and ndwi matches it; unmasked haze in lower left; small dark blobs bottom-right are uncertain
+299_istrancalar_20230216,ndwi,ndwi,ndwi,,

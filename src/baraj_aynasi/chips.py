@@ -135,6 +135,29 @@ def fetch_item(item: pystac.Item, dams: list[Dam], store: ChipStore, min_clear: 
     return rows
 
 
+def extra_path(chip_path: Path) -> Path:
+    return chip_path.with_suffix(".extra.npz")
+
+
+def fetch_extra(item: pystac.Item, dams: list[Dam], root: Path) -> int:
+    """Add red (B04, 10 m) and short-wave infrared (B11, 20 m) for an already saved
+    chip, on the same windows, as <item id>.extra.npz. Returns the number written."""
+    signed = planetary_computer.sign(item)
+    with rasterio.Env(**GDAL_ENV):
+        with rasterio.open(signed.assets["B11"].href) as b11:
+            wins = {d.key: [scl_window(b, b11.transform) for b in d.boxes] for d in dams}
+            swir = {k: [b11.read(1, window=w) for w in ws] for k, ws in wins.items()}
+        with rasterio.open(signed.assets["B04"].href) as b04:
+            red = {k: [b04.read(1, window=double(w)) for w in ws] for k, ws in wins.items()}
+    for d in dams:
+        arrays = {}
+        for j in range(len(d.boxes)):
+            arrays[f"b04_{j}"] = red[d.key][j]
+            arrays[f"b11_{j}"] = swir[d.key][j]
+        np.savez_compressed(extra_path(root / d.key / f"{item.id}.npz"), **arrays)
+    return len(dams)
+
+
 def load_chip(path: Path) -> dict:
     with np.load(path) as z:
         return {k: z[k] for k in z.files}

@@ -6,8 +6,10 @@ committed): Wayback Machine copies of İSKİ's daily summary in data/iski/waybac
 and the per-dam windows read from İSKİ's occupancy page in data/iski/live_*.json.
 
     uv run python scripts/iski_check.py
+    uv run python scripts/iski_check.py --results results/unet/unet
 """
 
+import argparse
 from pathlib import Path
 
 import matplotlib
@@ -23,7 +25,6 @@ from baraj_aynasi.fit import metrics
 from baraj_aynasi.iski import match_nearest, one_per_scene, parse_daily_summary, parse_page_windows, pick_by_priority
 
 IN = Path("data/iski")
-EST = Path("results/estimates_2024_2026.csv")
 RESULTS = Path("results")
 MAX_DAYS = 1  # occupancy can move several points a day after heavy rain
 PRIORITY = ["daily_summary", "last_14_days", "month_end", "same_day_10y"]
@@ -45,6 +46,10 @@ def check_against_ibb(iski: pd.DataFrame) -> None:
 
 
 def main() -> None:
+    global RESULTS
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--results", type=Path, default=RESULTS, help="folder with estimates_2024_2026.csv")
+    RESULTS = ap.parse_args().results
     iski = load_iski()
     check_against_ibb(iski)
     after = pick_by_priority(iski[iski.date > ibb.END], PRIORITY)
@@ -52,7 +57,7 @@ def main() -> None:
     # Some days have two scenes of the same tile (relative orbits R007 and R107);
     # average them into one measurement per day.
     est = (
-        pd.read_csv(EST, parse_dates=["date"])
+        pd.read_csv(RESULTS / "estimates_2024_2026.csv", parse_dates=["date"])
         .groupby(["dam", "date"], as_index=False)
         .agg(
             water_km2=("water_km2", "mean"),

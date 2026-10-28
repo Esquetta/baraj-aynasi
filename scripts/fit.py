@@ -8,8 +8,10 @@ degree and to size the 90% error bar. A final curve refit on all labelled scenes
 2024-2026 satellite-only estimates.
 
     uv run python scripts/fit.py
+    uv run python scripts/fit.py --areas results/unet/areas_unet.csv --out results/unet/unet
 """
 
+import argparse
 import json
 from pathlib import Path
 
@@ -26,7 +28,6 @@ from baraj_aynasi.fit import fit_curve, hampel_outliers, metrics, out_of_fold_re
 
 AREAS = Path("results/areas.csv")
 RESULTS = Path("results")
-FIGS = RESULTS / "figures"
 MIN_CLEAR = 0.98
 TRAIN_END = pd.Timestamp("2022-06-30")
 KILL_MAE = 10.0
@@ -57,7 +58,7 @@ def plot(dam, df, curve, test_curve, path):
     lo, hi = test_curve.interval(x)
     ax1.plot(x, test_curve.predict(x), "k-", lw=1, label="curve fitted on train")
     ax1.fill_between(x, lo, hi, color="k", alpha=0.1, label="90% error bar")
-    ax1.set(xlabel="NDWI water area (km²)", ylabel="İBB occupancy (%)", title=dam.name)
+    ax1.set(xlabel="water area (km²)", ylabel="İBB occupancy (%)", title=dam.name)
     ax1.legend(fontsize=8)
     est = curve.predict(df.water_km2.to_numpy())
     ax2.plot(df.date, df.occupancy_pct, ".", ms=3, color="C0", label="İBB reported")
@@ -75,6 +76,13 @@ def plot(dam, df, curve, test_curve, path):
 
 
 def main() -> None:
+    global AREAS, RESULTS
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--areas", type=Path, default=AREAS)
+    ap.add_argument("--out", type=Path, default=RESULTS)
+    args = ap.parse_args()
+    AREAS, RESULTS = args.areas, args.out
+    FIGS = RESULTS / "figures"
     FIGS.mkdir(parents=True, exist_ok=True)
     rows, curves, estimates = [], {}, []
     for dam in DAMS:

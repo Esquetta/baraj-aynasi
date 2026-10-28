@@ -86,3 +86,13 @@ Used only to score the frozen 2024-2026 estimates (`scripts/iski_check.py`).
   published, in `results/iski_check.csv`, credited to İSKİ.
 - Not used: news articles. They repeat İSKİ's figures but one checked article
   printed each reservoir's share of total storage as its occupancy.
+
+## U-Net training labels
+
+`labels/patches.csv` lists, for 300 patches of 96 × 96 pixels, the scene, box
+and window each was cut from; `labels/review.csv` records which candidate mask
+was picked for each (or that it was rejected). The patches themselves are
+derived from the Sentinel-2 imagery above and stay in `data/unet/`. The picks
+were made by AI agents looking at true- and false-colour images in two
+independent passes, with a third pass on the 24 disagreements. No person has
+spot-checked them yet; see `results/unet/README.md`.

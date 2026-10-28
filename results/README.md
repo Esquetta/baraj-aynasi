@@ -127,6 +127,14 @@ This scope is a post-hoc choice made after the kill rule was met (see above).
   pairs in 2024-2026. It stays labelled as failing.
 - **Elmalı** is out: under 1 km² of water.
 
+## Later: U-Net water masks
+
+With a U-Net mask (Phase 2), Darlık's held-out error is 5.5 and Terkos and
+Büyükçekmece stay above the stop line; see [unet/README.md](unet/README.md).
+The Darlık gain shows that point 4 above (late-spring NDWI dropouts, through
+their effect on the training curve) explained much of Darlık's gap, more than
+point 1 suggested. The scope above was set before that run.
+
 ## How the method changed
 
 The first run used plain least-squares polynomials without a monotone

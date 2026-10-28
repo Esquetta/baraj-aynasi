@@ -33,6 +33,12 @@ def ndwi(green: np.ndarray, nir: np.ndarray) -> np.ndarray:
     return out
 
 
+def mndwi(green: np.ndarray, swir: np.ndarray) -> np.ndarray:
+    """Modified NDWI = (G - SWIR1) / (G + SWIR1). Water absorbs short-wave infrared
+    even when algae or sediment raise its near-infrared, where NDWI fails."""
+    return ndwi(green, swir)
+
+
 def clear_mask(scl: np.ndarray) -> np.ndarray:
     """True where the SCL class does not hide the surface."""
     return ~np.isin(scl, SCL_INVALID)

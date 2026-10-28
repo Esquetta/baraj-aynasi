@@ -5,6 +5,7 @@ from baraj_aynasi.water import (
     boa_offset,
     clear_fraction,
     clear_mask,
+    mndwi,
     ndwi,
     reflectance,
     water_area_km2,
@@ -34,6 +35,13 @@ def test_ndwi_water_and_land():
     out = ndwi(green, nir)
     assert out[0] == pytest.approx(0.6)
     assert out[1] == pytest.approx(-5 / 7)
+
+
+def test_mndwi_keeps_algal_water_that_ndwi_misses():
+    # Algal water: NIR raised above green, SWIR still low.
+    green, nir, swir = np.array([0.06]), np.array([0.09]), np.array([0.01])
+    assert ndwi(green, nir)[0] < 0
+    assert mndwi(green, swir)[0] == pytest.approx(5 / 7)
 
 
 def test_ndwi_undefined_is_nan():

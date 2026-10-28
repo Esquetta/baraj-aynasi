@@ -16,6 +16,15 @@ figures by 1.6 to 4.8 points on average in an untouched test (4 to 6 comparison
 dates each). Kazandere is provisional after 17- and 23-point misses in summer
 2026; Terkos is out, and Elmalı is too small.
 
+A small U-Net, trained on 237 patches labelled by AI agents (60 more held out
+for testing; not yet spot-checked by a person), is available as an alternative
+water mask. It handles the late-spring scenes where NDWI misses algal water
+without a hand-made filter: Darlık's held-out error drops from 11.7 to 5.5 and
+its error bar from ±24 to ±12, while removing those scenes from the NDWI series
+gives about the same error. It is slightly worse on a few reservoirs, and
+Terkos and Büyükçekmece still miss the stop line. The served estimates stay on
+NDWI. See [results/unet/README.md](results/unet/README.md).
+
 ## How it works
 
 1. `scripts/search.py` caches Sentinel-2 L2A STAC items for tiles 35TPF, 35TQF
@@ -40,6 +49,8 @@ uv run python scripts/areas.py
 uv run python scripts/fit.py
 uv run python scripts/iski_check.py   # needs data/iski/, see docs/data-sources.md
 ```
+
+The U-Net steps are listed in [results/unet/README.md](results/unet/README.md).
 
 Raw imagery is cached under `data/` (about 30 GB) and is not committed.
 
