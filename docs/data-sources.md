@@ -69,8 +69,20 @@ is an inference from İSKİ's basin regulation.
 
 ## İSKİ occupancy after 2024-02-19
 
-Not yet collected. İSKİ's [baraj doluluk page](https://iski.istanbul/baraj-doluluk/)
-shows the current day, rolling windows and the same calendar day for the past ten
-years; Wayback Machine snapshots of its JSON exist for 14 dates in 2024-2025;
-news articles repeat the daily figures with occasional transcription errors.
-How this comparison set is gathered will be decided before it is used.
+Used only to score the frozen 2024-2026 estimates (`scripts/iski_check.py`).
+
+- İSKİ's [baraj doluluk page](https://iski.istanbul/baraj-doluluk/) has no
+  public download or date-range query. On 2026-10-28 the page was opened in a
+  browser like any visitor, each reservoir was selected in its detail tab, and
+  the values the page displayed were saved: month ends from 2025-10-31 to
+  2026-09-30 plus the current day, the last 14 days, and 28 October of each
+  year since 2016. The page's API token was not
+  used outside the page.
+- Wayback Machine copies of the page's daily summary (`gunlukOzet`) cover 20
+  dates from 2024-01-21 to 2025-12-10.
+- On the 140 reservoir-days that İBB also covers, İSKİ and İBB agree to 0.01
+  points.
+- The raw files stay in `data/iski/`. Only the figures matched to a scene are
+  published, in `results/iski_check.csv`, credited to İSKİ.
+- Not used: news articles. They repeat İSKİ's figures but one checked article
+  printed each reservoir's share of total storage as its occupancy.

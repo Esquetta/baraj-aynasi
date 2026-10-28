@@ -41,9 +41,11 @@ extrapolation forward in time.
 
 ## Kill rule
 
-The project card set one stop condition: held-out error above 10 occupancy
-points on the four largest reservoirs. **It is met for Terkos, Büyükçekmece and
-Darlık.** Only Ömerli passes.
+The project card set one stop condition: "If the held-out error for the four
+largest reservoirs exceeds 10 occupancy points, publish the gap and stop."
+**It is met for Terkos, Büyükçekmece and Darlık.** Only Ömerli passes. This
+write-up is the published gap. Going on with a narrower scope (below) is a
+separate, later decision by the project owner, not something the rule allows.
 
 ## Where the gap comes from
 
@@ -70,6 +72,61 @@ Darlık.** Only Ömerli passes.
 
 Elmalı (9.6 million m³, under 1 km² of water) is too small for this method.
 
+## Untouched test: İSKİ figures, 2024-03-25 to 2026-10-22
+
+The estimates file was committed (`b88fc36`) before any İSKİ figure after
+2024-02-19 was collected, and the curves were not changed afterwards. Each scene
+is paired with the İSKİ figure at most one day away; when two scenes of the same
+tile exist on one day (two orbits), their estimates are averaged. The ±1-day
+window was set before the first scoring run. The rule of one pair per scene was
+added after that run, which had counted some scenes several times. İSKİ figures
+come from Wayback Machine copies of İSKİ's daily summary (20 dates, 14 after
+2024-02-19) and from the windows İSKİ's occupancy page showed on 2026-10-28
+(month ends from 2025-10-31 to 2026-09-30, the last 14 days, and 28 October of
+each year). On the 140 dam-days
+that İBB also covers, the two series agree to 0.01 points, so they are the same
+measurements.
+
+| Reservoir | Held-out check | Pairs | MAE | Bias | Inside 90% bar |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Ömerli | passed | 6 | 4.8 | +1.6 | 6/6 |
+| Alibey | passed | 6 | 3.0 | +2.2 | 6/6 |
+| Sazlıdere | passed | 5 | 1.6 | −0.3 | 5/5 |
+| Pabuçdere | passed | 5 | 2.5 | +2.5 | 5/5 |
+| Istrancalar | passed | 4 | 2.6 | +0.6 | 4/4 |
+| Kazandere | passed | 4 | 12.0 | +8.0 | 3/4 |
+| Darlık | failed | 5 | 4.0 | −1.0 | 5/5 |
+| Büyükçekmece | failed | 7 | 6.9 | −6.3 | 7/7 |
+| Terkos | failed | 2 | 20.0 | +20.0 | 2/2 |
+| Elmalı | failed | 8 | 6.2 | +6.2 | 8/8 |
+
+Pairs per reservoir are few (2 to 8), so these numbers are rough. They agree
+with the held-out picture for Ömerli, Alibey, Sazlıdere, Pabuçdere, Istrancalar
+and Terkos. Darlık does better here than in the held-out years, which is
+consistent with its matched scenes (35–89%) staying above the 2023 record low.
+Büyükçekmece's MAE is lower too, but two of its seven pairs miss by 16 points
+(2025-12-31) and 20 points (2026-07-31), the second well inside the training
+range. Kazandere is worse: its two summer 2026 scenes overestimate by 17 and 23
+points. For the reservoirs that failed held-out, the 90% bars are ±20 to ±30
+points wide, so a full "inside" count says little about accuracy; one covered
+Büyükçekmece pair is an estimate of 0% against 16%. See
+[iski_metrics.csv](iski_metrics.csv), [iski_check.csv](iski_check.csv) and
+[figures/iski_check.png](figures/iski_check.png).
+
+## Scope after Phase 1
+
+This scope is a post-hoc choice made after the kill rule was met (see above).
+
+- Estimates with error bars are offered for **Ömerli, Alibey, Sazlıdere,
+  Pabuçdere and Istrancalar**. Kazandere passed held-out but missed in summer
+  2026 on the untouched test; treat it as provisional.
+- **Terkos** is out: it fails both tests by about 20 points.
+- **Darlık** failed held-out mainly at the 2023 record low; on 5 pairs in
+  2024-2026 it stayed within 4 points on average. It stays labelled as failing.
+- **Büyükçekmece** failed held-out and still misses by 16 and 20 points on 2 of 7
+  pairs in 2024-2026. It stays labelled as failing.
+- **Elmalı** is out: under 1 km² of water.
+
 ## How the method changed
 
 The first run used plain least-squares polynomials without a monotone
@@ -78,18 +135,21 @@ commit `d88020f`). Its curves bent into U shapes through the NDWI failures and
 the kill rule was met for the same three reservoirs. The robust, monotone fit
 was added **after** looking at the held-out results, so the held-out numbers
 above are somewhat optimistic. The 2024–2026 comparison with İSKİ's reported
-figures has not been looked at and is the untouched test.
+figures was run once the estimates were frozen in `b88fc36`; see the
+untouched-test section above.
 
 ## Files
 
 - `areas.csv`: water area and cloud-free share per reservoir and scene.
 - `curves.json`: final curves fitted on all labelled scenes, with the area range
   they were fitted on (straight-line continuation outside it) and error bars.
-- `estimates_2024_2026.csv`: satellite-only estimates after 2024-02-19. Not
-  validated against İSKİ yet. Rows with `heldout_passed = False` (Terkos,
+- `estimates_2024_2026.csv`: satellite-only estimates after 2024-02-19, frozen
+  before the İSKİ comparison. Rows with `heldout_passed = False` (Terkos,
   Büyükçekmece, Darlık, Elmalı) failed the 10-point held-out check; do not use them.
 - `figures/fit_<dam>.png`: curve, held-out points and time series.
 - `figures/crops_<dam>.png`: true colour with the NDWI outline at high and low water.
+- `iski_check.csv`, `iski_metrics.csv`, `figures/iski_check.png`: the untouched
+  test. Occupancy figures in these files are İSKİ's, cited from iski.istanbul.
 
 Contains modified Copernicus Sentinel data 2017–2026. Occupancy: İBB Açık Veri
-Portalı, İBB Open Data License.
+Portalı, İBB Open Data License; after 2024-02-19, İSKİ (iski.istanbul).

@@ -6,11 +6,15 @@ L2A imagery (2017–2026), and a per-reservoir curve maps surface area to the
 occupancy İBB reported daily until 2024-02-19. After that date the curves turn
 satellite measurements alone into occupancy estimates.
 
-Status: Phase 1 (data pipeline and NDWI baseline) is done. Held-out error is
-under 6 occupancy points for Ömerli, Alibey, Sazlıdere, Kazandere, Pabuçdere
-and Istrancalar, but above the project's 10-point stop line for Terkos,
-Büyükçekmece and Darlık, and for the small Elmalı. See [results/README.md](results/README.md) for the
-numbers and why.
+Status: Phase 1 (data pipeline and NDWI baseline) is done. The project's stop
+rule ("if the held-out error for the four largest reservoirs exceeds 10
+occupancy points, publish the gap and stop") was met for Terkos, Büyükçekmece
+and Darlık; [results/README.md](results/README.md) is that write-up. Continuing
+with a narrower scope was a later decision: estimates are offered for Ömerli,
+Alibey, Sazlıdere, Pabuçdere and Istrancalar, which missed İSKİ's 2024-2026
+figures by 1.6 to 4.8 points on average in an untouched test (4 to 6 comparison
+dates each). Kazandere is provisional after 17- and 23-point misses in summer
+2026; Terkos is out, and Elmalı is too small.
 
 ## How it works
 
@@ -34,6 +38,7 @@ uv run python scripts/download.py
 uv run python scripts/draw_aoi.py
 uv run python scripts/areas.py
 uv run python scripts/fit.py
+uv run python scripts/iski_check.py   # needs data/iski/, see docs/data-sources.md
 ```
 
 Raw imagery is cached under `data/` (about 30 GB) and is not committed.
@@ -45,6 +50,7 @@ Raw imagery is cached under `data/` (about 30 GB) and is not committed.
   Atıf 4.0 Uluslararası (CC BY 4.0) kapsamında lisanslanan kamu sektörü bilgilerini içerir.
 - Imagery: Contains modified Copernicus Sentinel data 2017–2026, accessed through
   the Microsoft Planetary Computer.
+- 2024–2026 comparison figures: İSKİ, [iski.istanbul/baraj-doluluk](https://iski.istanbul/baraj-doluluk/).
 
 Details, terms and the AOI drawing method are in
 [docs/data-sources.md](docs/data-sources.md). Code is MIT licensed.
