@@ -1,0 +1,8 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# Local data: raw imagery, STAC caches and downloads are never committed
+data/
