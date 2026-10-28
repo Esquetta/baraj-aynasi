@@ -50,7 +50,8 @@ uv run python scripts/fit.py
 uv run python scripts/iski_check.py   # needs data/iski/, see docs/data-sources.md
 ```
 
-The U-Net steps are listed in [results/unet/README.md](results/unet/README.md).
+The U-Net steps are listed in [results/unet/README.md](results/unet/README.md). `uv run python scripts/build_site.py` builds the static project page in
+`site/` from the committed results.
 
 Raw imagery is cached under `data/` (about 30 GB) and is not committed.
 

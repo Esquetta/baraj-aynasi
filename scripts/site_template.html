@@ -1,0 +1,291 @@
+<title>Baraj Aynası</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Satellite estimates, with error bars, of how full Istanbul's ten supply reservoirs are, from Sentinel-2 imagery 2017–2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a reading column for the argument, widened to a two-column grid for the ten reservoir charts. */
+:root {
+  --bg: #f4f6f6;
+  --surface: #fcfcfb;
+  --ink: #142120;
+  --ink-2: #3c4c49;
+  --muted: #64746f;
+  --line: #d8e0de;
+  --grid: #e6ecea;
+  --sat: #0085a3;
+  --rep: #c0560c;
+  --pill-ok: #1f7a46;
+  --pill-warn: #9a5a00;
+  --pill-bad: #a3341f;
+  --pill-out: #64746f;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1515; --surface: #1a1a19; --ink: #e5ecea; --ink-2: #c3d0cc; --muted: #93a6a1; --line: #2d3a38; --grid: #26302e;
+    --sat: #2398ad; --rep: #c97a22; --pill-ok: #5fcb8b; --pill-warn: #e9a743; --pill-bad: #f08a72; --pill-out: #93a6a1;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1515; --surface: #1a1a19; --ink: #e5ecea; --ink-2: #c3d0cc; --muted: #93a6a1; --line: #2d3a38; --grid: #26302e;
+  --sat: #2398ad; --rep: #c97a22; --pill-ok: #5fcb8b; --pill-warn: #e9a743; --pill-bad: #f08a72; --pill-out: #93a6a1;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 56px; }
+.col { max-width: 720px; display: grid; gap: 14px; }
+h1 { font: 800 clamp(2.4rem, 7vw, 4.2rem)/0.95 var(--display); letter-spacing: -0.02em; margin: 0; }
+h2 { font: 700 1.55rem/1.2 var(--display); margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h3 { font: 700 1.1rem/1.25 var(--display); margin: 0; }
+p { margin: 0; }
+.eyebrow { font: 500 0.78rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 1.2rem; line-height: 1.5; color: var(--ink-2); max-width: 34ch; text-wrap: balance; }
+.muted { color: var(--muted); }
+.mono, .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+a { color: var(--sat); }
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 32px; align-items: end; }
+.hero figure { margin: 0; display: grid; gap: 8px; }
+.hero img, figure img { width: 100%; height: auto; max-width: 100%; border-radius: 6px; border: 1px solid var(--line); background: #fff; }
+figcaption { font-size: 0.85rem; color: var(--muted); max-width: 70ch; }
+.disclaim { border-left: 3px solid var(--rep); padding: 2px 0 2px 12px; color: var(--ink-2); font-size: 0.95rem; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 12px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: grid; gap: 4px; align-content: start; }
+.tile .big { font: 800 2.2rem/1 var(--display); font-variant-numeric: tabular-nums; }
+.tile .big small { font: 500 0.95rem var(--mono); color: var(--muted); margin-left: 4px; }
+.tile .when { font-size: 0.82rem; color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font: 500 0.75rem var(--mono); letter-spacing: 0.04em; text-transform: uppercase; }
+.pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.s-offered { color: var(--pill-ok); }
+.s-provisional { color: var(--pill-warn); }
+.s-failed { color: var(--pill-bad); }
+.s-out { color: var(--pill-out); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 0.88rem; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 8px; }
+.sw-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--sat); }
+.sw-line { width: 18px; height: 2px; background: var(--rep); }
+.sw-ring { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--rep); }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.dam { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 14px 12px; display: grid; gap: 8px; min-width: 0; }
+.dam header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
+.dam .cap { font-size: 0.8rem; color: var(--muted); }
+.chart { position: relative; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+.chart text { fill: var(--muted); font: 10px var(--mono); }
+.tip {
+  position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+  padding: 6px 8px; font: 12px/1.4 var(--mono); color: var(--ink); box-shadow: 0 2px 10px rgba(0,0,0,.12); white-space: nowrap; z-index: 2;
+}
+.facts { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 0.82rem; color: var(--ink-2); }
+.facts b { font-family: var(--mono); font-weight: 500; }
+.note { font-size: 0.85rem; color: var(--muted); }
+ol.steps { margin: 0; padding-left: 22px; display: grid; gap: 10px; max-width: 70ch; }
+ol.steps li::marker { font-family: var(--mono); color: var(--muted); }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font: 500 0.75rem var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+td.num, th.num { text-align: right; }
+.credits { display: grid; gap: 10px; max-width: 75ch; font-size: 0.92rem; color: var(--ink-2); }
+footer { color: var(--muted); font-size: 0.82rem; }
+@media (max-width: 760px) { .hero, .grid, .two { grid-template-columns: minmax(0, 1fr); } }
+</style>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="col">
+      <span class="eyebrow">Istanbul · Sentinel-2 · 2017–2026</span>
+      <h1>Baraj Aynası</h1>
+      <p class="lede">How full are Istanbul's reservoirs, seen from orbit? Satellite estimates with error bars.</p>
+      <p class="disclaim">Estimates from water surface area, not official figures. Istanbul's official occupancy is published by İSKİ.</p>
+    </div>
+    <figure>
+      <img src="img/crops_buyukcekmece.png" alt="Büyükçekmece reservoir in true colour: full in April 2022 and at 4 percent in October 2023, with the detected water outlined">
+      <figcaption>Büyükçekmece at 98% (April 2022) and 4% (October 2023). The cyan outline is the water the satellite measures; at 4% half of the full surface is still wet, which is why area alone misleads here.</figcaption>
+    </figure>
+  </section>
+
+  <section class="col" style="max-width:none">
+    <h2>Latest satellite estimates</h2>
+    <p class="muted" id="latestNote"></p>
+    <div class="tiles" id="tiles"></div>
+  </section>
+
+  <section style="display:grid;gap:16px">
+    <div class="col">
+      <h2>Ten reservoirs, 2017–2026</h2>
+      <p class="muted">Each dot is one cloud-free Sentinel-2 scene turned into an occupancy estimate. Until 19 February 2024 the curve was fitted against İBB's daily figures; after that the dots are satellite-only and are checked against the İSKİ figures we could collect. Hover a chart for values and the 90% error bar. Dots far below the line, mostly in May and June, are scenes where algae hide the water from NDWI; they are kept on the charts.</p>
+      <div class="legend">
+        <span><i class="sw-dot"></i>Satellite estimate</span>
+        <span><i class="sw-line"></i>Reported occupancy (İBB, weekly mean)</span>
+        <span><i class="sw-ring"></i>Reported occupancy (İSKİ, 2024–2026)</span>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="col">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li>Every Sentinel-2 L2A scene of the three tiles over Istanbul's reservoirs from 2017 on is clipped to each reservoir, and clouds are masked with the scene classification layer.</li>
+      <li>Water is mapped with NDWI, a ratio of the green and near-infrared bands: water reflects green light and absorbs near infrared. Water area is counted inside an outline drawn from each reservoir's high-water extent.</li>
+      <li>For each reservoir, a curve from water area to occupancy is fitted on scenes up to June 2022 and tested on July 2022 to February 2024, the end of İBB's open daily data. The fit ignores scenes far off the curve and must rise with area.</li>
+      <li>The 90% error bar comes from how far the curve misses on years it did not see. After February 2024, the frozen curves were scored once against İSKİ's reported figures.</li>
+    </ol>
+  </section>
+
+  <section style="display:grid;gap:16px">
+    <div class="col">
+      <h2>Where it falls short</h2>
+      <p>The project set itself one stop rule: if the error on the four largest reservoirs exceeded 10 occupancy points, publish the gap and stop. It was met for Terkos, Büyükçekmece and Darlık, so estimates are offered only for the reservoirs that passed.</p>
+      <p>Two kinds of trouble cause it. Shape: in a shallow lagoon like Büyükçekmece, area keeps shrinking while little water is left, and in a steep valley like Darlık area hardly changes at all. And late-spring scenes where algae turn the water's colour, so NDWI misses it.</p>
+    </div>
+    <div class="two">
+      <figure><img src="img/crops_darlik.png" alt="Darlık reservoir full in March 2022 and at 29 percent in January 2023"><figcaption>Darlık: 100% and 29% look much alike from above. The surface only shrinks from 5.4 to 2.9 km².</figcaption></figure>
+      <div class="col" style="align-content:start">
+        <h3>A learned water mask</h3>
+        <p>A small U-Net, trained on 237 reviewed image patches, replaces the NDWI threshold as an alternative. It keeps the water in algal scenes that NDWI drops, which halves Darlık's error (11.7 to 5.5 points). It does not fix Terkos or Büyükçekmece, whose problem is shape, and the estimates shown here still use NDWI.</p>
+      </div>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Reservoir</th><th>Status</th><th class="num">Capacity, million m³</th><th class="num">Held-out error</th><th class="num">vs İSKİ 2024–26</th><th class="num">İSKİ dates</th><th class="num">90% bar</th><th class="num">With U-Net</th></tr></thead>
+        <tbody id="table"></tbody>
+      </table>
+    </div>
+    <p class="note">Errors are mean absolute errors in occupancy points. Held-out: July 2022 to February 2024, against İBB. İSKİ dates are few per reservoir, so that column is rough.</p>
+  </section>
+
+  <section class="credits">
+    <h2>Data and credits</h2>
+    <p><b>Reservoir occupancy to 19 February 2024:</b> <a href="https://data.ibb.gov.tr/dataset/istanbul-barajlari-gunluk-doluluk-oranlari">İstanbul Barajları Günlük Doluluk Oranları</a>, İBB Açık Veri Portalı, under the <a href="https://data.ibb.gov.tr/license">İBB Open Data License</a>. Atıf 4.0 Uluslararası (CC BY 4.0) kapsamında lisanslanan kamu sektörü bilgilerini içerir.</p>
+    <p><b>Imagery:</b> Contains modified Copernicus Sentinel data 2017–2026, accessed through the Microsoft Planetary Computer.</p>
+    <p><b>Occupancy after February 2024:</b> İSKİ, <a href="https://iski.istanbul/baraj-doluluk/">iski.istanbul/baraj-doluluk</a>, collected from the page and from Wayback Machine copies.</p>
+    <p>Code and full results: <span class="mono">github.com/Esquetta/baraj-aynasi</span> (MIT licence). Built by Furkan Tasci.</p>
+  </section>
+
+  <footer>Satellite estimates with error bars. Not affiliated with İBB or İSKİ.</footer>
+</div>
+
+<script>
+const DATA = __DATA__;
+const STATUS = { offered: "Estimates offered", provisional: "Provisional", failed: "Failed held-out test", out: "Not estimated" };
+const X0 = Date.UTC(2017, 0, 1), X1 = Date.UTC(2027, 0, 1);
+const W = 560, H = 190, M = { l: 30, r: 8, t: 10, b: 22 };
+const t = (s) => Date.parse(s + "T00:00:00Z");
+const fmtDate = (s) => new Date(t(s)).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+const el = (tag, attrs = {}, parent) => {
+  const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  if (parent) parent.appendChild(n);
+  return n;
+};
+const html = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+const sx = (ms) => M.l + (ms - X0) / (X1 - X0) * (W - M.l - M.r);
+const sy = (v) => M.t + (100 - v) / 100 * (H - M.t - M.b);
+
+function nearest(arr, ms) {
+  let lo = 0, hi = arr.length - 1;
+  if (hi < 0) return null;
+  while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (t(arr[mid][0]) < ms) lo = mid; else hi = mid; }
+  return Math.abs(t(arr[lo][0]) - ms) <= Math.abs(t(arr[hi][0]) - ms) ? arr[lo] : arr[hi];
+}
+
+function chart(d) {
+  const box = html("div", "chart");
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `${d.name}: satellite estimates and reported occupancy, 2017 to 2026` }, box);
+  for (const v of [0, 50, 100]) {
+    el("line", { x1: M.l, x2: W - M.r, y1: sy(v), y2: sy(v), stroke: "var(--grid)", "stroke-width": 1 }, svg);
+    el("text", { x: M.l - 6, y: sy(v) + 3, "text-anchor": "end" }, svg).textContent = v + "%";
+  }
+  for (let y = 2017; y <= 2026; y += 3) el("text", { x: sx(Date.UTC(y, 0, 1)), y: H - 6, "text-anchor": "start" }, svg).textContent = y;
+  const xe = sx(t(DATA.ibb_end));
+  el("line", { x1: xe, x2: xe, y1: M.t, y2: H - M.b, stroke: "var(--muted)", "stroke-dasharray": "3 3", "stroke-width": 1 }, svg);
+  el("polyline", { points: d.reported.map(([s, v]) => `${sx(t(s)).toFixed(1)},${sy(v).toFixed(1)}`).join(" "), fill: "none", stroke: "var(--rep)", "stroke-width": 2, "stroke-linejoin": "round" }, svg);
+  const g = el("g", { fill: "var(--sat)" }, svg);
+  for (const [s, v] of d.sat) el("circle", { cx: sx(t(s)).toFixed(1), cy: sy(v).toFixed(1), r: 1.9 }, g);
+  for (const [s, v] of d.iski) el("circle", { cx: sx(t(s)), cy: sy(v), r: 4, fill: "var(--surface)", stroke: "var(--rep)", "stroke-width": 2 }, svg);
+  const cross = el("line", { y1: M.t, y2: H - M.b, stroke: "var(--ink-2)", "stroke-width": 1, visibility: "hidden" }, svg);
+  const bar = el("line", { stroke: "var(--sat)", "stroke-width": 3, "stroke-linecap": "round", visibility: "hidden", opacity: 0.5 }, svg);
+  const dot = el("circle", { r: 4.5, fill: "var(--sat)", stroke: "var(--surface)", "stroke-width": 2, visibility: "hidden" }, svg);
+  const hit = el("rect", { x: M.l, y: M.t, width: W - M.l - M.r, height: H - M.t - M.b, fill: "transparent" }, svg);
+  const tip = html("div", "tip"); tip.hidden = true; box.appendChild(tip);
+  const move = (ev) => {
+    const r = svg.getBoundingClientRect();
+    const px = (ev.clientX - r.left) / r.width * W;
+    const ms = X0 + (px - M.l) / (W - M.l - M.r) * (X1 - X0);
+    const s = nearest(d.sat, ms);
+    if (!s) return;
+    const x = sx(t(s[0]));
+    const rep = nearest(t(s[0]) <= t(DATA.ibb_end) ? d.reported : d.iski, t(s[0]));
+    for (const n of [cross, bar, dot]) n.setAttribute("visibility", "visible");
+    cross.setAttribute("x1", x); cross.setAttribute("x2", x);
+    bar.setAttribute("x1", x); bar.setAttribute("x2", x);
+    bar.setAttribute("y1", sy(Math.min(100, s[1] + d.bar))); bar.setAttribute("y2", sy(Math.max(0, s[1] - d.bar)));
+    dot.setAttribute("cx", x); dot.setAttribute("cy", sy(s[1]));
+    tip.textContent = "";
+    tip.append(html("div", null, fmtDate(s[0])), html("div", null, `Satellite ${s[1].toFixed(0)}% ± ${d.bar.toFixed(0)}`));
+    if (rep && Math.abs(t(rep[0]) - t(s[0])) <= 8 * 864e5) tip.append(html("div", null, `Reported ${rep[1].toFixed(0)}% (${fmtDate(rep[0])})`));
+    tip.hidden = false;
+    const left = x / W * r.width;
+    tip.style.left = Math.min(Math.max(0, left + 10), r.width - tip.offsetWidth) + "px";
+    tip.style.top = "4px";
+  };
+  hit.addEventListener("pointermove", move);
+  hit.addEventListener("pointerdown", move);
+  hit.addEventListener("pointerleave", () => { for (const n of [cross, bar, dot]) n.setAttribute("visibility", "hidden"); tip.hidden = true; });
+  return box;
+}
+
+function render() {
+  const shown = DATA.dams.filter((d) => d.status === "offered");
+  const lastDate = shown.map((d) => d.latest.date).sort().at(-1);
+  document.getElementById("latestNote").textContent = `From the most recent cloud-free scene of each reservoir, up to ${fmtDate(lastDate)}. The ± figure is the 90% error bar.`;
+  const tiles = document.getElementById("tiles");
+  for (const d of shown) {
+    const tl = html("div", "tile");
+    tl.append(html("span", `pill s-${d.status}`, d.name));
+    const big = html("div", "big", `${Math.round(d.latest.pct)}%`);
+    big.append(html("small", null, `± ${Math.round(d.bar)}`));
+    tl.append(big, html("span", "when", `${fmtDate(d.latest.date)} scene`));
+    tiles.appendChild(tl);
+  }
+  const grid = document.getElementById("grid");
+  for (const d of DATA.dams) {
+    const card = html("article", "dam");
+    const head = html("header");
+    const left = html("div");
+    left.append(html("h3", null, d.name), html("span", "cap", `${d.capacity.toFixed(1)} million m³`));
+    head.append(left, html("span", `pill s-${d.status}`, STATUS[d.status]));
+    const facts = html("div", "facts");
+    const fact = (label, val) => { const s = html("span", null, label + " "); s.append(html("b", null, val)); return s; };
+    facts.append(
+      fact("Held-out error", `${d.heldout_mae.toFixed(1)} pts`),
+      fact("vs İSKİ", `${d.iski_mae.toFixed(1)} pts (${d.iski_n} dates)`),
+      fact("Bar", `± ${d.bar.toFixed(1)}`),
+    );
+    card.append(head, chart(d), facts);
+    if (d.note) card.append(html("p", "note", d.note));
+    grid.appendChild(card);
+  }
+  const body = document.getElementById("table");
+  for (const d of DATA.dams) {
+    const tr = document.createElement("tr");
+    const cells = [d.name, STATUS[d.status], d.capacity.toFixed(1), d.heldout_mae.toFixed(1), d.iski_mae.toFixed(1), d.iski_n, "± " + d.bar.toFixed(1), d.unet_mae.toFixed(1)];
+    cells.forEach((c, i) => { const td = html("td", i >= 2 ? "num" : null, c); if (i === 1) td.className = `s-${d.status}`; tr.appendChild(td); });
+    body.appendChild(tr);
+  }
+}
+render();
+</script>

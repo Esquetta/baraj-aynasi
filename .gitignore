@@ -6,3 +6,6 @@ __pycache__/
 
 # Local data: raw imagery, STAC caches and downloads are never committed
 data/
+
+# Local agent and editor settings
+.claude/
