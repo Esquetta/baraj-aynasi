@@ -6,8 +6,11 @@ L2A imagery (2017–2026), and a per-reservoir curve maps surface area to the
 occupancy İBB reported daily until 2024-02-19. After that date the curves turn
 satellite measurements alone into occupancy estimates.
 
-Status: Phase 1 (data pipeline and NDWI baseline). A small U-Net for cloud
-shadow, turbid water and shoreline vegetation comes later.
+Status: Phase 1 (data pipeline and NDWI baseline) is done. Held-out error is
+under 6 occupancy points for Ömerli, Alibey, Sazlıdere, Kazandere, Pabuçdere
+and Istrancalar, but above the project's 10-point stop line for Terkos,
+Büyükçekmece and Darlık, and for the small Elmalı. See [results/README.md](results/README.md) for the
+numbers and why.
 
 ## How it works
 
@@ -19,9 +22,9 @@ shadow, turbid water and shoreline vegetation comes later.
    high-water extent (see [docs/data-sources.md](docs/data-sources.md)).
 4. `scripts/areas.py` computes NDWI = (green − NIR) / (green + NIR) and counts
    water pixels (NDWI > 0, cloud-free per SCL) inside the AOI.
-5. `scripts/fit.py` fits area-to-occupancy curves on scenes up to 2022-06-30,
-   reports error on 2022-07-01 to 2024-02-19, and sizes a 90% error bar from
-   leave-one-year-out residuals.
+5. `scripts/fit.py` fits robust, increasing area-to-occupancy curves on scenes
+   up to 2022-06-30, reports error on 2022-07-01 to 2024-02-19, and sizes a 90%
+   error bar from leave-one-year-out residuals.
 
 ```bash
 uv sync

@@ -39,8 +39,9 @@ local, git-ignored `data/` folder and are not redistributed.
   for the same dates.
 - Terms: the [Legal notice on the use of Copernicus Sentinel Data and Service
   Information](https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice)
-  grants free reproduction, distribution and adaptation. Every figure and table
-  derived from the imagery carries the required wording:
+  grants free reproduction, distribution and adaptation. Every published figure
+  derived from the imagery carries the required wording, and the README files
+  next to the derived tables state it:
   > Contains modified Copernicus Sentinel data [years].
 
 ## Reservoir areas of interest (AOI)
@@ -50,7 +51,8 @@ from the imagery itself, not traced from another map:
 
 1. For each reservoir, the clearest scenes (at least 95% cloud-free over the
    search box) on the dates İBB reported the highest occupancy between 2017 and
-   2024-02-19 were selected, at most one per month and twelve in total.
+   2022-06-30 (the training period) were selected, at most one per month and
+   twelve in total.
 2. Per pixel, the share of those scenes with NDWI > 0 was computed.
 3. The connected water body containing hand-picked seed points (in
    `src/baraj_aynasi/dams.py`) was kept, grown by 200 m and stripped of any other

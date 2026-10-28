@@ -1,6 +1,7 @@
 """Draw each reservoir's AOI polygon from its high-water extent.
 
-1. Pick the clearest scenes on the days İBB reported the highest occupancy (2017 to 2024-02-19).
+1. Pick the clearest scenes on the days İBB reported the highest occupancy, using
+   only the training period (2017 to 2022-06-30) so held-out labels stay unseen.
 2. Water frequency per pixel over those scenes (NDWI > 0, cloud-free pixels only).
 3. Keep the connected water body that contains the hand-picked seed points in dams.py.
 4. Grow it by MARGIN_M and remove other water bodies the margin touches.
@@ -36,9 +37,11 @@ from baraj_aynasi.stac import DAM_TILE
 CHIPS = Path("data/chips")
 OUT = Path("aoi/reservoirs.geojson")
 REVIEW = Path("aoi/review")
+TRAIN_END = pd.Timestamp("2022-06-30")  # same split as scripts/fit.py
 N_SCENES = 12
 MIN_CLEAR = 0.95
 MARGIN_M = 200
+ATTRIBUTION = "Contains modified Copernicus Sentinel data 2017-2022."
 SIMPLIFY_M = 10
 
 
@@ -47,7 +50,7 @@ def high_water_scenes(dam) -> pd.DataFrame:
     idx = idx[(idx.dam == dam.key) & idx.saved & (idx.clear_box >= MIN_CLEAR)].copy()
     idx["date"] = pd.to_datetime(idx.datetime.str[:10])
     gt = ibb.load()
-    gt = gt[gt.ibb_column == dam.ibb_column][["date", "occupancy_pct"]]
+    gt = gt[(gt.ibb_column == dam.ibb_column) & (gt.date <= TRAIN_END)][["date", "occupancy_pct"]]
     idx = idx.merge(gt, on="date").sort_values("occupancy_pct", ascending=False)
     # At most one scene per month, so a single wet spell does not dominate.
     idx["month"] = idx.date.dt.to_period("M")
@@ -121,6 +124,7 @@ def main() -> None:
                 lonlat_grid(axs[0, j], g)
                 print_components(f, g, j)
             fig.suptitle(f"{dam.name}: high-water frequency")
+            fig.text(0.01, 0.01, ATTRIBUTION, fontsize=7)
             fig.savefig(REVIEW / f"{dam.key}_freq.png", dpi=60, bbox_inches="tight")
             plt.close(fig)
             continue
@@ -140,6 +144,7 @@ def main() -> None:
             axs[0, j].plot([c for _, c in seeds], [r for r, _ in seeds], "y*", ms=12)
             lonlat_grid(axs[0, j], g)
         fig.suptitle(f"{dam.name}: AOI (red) on high-water frequency")
+        fig.text(0.01, 0.01, ATTRIBUTION, fontsize=7)
         fig.savefig(REVIEW / f"{dam.key}_aoi.png", dpi=60, bbox_inches="tight")
         plt.close(fig)
         geom = to_wgs84(unary_union(polys))

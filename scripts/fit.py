@@ -1,8 +1,10 @@
 """Fit per-dam area-to-occupancy curves and report held-out error.
 
 Train: scenes up to TRAIN_END. Test: TRAIN_END to 2024-02-19 (end of İBB data).
-Within training, years are held out in turn to choose the polynomial degree and
-to size the 90% error bar. A final curve refit on all labelled scenes gives the
+Scenes whose water area jumps away from their neighbours (within 20 days) are
+dropped first; these are NDWI failures such as late-spring algal or turbid
+water. Within training, years are held out in turn to choose the polynomial
+degree and to size the 90% error bar. A final curve refit on all labelled scenes gives the
 2024-2026 satellite-only estimates.
 
     uv run python scripts/fit.py
@@ -20,7 +22,7 @@ import pandas as pd
 
 from baraj_aynasi import ibb
 from baraj_aynasi.dams import DAMS, LARGEST_FOUR
-from baraj_aynasi.fit import fit_curve, metrics
+from baraj_aynasi.fit import fit_curve, hampel_outliers, metrics, out_of_fold_residuals
 
 AREAS = Path("results/areas.csv")
 RESULTS = Path("results")
@@ -28,11 +30,18 @@ FIGS = RESULTS / "figures"
 MIN_CLEAR = 0.98
 TRAIN_END = pd.Timestamp("2022-06-30")
 KILL_MAE = 10.0
+OUTLIER_WINDOW_DAYS = 20
+OUTLIER_FLOOR = 0.03  # of the dam's 95th-percentile area
 
 
 def labelled(dam) -> pd.DataFrame:
     a = pd.read_csv(AREAS, parse_dates=["date"])
-    a = a[(a.dam == dam.key) & (a.clear_frac >= MIN_CLEAR)]
+    a = a[(a.dam == dam.key) & (a.clear_frac >= MIN_CLEAR)].sort_values("date")
+    if a.empty:
+        return a
+    days = (a.date - a.date.min()).dt.days.to_numpy()
+    floor = OUTLIER_FLOOR * np.quantile(a.water_km2, 0.95)
+    a = a[~hampel_outliers(days, a.water_km2.to_numpy(), OUTLIER_WINDOW_DAYS, floor=floor)]
     gt = ibb.load()
     gt = gt[gt.ibb_column == dam.ibb_column][["date", "occupancy_pct"]]
     return a.merge(gt, on="date", how="left")
@@ -52,9 +61,12 @@ def plot(dam, df, curve, test_curve, path):
     ax1.legend(fontsize=8)
     est = curve.predict(df.water_km2.to_numpy())
     ax2.plot(df.date, df.occupancy_pct, ".", ms=3, color="C0", label="İBB reported")
-    ax2.errorbar(df.date, est, yerr=curve.halfwidth, fmt=".", ms=3, color="C3", elinewidth=0.4, alpha=0.6, label="satellite estimate ±90% bar")
+    ax2.errorbar(
+        df.date, est, yerr=curve.halfwidth, fmt=".", ms=3, color="C3", elinewidth=0.4, alpha=0.6,
+        label="satellite estimate ±90% bar (curve fitted on all data to 2024-02-19)",
+    )
     ax2.axvline(ibb.END, color="k", lw=0.8, ls="--")
-    ax2.set(ylabel="occupancy (%)", ylim=(0, 105), title="Sentinel-2 L2A estimates vs İBB")
+    ax2.set(ylabel="occupancy (%)", ylim=(0, 105), title="Estimates vs İBB (in-sample before the dashed line)")
     ax2.legend(fontsize=8)
     fig.text(0.01, 0.01, "Contains modified Copernicus Sentinel data 2017-2026. Occupancy: İBB Open Data.", fontsize=7)
     fig.tight_layout()
@@ -77,6 +89,10 @@ def main() -> None:
         lo, hi = test_curve.interval(test.water_km2.to_numpy())
         m = metrics(test.occupancy_pct.to_numpy(), test_curve.predict(test.water_km2.to_numpy()), lo, hi)
         final, final_deg = fit_curve(lab.water_km2.to_numpy(), lab.occupancy_pct.to_numpy(), lab.date.dt.year.to_numpy())
+        # Secondary metric: each labelled year held out in turn (mostly interpolation).
+        loyo = out_of_fold_residuals(
+            lab.water_km2.to_numpy(), lab.occupancy_pct.to_numpy(), lab.date.dt.year.to_numpy(), final_deg
+        )
         rows.append(
             {
                 "dam": dam.key,
@@ -86,14 +102,22 @@ def main() -> None:
                 "degree": deg,
                 "test_mae": m["mae"],
                 "test_rmse": m["rmse"],
-                "test_bias": m["bias"],
+                "test_bias": m["bias"],  # predicted - observed
+                "loyo_mae_2017_2024": float(np.nanmean(np.abs(loyo))),
                 "error_bar_90": test_curve.halfwidth,
                 "test_coverage_90": m["coverage"],
                 "occ_range_test": f"{test.occupancy_pct.min():.0f}-{test.occupancy_pct.max():.0f}",
                 "area_range_km2": f"{lab.water_km2.min():.2f}-{lab.water_km2.max():.2f}",
             }
         )
-        curves[dam.key] = {"degree": final_deg, "coef": final.coef.tolist(), "error_bar_90": final.halfwidth}
+        passed = m["mae"] <= KILL_MAE
+        curves[dam.key] = {
+            "degree": final_deg,
+            "coef": final.coef.tolist(),
+            "fit_range_km2": [final.lo, final.hi],
+            "error_bar_90": final.halfwidth,
+            "heldout_passed": passed,
+        }
         new = df[df.date > ibb.END]
         lo, hi = final.interval(new.water_km2.to_numpy())
         estimates.append(
@@ -106,6 +130,7 @@ def main() -> None:
                     "occupancy_est": final.predict(new.water_km2.to_numpy()).round(1),
                     "lower_90": lo.round(1),
                     "upper_90": hi.round(1),
+                    "heldout_passed": passed,
                 }
             )
         )
@@ -114,10 +139,10 @@ def main() -> None:
     table.round(2).to_csv(RESULTS / "heldout_metrics.csv", index=False)
     (RESULTS / "curves.json").write_text(json.dumps(curves, indent=1), encoding="utf-8")
     pd.concat(estimates).to_csv(RESULTS / "estimates_2024_2026.csv", index=False)
-    print(table.round(2).to_string(index=False))
+    print(table.drop(columns="name").round(2).to_string(index=False))
     big = table[table.dam.isin(LARGEST_FOUR)]
     over = big[big.test_mae > KILL_MAE]
-    print(f"\nKill rule (held-out MAE > {KILL_MAE} points on the four largest): " + ("TRIGGERED: " + ", ".join(over.name) if len(over) else "not triggered"))
+    print(f"\nKill rule (held-out MAE > {KILL_MAE} points on the four largest): " + ("TRIGGERED: " + ", ".join(over.dam) if len(over) else "not triggered"))
 
 
 if __name__ == "__main__":
