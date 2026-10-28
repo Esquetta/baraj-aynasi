@@ -94,5 +94,6 @@ and window each was cut from; `labels/review.csv` records which candidate mask
 was picked for each (or that it was rejected). The patches themselves are
 derived from the Sentinel-2 imagery above and stay in `data/unet/`. The picks
 were made by AI agents looking at true- and false-colour images in two
-independent passes, with a third pass on the 24 disagreements. No person has
-spot-checked them yet; see `results/unet/README.md`.
+independent passes, with a third pass on the 24 disagreements. The owner
+spot-checked 56 of them by eye (`labels/owner_check.csv`); see
+`results/unet/README.md`.

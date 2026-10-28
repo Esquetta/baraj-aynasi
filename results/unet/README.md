@@ -23,8 +23,13 @@ NDWI; the U-Net is an alternative under test.
   third pass decided the 24 disagreements. Because the first two passes misread
   some patch ids, the third pass also looked at 24 rows where the passes turned
   out to agree once ids were matched; there the agreed pick was kept. **The
-  reviewers were AI agents reading the images, not people, and no person has
-  spot-checked them yet.** Picks: NDWI 268, near-infrared split 18, union 11,
+  reviewers were AI agents reading the images, not people.** The owner then
+  did a quick visual spot-check (about five minutes) of 56 labels: every
+  non-NDWI or disputed label used for training or testing, plus 15 random NDWI
+  picks. Asked only whether the picked mask covers the water, the owner judged
+  49 correct, 6 unsure and 1 wrong (a narrow Darlık arm the mask misses, which
+  should be rejected at the next retrain); see
+  [`../../labels/owner_check.csv`](../../labels/owner_check.csv). Picks: NDWI 268, near-infrared split 18, union 11,
   rejected 3 ([`../../labels/review.csv`](../../labels/review.csv)). The
   near-infrared candidate was added after the first sheet showed a late-spring
   Ömerli patch where every index mask missed most of the water.

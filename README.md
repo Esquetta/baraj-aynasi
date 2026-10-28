@@ -17,7 +17,7 @@ dates each). Kazandere is provisional after 17- and 23-point misses in summer
 2026; Terkos is out, and Elmalı is too small.
 
 A small U-Net, trained on 237 patches labelled by AI agents (60 more held out
-for testing; not yet spot-checked by a person), is available as an alternative
+for testing; 56 of them spot-checked by the owner), is available as an alternative
 water mask. It handles the late-spring scenes where NDWI misses algal water
 without a hand-made filter: Darlık's held-out error drops from 11.7 to 5.5 and
 its error bar from ±24 to ±12, while removing those scenes from the NDWI series
