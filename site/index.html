@@ -90,6 +90,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .panel img { width: 100%; height: auto; max-width: 100%; aspect-ratio: 5 / 8; object-fit: cover; border-radius: 6px; display: block; background: var(--track); }
 .panel span { font: 500 0.78rem/1.4 var(--mono); color: var(--ink-2); font-variant-numeric: tabular-nums; }
 figcaption { font-size: 0.88rem; color: var(--muted); max-width: 70ch; }
+.src { font-size: 0.76rem; white-space: nowrap; }
 
 /* Estimate tiles */
 .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
@@ -187,7 +188,7 @@ footer { color: var(--muted); font-size: 0.82rem; }
         <div class="panel"><img src="img/crop_buyukcekmece_high.jpg" alt="Büyükçekmece reservoir in true colour: full in April 2022 and at 4 percent in October 2023, with the detected water outlined" width="627" height="1004"><span>24 Apr 2022 · 98% full · 23.9 km²</span></div>
         <div class="panel"><img src="img/crop_buyukcekmece_low.jpg" alt="" width="627" height="1004"><span>14 Oct 2023 · 4% full · 12.2 km²</span></div>
       </div>
-      <figcaption>Büyükçekmece, full and nearly empty. The cyan line is the water the satellite measures: at 4% about half of the full surface is still wet, so area alone misleads here.</figcaption>
+      <figcaption>Büyükçekmece, full and nearly empty. The cyan line is the water the satellite measures: at 4% about half of the full surface is still wet, so area alone misleads here. <span class="src">Contains modified Copernicus Sentinel data 2022–2023.</span></figcaption>
     </figure>
   </section>
 
@@ -240,7 +241,7 @@ footer { color: var(--muted); font-size: 0.82rem; }
           <div class="panel"><img src="img/crop_darlik_high.jpg" alt="Darlık reservoir full in March 2022 and at 29 percent in January 2023" width="627" height="1004" loading="lazy"><span>25 Mar 2022 · 100% full · 5.4 km²</span></div>
           <div class="panel"><img src="img/crop_darlik_low.jpg" alt="" width="627" height="1004" loading="lazy"><span>9 Jan 2023 · 29% full · 2.9 km²</span></div>
         </div>
-        <figcaption>Darlık at 100% and at 29% look much alike from above: a steep valley, where the surface only shrinks from 5.4 to 2.9 km².</figcaption>
+        <figcaption>Darlık at 100% and at 29% look much alike from above: a steep valley, where the surface only shrinks from 5.4 to 2.9 km². <span class="src">Contains modified Copernicus Sentinel data 2022–2023.</span></figcaption>
       </figure>
       <div class="col">
         <h3>A learned water mask</h3>

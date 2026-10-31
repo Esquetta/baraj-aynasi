@@ -85,6 +85,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .panel img { width: 100%; height: auto; max-width: 100%; aspect-ratio: 5 / 8; object-fit: cover; border-radius: 6px; display: block; background: var(--track); }
 .panel span { font: 500 0.78rem/1.4 var(--mono); color: var(--ink-2); font-variant-numeric: tabular-nums; }
 figcaption { font-size: 0.88rem; color: var(--muted); max-width: 70ch; }
+.src { font-size: 0.76rem; white-space: nowrap; }
 
 /* Estimate tiles */
 .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
@@ -180,7 +181,7 @@ footer { color: var(--muted); font-size: 0.82rem; }
         <div class="panel"><img src="{{img}}crop_buyukcekmece_high.jpg" alt="{{hero_alt}}" width="627" height="1004"><span>{{bc_high}}</span></div>
         <div class="panel"><img src="{{img}}crop_buyukcekmece_low.jpg" alt="" width="627" height="1004"><span>{{bc_low}}</span></div>
       </div>
-      <figcaption>{{hero_caption}}</figcaption>
+      <figcaption>{{hero_caption}} <span class="src">Contains modified Copernicus Sentinel data 2022–2023.</span></figcaption>
     </figure>
   </section>
 
@@ -233,7 +234,7 @@ footer { color: var(--muted); font-size: 0.82rem; }
           <div class="panel"><img src="{{img}}crop_darlik_high.jpg" alt="{{darlik_alt}}" width="627" height="1004" loading="lazy"><span>{{dk_high}}</span></div>
           <div class="panel"><img src="{{img}}crop_darlik_low.jpg" alt="" width="627" height="1004" loading="lazy"><span>{{dk_low}}</span></div>
         </div>
-        <figcaption>{{darlik_caption}}</figcaption>
+        <figcaption>{{darlik_caption}} <span class="src">Contains modified Copernicus Sentinel data 2022–2023.</span></figcaption>
       </figure>
       <div class="col">
         <h3>{{unet_h}}</h3>
