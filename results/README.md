@@ -41,7 +41,7 @@ extrapolation forward in time.
 
 ## Kill rule
 
-The project card set one stop condition: "If the held-out error for the four
+The project set one stop condition before any results: "If the held-out error for the four
 largest reservoirs exceeds 10 occupancy points, publish the gap and stop."
 **It is met for Terkos, Büyükçekmece and Darlık.** Only Ömerli passes. This
 write-up is the published gap. Going on with a narrower scope (below) is a
@@ -68,7 +68,7 @@ separate, later decision by the project owner, not something the rule allows.
    Ömerli and Darlık sometimes has NDWI ≤ 0 (likely algal or turbid water), giving
    near-zero areas at 90% occupancy. The robust fit ignores these in training, but
    an estimate made on such a date is wrong. A better water mask (MNDWI with the
-   SWIR band, or the planned U-Net) targets this; it does not fix points 1–3.
+   SWIR band, or the U-Net mask in [unet/README.md](unet/README.md)) targets this; it does not fix points 1–3.
 
 Elmalı (9.6 million m³, under 1 km² of water) is too small for this method.
 

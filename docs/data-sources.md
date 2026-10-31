@@ -78,12 +78,20 @@ Used only to score the frozen 2024-2026 estimates (`scripts/iski_check.py`).
   2026-09-30 plus the current day, the last 14 days, and 28 October of each
   year since 2016. The page's API token was not
   used outside the page.
+- From 2026-10-31, `scripts/iski_harvest.py` repeats that page visit once a
+  day in a headless browser (Playwright, installed with `uv sync --extra
+  harvest`) and saves `data/iski/live_<date>.json`. Because the page shows the
+  same calendar day for the past ten years, a year of daily visits fills in
+  every day of 2024–2026. Run it once a day after about 09:30 Istanbul time,
+  when İSKİ updates the page (for example from a scheduled task or cron).
 - Wayback Machine copies of the page's daily summary (`gunlukOzet`) cover 20
   dates from 2024-01-21 to 2025-12-10.
 - On the 140 reservoir-days that İBB also covers, İSKİ and İBB agree to 0.01
   points.
-- The raw files stay in `data/iski/`. Only the figures matched to a scene are
-  published, in `results/iski_check.csv`, credited to İSKİ.
+- No open licence for İSKİ's figures was found. The raw files stay in
+  `data/iski/`; only the figures matched to a satellite scene (52 in
+  `results/iski_check.csv`, and the same pairs for the U-Net and MNDWI runs)
+  are reproduced, credited to İSKİ, for comparison.
 - Not used: news articles. They repeat İSKİ's figures but one checked article
   printed each reservoir's share of total storage as its occupancy.
 

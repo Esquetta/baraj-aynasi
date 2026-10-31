@@ -1,5 +1,8 @@
 # Baraj Aynası
 
+Project page: [esquetta.github.io/baraj-aynasi](https://esquetta.github.io/baraj-aynasi/)
+([Türkçe](https://esquetta.github.io/baraj-aynasi/tr/))
+
 Satellite estimates, with error bars, of how full Istanbul's ten supply
 reservoirs are. The water surface of each reservoir is measured in Sentinel-2
 L2A imagery (2017–2026), and a per-reservoir curve maps surface area to the
@@ -16,14 +19,15 @@ figures by 1.6 to 4.8 points on average in an untouched test (4 to 6 comparison
 dates each). Kazandere is provisional after 17- and 23-point misses in summer
 2026; Terkos is out, and Elmalı is too small.
 
-A small U-Net, trained on 237 patches labelled by AI agents (60 more held out
-for testing; 56 of the labels spot-checked by the owner), is available as an alternative
-water mask. It handles the late-spring scenes where NDWI misses algal water
-without a hand-made filter: Darlık's held-out error drops from 11.7 to 5.5 and
-its error bar from ±24 to ±12, while removing those scenes from the NDWI series
-gives about the same error. It is slightly worse on a few reservoirs, and
-Terkos and Büyükçekmece still miss the stop line. The served estimates stay on
-NDWI. See [results/unet/README.md](results/unet/README.md).
+A small U-Net, trained on 236 patches labelled by AI agents (60 more held out
+for testing; 56 of the labels spot-checked by the owner), was tried as an
+alternative water mask. It handles the late-spring scenes where NDWI misses
+algal water without a hand-made filter: Darlık's held-out error drops from 11.7
+to 5.1 and its error bar from ±24 to ±14, while removing those scenes from the
+NDWI series gives about the same error. Its numbers move by a few points between
+training runs, it is slightly worse on a few reservoirs, and Terkos and
+Büyükçekmece still miss the stop line. The served estimates stay on NDWI. See
+[results/unet/README.md](results/unet/README.md).
 
 ## How it works
 
@@ -40,7 +44,7 @@ NDWI. See [results/unet/README.md](results/unet/README.md).
    error bar from leave-one-year-out residuals.
 
 ```bash
-uv sync
+uv sync                  # add --extra unet for the U-Net (PyTorch, CUDA wheels for Windows and Linux)
 uv run pytest
 uv run python scripts/search.py
 uv run python scripts/download.py
@@ -48,6 +52,7 @@ uv run python scripts/draw_aoi.py
 uv run python scripts/areas.py
 uv run python scripts/fit.py
 uv run python scripts/iski_check.py   # needs data/iski/, see docs/data-sources.md
+uv run --extra harvest python scripts/iski_harvest.py   # once a day, saves İSKİ's page windows
 ```
 
 The U-Net steps are listed in [results/unet/README.md](results/unet/README.md). `uv run python scripts/build_site.py` builds the static project page in

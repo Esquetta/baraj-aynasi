@@ -1,8 +1,9 @@
 import numpy as np
 import pytest
-import torch
 
-from baraj_aynasi.unet import UNet, iou_f1, masked_loss, predict
+torch = pytest.importorskip("torch")  # installed with the "unet" extra
+
+from baraj_aynasi.unet import UNet, iou_f1, masked_loss, predict  # noqa: E402
 
 
 def test_unet_output_shape():

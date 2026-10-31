@@ -1,4 +1,5 @@
-"""Build the static project page in site/ from the committed results.
+"""Build the static project page in site/ (English) and site/tr/ (Turkish)
+from the committed results. Page copy lives in scripts/site_text.py.
 
     uv run python scripts/build_site.py
 """
@@ -17,6 +18,7 @@ import fit as fitscript  # noqa: E402  (reuses the exact scene filter of the occ
 from baraj_aynasi import ibb
 from baraj_aynasi.dams import DAMS
 from baraj_aynasi.fit import Curve
+from site_text import EN, TR  # noqa: E402
 
 SITE = Path("site")
 TEMPLATE = Path("scripts/site_template.html")
@@ -24,15 +26,6 @@ STATUS = {
     "omerli": "offered", "alibey": "offered", "sazlidere": "offered", "pabucdere": "offered", "istrancalar": "offered",
     "kazandere": "provisional", "darlik": "failed", "buyukcekmece": "failed", "terkos": "out", "elmali": "out",
 }
-NOTES = {
-    "kazandere": "Passed the held-out test, but overestimated two summer 2026 scenes by 17 and 23 points.",
-    "darlik": "Missed the stop line at the 2023 record low (11.7 points); a U-Net water mask brings it to 5.5.",
-    "buyukcekmece": "A shallow former lagoon: at 4% it still holds about half its full-water surface.",
-    "terkos": "Surface area barely moves between 40% and 95%, likely because of reed beds; misses by about 20 points.",
-    "elmali": "Under 1 km² of water: too small for 10 m pixels.",
-}
-
-
 def main() -> None:
     curves = json.loads(Path("results/curves.json").read_text(encoding="utf-8"))
     held = pd.read_csv("results/heldout_metrics.csv").set_index("dam")
@@ -59,7 +52,6 @@ def main() -> None:
                 "name": dam.name,
                 "capacity": dam.capacity_mcm,
                 "status": STATUS[dam.key],
-                "note": NOTES.get(dam.key, ""),
                 "bar": round(curve.halfwidth, 1),
                 "heldout_mae": round(float(held.loc[dam.key, "test_mae"]), 1),
                 "iski_mae": round(float(iski_m.loc[dam.key, "mae"]), 1),
@@ -75,17 +67,55 @@ def main() -> None:
     (SITE / "img").mkdir(exist_ok=True)
     for key in ("buyukcekmece", "darlik"):
         shutil.copy(f"results/figures/crops_{key}.png", SITE / "img" / f"crops_{key}.png")
-    html = TEMPLATE.read_text(encoding="utf-8").replace("__DATA__", json.dumps({"dams": dams, "ibb_end": str(ibb.END.date())}))
-    page = (
-        '<!doctype html><html lang="en"><head><meta charset="utf-8">'
-        '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>'
-        + html
-        + "</body></html>"
+    table = pd.read_csv("labels/patches.csv").merge(pd.read_csv("labels/review.csv"), on="pid")
+    numbers = {
+        "n_train": int(((table.split == "train") & (table.choice != "reject")).sum()),
+        "darlik_ndwi": float(unet.loc["darlik", "test_mae_ndwi"]),
+        "darlik_unet": float(unet.loc["darlik", "test_mae_unet"]),
+    }
+    template = TEMPLATE.read_text(encoding="utf-8")
+    for text, folder, img in ((EN, SITE, "img/"), (TR, SITE / "tr", "../img/")):
+        folder.mkdir(exist_ok=True)
+        html = render(template, text, img, numbers, dams)
+        head, body = html.split("</style>", 1)
+        page = (
+            f'<!doctype html>\n<html lang="{text["lang"]}">\n<head>\n<meta charset="utf-8">\n'
+            '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
+            + head
+            + "</style>\n</head>\n<body>"
+            + body
+            + "</body>\n</html>\n"
+        )
+        (folder / "index.html").write_text(page, encoding="utf-8")
+        print(f"wrote {folder / 'index.html'} ({(folder / 'index.html').stat().st_size // 1024} KB)")
+
+
+def fmt(value: float, text: dict) -> str:
+    """One decimal, with the language's decimal mark."""
+    s = f"{value:.1f}"
+    return s.replace(".", ",") if text["lang"] == "tr" else s
+
+
+def render(template: str, text: dict, img: str, numbers: dict, dams: list[dict]) -> str:
+    nums = {k: (fmt(v, text) if isinstance(v, float) else str(v)) for k, v in numbers.items()}
+    fill = lambda s: s.format(**nums)  # noqa: E731
+    page_dams = [{**d, "note": fill(text["notes"].get(d["key"], ""))} for d in dams]
+    keys = {k: v for k, v in text.items() if isinstance(v, str)}
+    keys.update(
+        img=img,
+        other_lang="tr" if text["lang"] == "en" else "en",
+        unet_p=fill(text["unet_p"]),
+        steps_html="".join(f"<li>{s}</li>" for s in text["steps"]),
+        credits_html="\n    ".join(f"<p>{c}</p>" for c in text["credits"]),
+        th_html="".join(('<th class="num">' if i >= 2 else "<th>") + h + "</th>" for i, h in enumerate(text["th"])),
     )
-    (SITE / "index.html").write_text(page, encoding="utf-8")
-    # The same page without the document shell, for a private claude.ai preview.
-    Path("data/site_preview.html").write_text(html, encoding="utf-8")
-    print(f"wrote {SITE / 'index.html'} ({(SITE / 'index.html').stat().st_size // 1024} KB)")
+    js = {k: text[k] for k in ("status", "capacity", "f_heldout", "f_iski", "f_dates", "f_bar", "pts", "tip_sat", "tip_rep", "aria", "latest_note", "scene", "locale")}
+    out = template.replace("__DATA__", json.dumps({"dams": page_dams, "ibb_end": str(ibb.END.date()), "t": js}, ensure_ascii=False))
+    for k, v in keys.items():
+        out = out.replace("{{" + k + "}}", v)
+    if "{{" in out:
+        raise ValueError("unfilled placeholder: " + out[out.index("{{") : out.index("{{") + 40])
+    return out
 
 
 if __name__ == "__main__":

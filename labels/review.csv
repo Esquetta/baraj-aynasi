@@ -48,7 +48,7 @@ pid,choice,pass_a,pass_b,tie_break,note
 046_darlik_20180415,ndwi,ndwi,ndwi,,
 047_darlik_20220325,ndwi,ndwi,ndwi,,
 048_darlik_20190803,ndwi,ndwi,ndwi,,
-049_darlik_20190729,union,dark_nir,union,union,"thin dark arm (~3-4% of patch) missed by ndwi, only partly by union; dark_nir gets the arm but adds ~1-2% false patches on land; Thin channel (~3% of patch); ndwi empty, union catches top part only, dark_nir adds land blobs; ndwi is empty and misses the thin arm (~2-3%); union gets the top part, so it misses ~2%; dark_nir adds ~6% land blobs"
+049_darlik_20190729,reject,dark_nir,union,union,"thin dark arm (~3-4% of patch) missed by ndwi, only partly by union; dark_nir gets the arm but adds ~1-2% false patches on land; Thin channel (~3% of patch); ndwi empty, union catches top part only, dark_nir adds land blobs; ndwi is empty and misses the thin arm (~2-3%); union gets the top part, so it misses ~2%; dark_nir adds ~6% land blobs; owner spot-check: picked mask misses the arm, rejected"
 050_darlik_20210817,ndwi,ndwi,ndwi,ndwi,same row as 050_darlik_20210817
 051_darlik_20170902,ndwi,ndwi,ndwi,ndwi,
 052_darlik_20190301,ndwi,ndwi,ndwi,,

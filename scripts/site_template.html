@@ -1,6 +1,6 @@
-<title>Baraj Aynası</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Satellite estimates, with error bars, of how full Istanbul's ten supply reservoirs are, from Sentinel-2 imagery 2017–2026.">
+<title>{{title}}</title>
+<meta name="description" content="{{meta_desc}}">
+<link rel="alternate" hreflang="{{other_lang}}" href="{{path_other}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -49,6 +49,8 @@ h1 { font: 800 clamp(2.4rem, 7vw, 4.2rem)/0.95 var(--display); letter-spacing: -
 h2 { font: 700 1.55rem/1.2 var(--display); margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
 h3 { font: 700 1.1rem/1.25 var(--display); margin: 0; }
 p { margin: 0; }
+.topline { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.lang { font: 500 0.85rem var(--mono); }
 .eyebrow { font: 500 0.78rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .lede { font-size: 1.2rem; line-height: 1.5; color: var(--ink-2); max-width: 34ch; text-wrap: balance; }
 .muted { color: var(--muted); }
@@ -105,92 +107,86 @@ footer { color: var(--muted); font-size: 0.82rem; }
 <div class="wrap">
   <section class="hero">
     <div class="col">
-      <span class="eyebrow">Istanbul · Sentinel-2 · 2017–2026</span>
+      <div class="topline"><span class="eyebrow">İstanbul · Sentinel-2 · 2017–2026</span><a class="lang" href="{{path_other}}" hreflang="{{other_lang}}" lang="{{other_lang}}">{{other}}</a></div>
       <h1>Baraj Aynası</h1>
-      <p class="lede">How full are Istanbul's reservoirs, seen from orbit? Satellite estimates with error bars.</p>
-      <p class="disclaim">Estimates from water surface area, not official figures. Istanbul's official occupancy is published by İSKİ.</p>
+      <p class="lede">{{lede}}</p>
+      <p class="disclaim">{{disclaim}}</p>
     </div>
     <figure>
-      <img src="img/crops_buyukcekmece.png" alt="Büyükçekmece reservoir in true colour: full in April 2022 and at 4 percent in October 2023, with the detected water outlined">
-      <figcaption>Büyükçekmece at 98% (April 2022) and 4% (October 2023). The cyan outline is the water the satellite measures; at 4% half of the full surface is still wet, which is why area alone misleads here.</figcaption>
+      <img src="{{img}}crops_buyukcekmece.png" alt="{{hero_alt}}">
+      <figcaption>{{hero_caption}}</figcaption>
     </figure>
   </section>
 
   <section class="col" style="max-width:none">
-    <h2>Latest satellite estimates</h2>
+    <h2>{{latest_h}}</h2>
     <p class="muted" id="latestNote"></p>
     <div class="tiles" id="tiles"></div>
   </section>
 
   <section style="display:grid;gap:16px">
     <div class="col">
-      <h2>Ten reservoirs, 2017–2026</h2>
-      <p class="muted">Each dot is one cloud-free Sentinel-2 scene turned into an occupancy estimate. Until 19 February 2024 the curve was fitted against İBB's daily figures; after that the dots are satellite-only and are checked against the İSKİ figures we could collect. Hover a chart for values and the 90% error bar. Dots far below the line, mostly in May and June, are scenes where algae hide the water from NDWI; they are kept on the charts.</p>
+      <h2>{{grid_h}}</h2>
+      <p class="muted">{{grid_p}}</p>
       <div class="legend">
-        <span><i class="sw-dot"></i>Satellite estimate</span>
-        <span><i class="sw-line"></i>Reported occupancy (İBB, weekly mean)</span>
-        <span><i class="sw-ring"></i>Reported occupancy (İSKİ, 2024–2026)</span>
+        <span><i class="sw-dot"></i>{{legend_sat}}</span>
+        <span><i class="sw-line"></i>{{legend_ibb}}</span>
+        <span><i class="sw-ring"></i>{{legend_iski}}</span>
       </div>
     </div>
     <div class="grid" id="grid"></div>
   </section>
 
   <section class="col">
-    <h2>How it works</h2>
-    <ol class="steps">
-      <li>Every Sentinel-2 L2A scene of the three tiles over Istanbul's reservoirs from 2017 on is clipped to each reservoir, and clouds are masked with the scene classification layer.</li>
-      <li>Water is mapped with NDWI, a ratio of the green and near-infrared bands: water reflects green light and absorbs near infrared. Water area is counted inside an outline drawn from each reservoir's high-water extent.</li>
-      <li>For each reservoir, a curve from water area to occupancy is fitted on scenes up to June 2022 and tested on July 2022 to February 2024, the end of İBB's open daily data. The fit ignores scenes far off the curve and must rise with area.</li>
-      <li>The 90% error bar comes from how far the curve misses on years it did not see. After February 2024, the frozen curves were scored once against İSKİ's reported figures.</li>
-    </ol>
+    <h2>{{how_h}}</h2>
+    <ol class="steps">{{steps_html}}</ol>
   </section>
 
   <section style="display:grid;gap:16px">
     <div class="col">
-      <h2>Where it falls short</h2>
-      <p>The project set itself one stop rule: if the error on the four largest reservoirs exceeded 10 occupancy points, publish the gap and stop. It was met for Terkos, Büyükçekmece and Darlık, so estimates are offered only for the reservoirs that passed.</p>
-      <p>Two kinds of trouble cause it. Shape: in a shallow lagoon like Büyükçekmece, area keeps shrinking while little water is left, and in a steep valley like Darlık area hardly changes at all. And late-spring scenes where algae turn the water's colour, so NDWI misses it.</p>
+      <h2>{{falls_h}}</h2>
+      <p>{{falls_p1}}</p>
+      <p>{{falls_p2}}</p>
     </div>
     <div class="two">
-      <figure><img src="img/crops_darlik.png" alt="Darlık reservoir full in March 2022 and at 29 percent in January 2023"><figcaption>Darlık: 100% and 29% look much alike from above. The surface only shrinks from 5.4 to 2.9 km².</figcaption></figure>
+      <figure><img src="{{img}}crops_darlik.png" alt="{{darlik_alt}}"><figcaption>{{darlik_caption}}</figcaption></figure>
       <div class="col" style="align-content:start">
-        <h3>A learned water mask</h3>
-        <p>A small U-Net, trained on 237 reviewed image patches, replaces the NDWI threshold as an alternative. It keeps the water in algal scenes that NDWI drops, which halves Darlık's error (11.7 to 5.5 points). It does not fix Terkos or Büyükçekmece, whose problem is shape, and the estimates shown here still use NDWI.</p>
+        <h3>{{unet_h}}</h3>
+        <p>{{unet_p}}</p>
       </div>
     </div>
     <div class="tablewrap">
       <table>
-        <thead><tr><th>Reservoir</th><th>Status</th><th class="num">Capacity, million m³</th><th class="num">Held-out error</th><th class="num">vs İSKİ 2024–26</th><th class="num">İSKİ dates</th><th class="num">90% bar</th><th class="num">With U-Net</th></tr></thead>
+        <thead><tr>{{th_html}}</tr></thead>
         <tbody id="table"></tbody>
       </table>
     </div>
-    <p class="note">Errors are mean absolute errors in occupancy points. Held-out: July 2022 to February 2024, against İBB. İSKİ dates are few per reservoir, so that column is rough.</p>
+    <p class="note">{{table_note}}</p>
   </section>
 
   <section class="credits">
-    <h2>Data and credits</h2>
-    <p><b>Reservoir occupancy to 19 February 2024:</b> <a href="https://data.ibb.gov.tr/dataset/istanbul-barajlari-gunluk-doluluk-oranlari">İstanbul Barajları Günlük Doluluk Oranları</a>, İBB Açık Veri Portalı, under the <a href="https://data.ibb.gov.tr/license">İBB Open Data License</a>. Atıf 4.0 Uluslararası (CC BY 4.0) kapsamında lisanslanan kamu sektörü bilgilerini içerir.</p>
-    <p><b>Imagery:</b> Contains modified Copernicus Sentinel data 2017–2026, accessed through the Microsoft Planetary Computer.</p>
-    <p><b>Occupancy after February 2024:</b> İSKİ, <a href="https://iski.istanbul/baraj-doluluk/">iski.istanbul/baraj-doluluk</a>, collected from the page and from Wayback Machine copies.</p>
-    <p>Code and full results: <span class="mono">github.com/Esquetta/baraj-aynasi</span> (MIT licence). Built by Furkan Tasci.</p>
+    <h2>{{credits_h}}</h2>
+    {{credits_html}}
   </section>
 
-  <footer>Satellite estimates with error bars. Not affiliated with İBB or İSKİ.</footer>
+  <footer>{{footer}}</footer>
 </div>
 
 <script>
 const DATA = __DATA__;
-const STATUS = { offered: "Estimates offered", provisional: "Provisional", failed: "Failed held-out test", out: "Not estimated" };
+const T = DATA.t;
+const STATUS = T.status;
 const X0 = Date.UTC(2017, 0, 1), X1 = Date.UTC(2027, 0, 1);
 const W = 560, H = 190, M = { l: 30, r: 8, t: 10, b: 22 };
 const t = (s) => Date.parse(s + "T00:00:00Z");
-const fmtDate = (s) => new Date(t(s)).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+const fmtDate = (s) => new Date(t(s)).toLocaleDateString(T.locale, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 const el = (tag, attrs = {}, parent) => {
   const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
   for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
   if (parent) parent.appendChild(n);
   return n;
 };
+const num = (v) => v.toLocaleString(T.locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const html = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
 const sx = (ms) => M.l + (ms - X0) / (X1 - X0) * (W - M.l - M.r);
 const sy = (v) => M.t + (100 - v) / 100 * (H - M.t - M.b);
@@ -204,7 +200,7 @@ function nearest(arr, ms) {
 
 function chart(d) {
   const box = html("div", "chart");
-  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": `${d.name}: satellite estimates and reported occupancy, 2017 to 2026` }, box);
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": T.aria.replace("{name}", d.name) }, box);
   for (const v of [0, 50, 100]) {
     el("line", { x1: M.l, x2: W - M.r, y1: sy(v), y2: sy(v), stroke: "var(--grid)", "stroke-width": 1 }, svg);
     el("text", { x: M.l - 6, y: sy(v) + 3, "text-anchor": "end" }, svg).textContent = v + "%";
@@ -235,8 +231,8 @@ function chart(d) {
     bar.setAttribute("y1", sy(Math.min(100, s[1] + d.bar))); bar.setAttribute("y2", sy(Math.max(0, s[1] - d.bar)));
     dot.setAttribute("cx", x); dot.setAttribute("cy", sy(s[1]));
     tip.textContent = "";
-    tip.append(html("div", null, fmtDate(s[0])), html("div", null, `Satellite ${s[1].toFixed(0)}% ± ${d.bar.toFixed(0)}`));
-    if (rep && Math.abs(t(rep[0]) - t(s[0])) <= 8 * 864e5) tip.append(html("div", null, `Reported ${rep[1].toFixed(0)}% (${fmtDate(rep[0])})`));
+    tip.append(html("div", null, fmtDate(s[0])), html("div", null, `${T.tip_sat} ${s[1].toFixed(0)}% ± ${d.bar.toFixed(0)}`));
+    if (rep && Math.abs(t(rep[0]) - t(s[0])) <= 8 * 864e5) tip.append(html("div", null, `${T.tip_rep} ${rep[1].toFixed(0)}% (${fmtDate(rep[0])})`));
     tip.hidden = false;
     const left = x / W * r.width;
     tip.style.left = Math.min(Math.max(0, left + 10), r.width - tip.offsetWidth) + "px";
@@ -251,14 +247,14 @@ function chart(d) {
 function render() {
   const shown = DATA.dams.filter((d) => d.status === "offered");
   const lastDate = shown.map((d) => d.latest.date).sort().at(-1);
-  document.getElementById("latestNote").textContent = `From the most recent cloud-free scene of each reservoir, up to ${fmtDate(lastDate)}. The ± figure is the 90% error bar.`;
+  document.getElementById("latestNote").textContent = T.latest_note.replace("{date}", fmtDate(lastDate));
   const tiles = document.getElementById("tiles");
   for (const d of shown) {
     const tl = html("div", "tile");
     tl.append(html("span", `pill s-${d.status}`, d.name));
     const big = html("div", "big", `${Math.round(d.latest.pct)}%`);
     big.append(html("small", null, `± ${Math.round(d.bar)}`));
-    tl.append(big, html("span", "when", `${fmtDate(d.latest.date)} scene`));
+    tl.append(big, html("span", "when", `${fmtDate(d.latest.date)} ${T.scene}`));
     tiles.appendChild(tl);
   }
   const grid = document.getElementById("grid");
@@ -266,14 +262,14 @@ function render() {
     const card = html("article", "dam");
     const head = html("header");
     const left = html("div");
-    left.append(html("h3", null, d.name), html("span", "cap", `${d.capacity.toFixed(1)} million m³`));
+    left.append(html("h3", null, d.name), html("span", "cap", `${num(d.capacity)} ${T.capacity}`));
     head.append(left, html("span", `pill s-${d.status}`, STATUS[d.status]));
     const facts = html("div", "facts");
     const fact = (label, val) => { const s = html("span", null, label + " "); s.append(html("b", null, val)); return s; };
     facts.append(
-      fact("Held-out error", `${d.heldout_mae.toFixed(1)} pts`),
-      fact("vs İSKİ", `${d.iski_mae.toFixed(1)} pts (${d.iski_n} dates)`),
-      fact("Bar", `± ${d.bar.toFixed(1)}`),
+      fact(T.f_heldout, `${num(d.heldout_mae)} ${T.pts}`),
+      fact(T.f_iski, `${num(d.iski_mae)} ${T.pts} (${d.iski_n} ${T.f_dates})`),
+      fact(T.f_bar, `± ${num(d.bar)}`),
     );
     card.append(head, chart(d), facts);
     if (d.note) card.append(html("p", "note", d.note));
@@ -282,7 +278,7 @@ function render() {
   const body = document.getElementById("table");
   for (const d of DATA.dams) {
     const tr = document.createElement("tr");
-    const cells = [d.name, STATUS[d.status], d.capacity.toFixed(1), d.heldout_mae.toFixed(1), d.iski_mae.toFixed(1), d.iski_n, "± " + d.bar.toFixed(1), d.unet_mae.toFixed(1)];
+    const cells = [d.name, STATUS[d.status], num(d.capacity), num(d.heldout_mae), num(d.iski_mae), d.iski_n, "± " + num(d.bar), num(d.unet_mae)];
     cells.forEach((c, i) => { const td = html("td", i >= 2 ? "num" : null, c); if (i === 1) td.className = `s-${d.status}`; tr.appendChild(td); });
     body.appendChild(tr);
   }

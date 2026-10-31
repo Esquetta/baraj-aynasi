@@ -27,18 +27,18 @@ NDWI; the U-Net is an alternative under test.
   did a quick visual spot-check (about five minutes) of 56 labels: every
   non-NDWI or disputed label used for training or testing, plus 15 random NDWI
   picks. Asked only whether the picked mask covers the water, the owner judged
-  49 correct, 6 unsure and 1 wrong (a narrow Darlık arm the mask misses, which
-  should be rejected at the next retrain); see
-  [`../../labels/owner_check.csv`](../../labels/owner_check.csv). Picks: NDWI 268, near-infrared split 18, union 11,
-  rejected 3 ([`../../labels/review.csv`](../../labels/review.csv)). The
+  49 correct, 6 unsure and 1 wrong (a narrow Darlık arm the mask misses); see
+  [`../../labels/owner_check.csv`](../../labels/owner_check.csv). That patch
+  was then rejected and the model retrained. Picks: NDWI 268, near-infrared
+  split 18, union 10, rejected 4 ([`../../labels/review.csv`](../../labels/review.csv)). The
   near-infrared candidate was added after the first sheet showed a late-spring
   Ömerli patch where every index mask missed most of the water.
 - **Training**: U-Net with 4 levels and 16 base channels (1.9 M parameters) on
-  237 training-period patches (206 train, 31 validation by scene). Loss is binary
+  236 training-period patches (204 train, 32 validation by scene). Loss is binary
   cross-entropy plus Dice, skipping cloud and no-data pixels; flips and 90°
-  rotations; AdamW; the epoch with the lowest validation loss (182 of 200) is
-  kept. About 1.5 minutes on an RTX 4070 Ti. One run; the model was not
-  changed after testing.
+  rotations; AdamW; the epoch with the lowest validation loss (197 of 200) is
+  kept. About 1.5 minutes on an RTX 4070 Ti. The numbers below are from one
+  run after the owner's correction; the model was not changed after testing.
 
 ## Pixel test (60 held-out patches)
 
@@ -51,7 +51,7 @@ NDWI; the U-Net is an alternative under test.
 58 of the 60 test labels are the NDWI candidate itself, so this test mostly
 checks that the U-Net reproduces NDWI where NDWI is right; it does, slightly
 less exactly. On the two other test patches the U-Net output stays close to
-NDWI's (IoU 0.68 and 0.81 against the label), so there is **no pixel-level
+NDWI's (IoU 0.68 and 0.85 against the label), so there is **no pixel-level
 evidence yet that it fixes NDWI failures**.
 
 ## Occupancy error by water mask
@@ -64,16 +64,16 @@ outlier filter, so scene counts differ slightly; see [comparison.csv](comparison
 
 | Reservoir | Held-out NDWI | MNDWI | U-Net | 90% bar NDWI → U-Net | Bar coverage NDWI → U-Net | LOYO NDWI → U-Net | İSKİ NDWI → U-Net |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| **Ömerli** | 5.33 | 9.56 | 4.13 | ±11.7 → ±10.6 | 98% → 96% | 6.92 → 4.40 | 4.77 → 4.73 |
-| **Darlık** | 11.71 | 9.14 | 5.46 | ±24.3 → ±12.3 | 83% → 95% | 9.06 → 5.61 | 3.99 → 4.58 |
-| **Terkos** | 22.98 | 24.57 | 22.87 | ±28.8 → ±26.2 | 82% → 64% | 13.01 → 12.05 | 20.04 → 14.49 |
-| **Büyükçekmece** | 11.50 | 10.59 | 11.12 | ±21.7 → ±18.0 | 85% → 78% | 14.86 → 13.28 | 6.94 → 4.47 |
-| Alibey | 3.16 | 6.76 | 3.48 | ±10.8 → ±8.5 | 100% → 96% | 4.38 → 4.35 | 2.97 → 3.46 |
-| Sazlıdere | 1.14 | 2.45 | 1.96 | ±4.6 → ±4.3 | 100% → 85% | 1.68 → 1.78 | 1.63 → 1.85 |
-| Kazandere | 5.61 | 5.57 | 5.82 | ±21.2 → ±18.3 | 100% → 100% | 11.46 → 9.72 | 12.00 → 4.17 |
-| Pabuçdere | 1.34 | 1.53 | 1.26 | ±8.3 → ±6.0 | 100% → 97% | 3.01 → 2.26 | 2.50 → 2.00 |
-| Istrancalar | 5.18 | 4.49 | 3.96 | ±12.3 → ±11.3 | 96% → 100% | 5.50 → 4.27 | 2.59 → 3.10 |
-| Elmalı | 16.95 | 15.05 | 13.69 | ±33.1 → ±20.9 | 100% → 93% | 10.88 → 9.10 | 6.17 → 4.72 |
+| **Ömerli** | 5.33 | 9.56 | 4.65 | ±11.7 → ±8.5 | 98% → 96% | 6.92 → 4.28 | 4.77 → 3.20 |
+| **Darlık** | 11.71 | 9.14 | 5.08 | ±24.3 → ±13.6 | 83% → 100% | 9.06 → 5.43 | 3.99 → 4.98 |
+| **Terkos** | 22.98 | 24.57 | 15.00 | ±28.8 → ±25.2 | 82% → 86% | 13.01 → 11.24 | 20.04 → 17.64 |
+| **Büyükçekmece** | 11.50 | 10.59 | 11.17 | ±21.6 → ±17.8 | 85% → 78% | 14.86 → 13.95 | 6.94 → 5.91 |
+| Alibey | 3.16 | 6.76 | 2.61 | ±10.8 → ±11.5 | 100% → 100% | 4.38 → 3.90 | 2.97 → 2.85 |
+| Sazlıdere | 1.14 | 2.45 | 1.91 | ±4.6 → ±4.3 | 100% → 87% | 1.68 → 1.76 | 1.63 → 1.99 |
+| Kazandere | 5.61 | 5.57 | 5.86 | ±21.2 → ±17.5 | 100% → 100% | 11.46 → 9.84 | 12.00 → 10.60 |
+| Pabuçdere | 1.34 | 1.53 | 1.50 | ±8.3 → ±6.5 | 100% → 97% | 3.01 → 2.51 | 2.50 → 2.00 |
+| Istrancalar | 5.18 | 4.49 | 3.42 | ±12.3 → ±10.3 | 96% → 100% | 5.50 → 4.65 | 2.59 → 2.97 |
+| Elmalı | 16.95 | 15.05 | 13.01 | ±33.1 → ±19.1 | 100% → 83% | 10.88 → 8.63 | 6.17 → 4.31 |
 
 ## What it shows
 
@@ -83,18 +83,25 @@ outlier filter, so scene counts differ slightly; see [comparison.csv](comparison
   NDWI curve bends; without them, it is a straight line. On the held-out scenes
   the two masks give almost the same areas (median difference 0.03 km²).
   NDWI with those eleven scenes removed reaches a held-out MAE of 5.1 (bar
-  ±14.5), close to the U-Net's 5.5 (±12.3). So the U-Net's value here is that
-  it handles these scenes on its own, without labels or a hand-made filter, not
-  that it measures normal scenes better.
-- Elmalı and Ömerli also improve on held-out error; Elmalı stays out because it
-  is too small.
-- **The U-Net is slightly worse on some reservoirs**: held-out error on Alibey,
-  Sazlıdere and Kazandere, and İSKİ error on Darlık, Alibey, Sazlıdere and
+  ±14.5), about the same as the U-Net's 5.1 (±13.6). So the U-Net's value here
+  is that it handles these scenes on its own, without labels or a hand-made
+  filter, not that it measures normal scenes better.
+- **One run is not enough to rank the methods closely.** The first U-Net run
+  (237 patches) and this one (236, one label removed) differ by more than the
+  label change explains: Terkos's held-out error went from 22.9 to 15.0,
+  Ömerli's from 4.1 to 4.7, Elmalı's from 13.7 to 13.0. GPU training is not
+  deterministic, so U-Net numbers carry a few points of run-to-run spread on
+  their own; differences smaller than that should not be read as real.
+- Ömerli, Alibey, Istrancalar and Elmalı also improve on held-out error;
+  Elmalı stays out because it is too small.
+- **The U-Net is slightly worse on some reservoirs**: held-out error on
+  Sazlıdere, Pabuçdere and Kazandere, and İSKİ error on Darlık, Sazlıdere and
   Istrancalar, by under one point in each case.
-- **Narrower bars are not always better.** The U-Net's bars are narrower on all
-  ten reservoirs, but on Terkos (64%), Büyükçekmece (78%) and Sazlıdere (85%)
-  they cover fewer held-out scenes than the nominal 90%.
-- **Terkos and Büyükçekmece barely change.** Their gap is likely the
+- **Narrower bars are not always better.** The U-Net's bars are narrower on
+  nine of ten reservoirs (Alibey's is slightly wider), but on Büyükçekmece
+  (78%), Elmalı (83%), Terkos (86%) and Sazlıdere (87%) they cover fewer
+  held-out scenes than the nominal 90%.
+- **Terkos and Büyükçekmece stay above the stop line.** Their gap is likely the
   extrapolation into the 2023 record low plus reservoir geometry (Büyükçekmece's
   shallow lagoon) and reed beds (Terkos), which a better mask does not address.
 - **MNDWI alone is mixed**: better than NDWI on five reservoirs' held-out error
@@ -107,13 +114,14 @@ outlier filter, so scene counts differ slightly; see [comparison.csv](comparison
 ## Kill rule with U-Net masks
 
 The four-largest stop line (held-out MAE above 10 points) is still met for
-**Terkos (22.9) and Büyükçekmece (11.1)**; Darlık (5.5) and Ömerli (4.1) pass.
+**Terkos (15.0) and Büyükçekmece (11.2)**; Darlık (5.1) and Ömerli (4.7) pass.
 The rule was set for the project, not per mask, so the outcome in
 [../README.md](../README.md) stands.
 
 ## Reproduce
 
 ```bash
+uv sync --extra unet                     # PyTorch with CUDA
 uv run python scripts/download_extra.py
 uv run python scripts/unet_patches.py
 uv run python scripts/train_unet.py      # needs labels/review.csv
@@ -127,7 +135,7 @@ uv run python scripts/compare_methods.py
 ```
 
 GPU training is not bit-for-bit deterministic, so a retrained model can differ
-slightly. Patch arrays, sheets and model weights stay in `data/unet/`.
+by a few points per reservoir (see above). Patch arrays, sheets and model weights stay in `data/unet/`.
 
 Contains modified Copernicus Sentinel data 2017–2026. Occupancy: İBB Açık Veri
 Portalı, İBB Open Data License; after 2024-02-19, İSKİ (iski.istanbul).
