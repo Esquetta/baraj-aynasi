@@ -53,7 +53,13 @@ uv run python scripts/areas.py
 uv run python scripts/fit.py
 uv run python scripts/iski_check.py   # needs data/iski/, see docs/data-sources.md
 uv run --extra harvest python scripts/iski_harvest.py   # once a day, saves İSKİ's page windows
+uv run python scripts/update.py       # new scenes -> results/areas.csv and estimates, frozen curves
 ```
+
+A GitHub Actions workflow (`.github/workflows/update.yml`) runs `update.py` and
+`build_site.py` every morning and commits any new estimates; the page then
+redeploys. Estimates appear only when a new scene of a reservoir is at least 98%
+cloud-free, so the page can stay unchanged for days in cloudy weather.
 
 The U-Net steps are listed in [results/unet/README.md](results/unet/README.md). `uv run python scripts/build_site.py` builds the static project page in
 `site/` from the committed results.

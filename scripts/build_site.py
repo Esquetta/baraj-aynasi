@@ -1,5 +1,7 @@
 """Build the static project page in site/ (English) and site/tr/ (Turkish)
-from the committed results. Page copy lives in scripts/site_text.py.
+from the committed results only, so it also runs in GitHub Actions. Page copy
+lives in scripts/site_text.py. İBB's weekly means are read from
+results/ibb_weekly.csv, which is written from the İBB file on first use.
 
     uv run python scripts/build_site.py
 """
@@ -9,40 +11,52 @@ import shutil
 import sys
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
-
-sys.path.insert(0, str(Path(__file__).parent))
-import fit as fitscript  # noqa: E402  (reuses the exact scene filter of the occupancy fit)
 
 from baraj_aynasi import ibb
 from baraj_aynasi.dams import DAMS
-from baraj_aynasi.fit import Curve
+from baraj_aynasi.scenes import clean_scenes, curve_from_json
+
+sys.path.insert(0, str(Path(__file__).parent))
 from site_text import EN, TR  # noqa: E402
 
 SITE = Path("site")
+IBB_WEEKLY = Path("results/ibb_weekly.csv")
 TEMPLATE = Path("scripts/site_template.html")
 STATUS = {
     "omerli": "offered", "alibey": "offered", "sazlidere": "offered", "pabucdere": "offered", "istrancalar": "offered",
     "kazandere": "provisional", "darlik": "failed", "buyukcekmece": "failed", "terkos": "out", "elmali": "out",
 }
+
+
+def ibb_weekly() -> pd.DataFrame:
+    """Weekly mean İBB occupancy per reservoir from 2017 (the series ends 2024-02-19)."""
+    if not IBB_WEEKLY.exists():
+        gt = ibb.load()
+        gt = gt[gt.date >= "2017-01-01"]
+        weekly = (
+            gt.set_index("date").groupby("ibb_column").occupancy_pct.resample("7D").mean().dropna().round(1).reset_index()
+        )
+        weekly.to_csv(IBB_WEEKLY, index=False)
+    return pd.read_csv(IBB_WEEKLY, parse_dates=["date"])
+
+
 def main() -> None:
     curves = json.loads(Path("results/curves.json").read_text(encoding="utf-8"))
     held = pd.read_csv("results/heldout_metrics.csv").set_index("dam")
     iski_m = pd.read_csv("results/iski_metrics.csv").set_index("dam")
     iski_pairs = pd.read_csv("results/iski_check.csv", parse_dates=["iski_date"])
     unet = pd.read_csv("results/unet/comparison.csv").set_index("dam")
-    gt = ibb.load()
+    areas = pd.read_csv("results/areas.csv", parse_dates=["date"])
+    weekly = ibb_weekly()
     dams = []
     for dam in DAMS:
-        c = curves[dam.key]
-        curve = Curve(np.array(c["coef"]), c["error_bar_90"], *c["fit_range_km2"])
-        df = fitscript.labelled(dam)
+        curve = curve_from_json(curves[dam.key])
+        df = clean_scenes(areas, dam.key)
         est = curve.predict(df.water_km2.to_numpy())
         sat = [[d.strftime("%Y-%m-%d"), round(float(e), 1)] for d, e in zip(df.date, est)]
-        g = gt[(gt.ibb_column == dam.ibb_column) & (gt.date >= "2017-01-01")].set_index("date").occupancy_pct
-        weekly = g.resample("7D").mean().dropna()
-        reported = [[d.strftime("%Y-%m-%d"), round(float(v), 1)] for d, v in weekly.items()]
+        w = weekly[weekly.ibb_column == dam.ibb_column]
+        reported = [[d.strftime("%Y-%m-%d"), float(v)] for d, v in zip(w.date, w.occupancy_pct)]
         p = iski_pairs[iski_pairs.dam == dam.key]
         iski = [[d.strftime("%Y-%m-%d"), round(float(v), 1)] for d, v in zip(p.iski_date, p.iski_pct)]
         last = df.iloc[-1]

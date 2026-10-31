@@ -94,10 +94,24 @@ def write_grids(root: Path, dams: list[Dam], item: pystac.Item) -> None:
 
 
 def fetch_item(item: pystac.Item, dams: list[Dam], store: ChipStore, min_clear: float) -> list[dict]:
-    """Read SCL for every dam box; when clear enough, read B03/B08 and save the chip."""
+    """Read an item's chips (see read_item) and save each to the store."""
+    rows, chips = read_item(item, dams, min_clear)
+    for key, arrays in chips.items():
+        path = store.chip_path(key, item.id)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        np.savez_compressed(path, **arrays)
+    return rows
+
+
+def read_item(item: pystac.Item, dams: list[Dam], min_clear: float) -> tuple[list[dict], dict[str, dict]]:
+    """Read SCL for every dam box; when clear enough, also read B03/B08.
+
+    Returns one index row per dam and, for the dams kept, the chip arrays
+    (the same keys load_chip returns).
+    """
     signed = planetary_computer.sign(item)
     baseline = item.properties["s2:processing_baseline"]
-    rows, keep = [], {}
+    rows, keep, chips = [], {}, {}
     with rasterio.Env(**GDAL_ENV):
         with rasterio.open(signed.assets["SCL"].href) as src:
             for dam in dams:
@@ -129,10 +143,8 @@ def fetch_item(item: pystac.Item, dams: list[Dam], store: ChipStore, min_clear: 
                     arrays[f"scl_{j}"] = s
                     arrays[f"b03_{j}"] = bands[(key, "B03")][j]
                     arrays[f"b08_{j}"] = bands[(key, "B08")][j]
-                path = store.chip_path(key, item.id)
-                path.parent.mkdir(parents=True, exist_ok=True)
-                np.savez_compressed(path, **arrays)
-    return rows
+                chips[key] = arrays
+    return rows, chips
 
 
 def extra_path(chip_path: Path) -> Path:

@@ -24,25 +24,19 @@ import pandas as pd
 
 from baraj_aynasi import ibb
 from baraj_aynasi.dams import DAMS, LARGEST_FOUR
-from baraj_aynasi.fit import fit_curve, hampel_outliers, metrics, out_of_fold_residuals
+from baraj_aynasi.fit import fit_curve, metrics, out_of_fold_residuals
+from baraj_aynasi.scenes import clean_scenes
 
 AREAS = Path("results/areas.csv")
 RESULTS = Path("results")
-MIN_CLEAR = 0.98
 TRAIN_END = pd.Timestamp("2022-06-30")
 KILL_MAE = 10.0
-OUTLIER_WINDOW_DAYS = 20
-OUTLIER_FLOOR = 0.03  # of the dam's 95th-percentile area
 
 
 def labelled(dam) -> pd.DataFrame:
-    a = pd.read_csv(AREAS, parse_dates=["date"])
-    a = a[(a.dam == dam.key) & (a.clear_frac >= MIN_CLEAR)].sort_values("date")
+    a = clean_scenes(pd.read_csv(AREAS, parse_dates=["date"]), dam.key)
     if a.empty:
         return a
-    days = (a.date - a.date.min()).dt.days.to_numpy()
-    floor = OUTLIER_FLOOR * np.quantile(a.water_km2, 0.95)
-    a = a[~hampel_outliers(days, a.water_km2.to_numpy(), OUTLIER_WINDOW_DAYS, floor=floor)]
     gt = ibb.load()
     gt = gt[gt.ibb_column == dam.ibb_column][["date", "occupancy_pct"]]
     return a.merge(gt, on="date", how="left")

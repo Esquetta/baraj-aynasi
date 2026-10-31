@@ -11,12 +11,25 @@ from shapely.geometry import mapping, shape
 from shapely.ops import transform as shp_transform
 
 from .chips import CRS, load_chip, upsample2
-from .water import boa_offset, clear_mask, ndwi, reflectance, water_mask
+from .water import boa_offset, clear_mask, ndwi, reflectance, water_area_km2, water_mask
+
+GRIDS = Path("aoi/grids.json")  # committed copy of every dam's grid, for runs without the chip cache
 
 
 def load_grid(chips_root: Path, dam_key: str) -> list[dict]:
-    grid = json.loads((chips_root / dam_key / "grid.json").read_text(encoding="utf-8"))
+    path = chips_root / dam_key / "grid.json"
+    if path.exists():
+        grid = json.loads(path.read_text(encoding="utf-8"))
+    else:
+        grid = json.loads(GRIDS.read_text(encoding="utf-8"))[dam_key]
     return [{"transform": Affine(*g["transform"]), "shape": (g["height"], g["width"])} for g in grid["boxes"]]
+
+
+def area_and_clear(masks: list, aois: list[np.ndarray]) -> tuple[float, float]:
+    """Water area (km2) inside the AOI and the AOI's cloud-free share, over all boxes."""
+    water = sum(water_area_km2(w, a) for (_, _, w), a in zip(masks, aois))
+    clear_px = sum(np.count_nonzero(c & a) for (_, c, _), a in zip(masks, aois))
+    return water, clear_px / sum(np.count_nonzero(a) for a in aois)
 
 
 def chip_masks(chip: dict, threshold: float = 0.0) -> list[tuple[np.ndarray, np.ndarray, np.ndarray]]:

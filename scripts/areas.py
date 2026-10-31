@@ -13,9 +13,8 @@ import numpy as np
 import pandas as pd
 
 from baraj_aynasi.dams import DAMS
-from baraj_aynasi.measure import load_aoi, load_grid, load_masks, rasterize_aoi
+from baraj_aynasi.measure import area_and_clear, load_aoi, load_grid, load_masks, rasterize_aoi
 from baraj_aynasi.stac import DAM_TILE
-from baraj_aynasi.water import clear_fraction, water_area_km2
 
 CHIPS = Path("data/chips")
 AOI = Path("aoi/reservoirs.geojson")
@@ -24,10 +23,7 @@ THRESHOLD = 0.0
 
 
 def measure(path: Path, aois: list[np.ndarray]) -> tuple[float, float]:
-    masks = load_masks(path, THRESHOLD)
-    water = sum(water_area_km2(w, a) for (_, _, w), a in zip(masks, aois))
-    clear_px = sum(clear_fraction(c, a) * np.count_nonzero(a) for (_, c, _), a in zip(masks, aois))
-    return water, clear_px / sum(np.count_nonzero(a) for a in aois)
+    return area_and_clear(load_masks(path, THRESHOLD), aois)
 
 
 def main() -> None:
