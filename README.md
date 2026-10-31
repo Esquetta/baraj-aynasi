@@ -53,6 +53,7 @@ uv run python scripts/areas.py
 uv run python scripts/fit.py
 uv run python scripts/iski_check.py   # needs data/iski/, see docs/data-sources.md
 uv run --extra harvest python scripts/iski_harvest.py   # once a day, saves İSKİ's page windows
+uv run --extra harvest python scripts/iski_publish.py   # harvest + results/iski_series.csv + page, then push
 uv run python scripts/update.py       # new scenes -> results/areas.csv and estimates, frozen curves
 ```
 

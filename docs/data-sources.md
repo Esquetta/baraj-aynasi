@@ -69,7 +69,8 @@ is an inference from İSKİ's basin regulation.
 
 ## İSKİ occupancy after 2024-02-19
 
-Used only to score the frozen 2024-2026 estimates (`scripts/iski_check.py`).
+Used to score the frozen 2024-2026 estimates (`scripts/iski_check.py`) and
+shown next to them on the project page.
 
 - İSKİ's [baraj doluluk page](https://iski.istanbul/baraj-doluluk/) has no
   public download or date-range query. On 2026-10-28 the page was opened in a
@@ -82,16 +83,18 @@ Used only to score the frozen 2024-2026 estimates (`scripts/iski_check.py`).
   day in a headless browser (Playwright, installed with `uv sync --extra
   harvest`) and saves `data/iski/live_<date>.json`. Because the page shows the
   same calendar day for the past ten years, a year of daily visits fills in
-  every day of 2024–2026. Run it once a day after about 09:30 Istanbul time,
-  when İSKİ updates the page (for example from a scheduled task or cron).
+  every day of 2024–2026. It runs once a day after about 09:30 Istanbul time,
+  when İSKİ updates the page, from a scheduled task on the author's machine
+  that calls `scripts/iski_publish.py` (harvest, rebuild, push).
 - Wayback Machine copies of the page's daily summary (`gunlukOzet`) cover 20
   dates from 2024-01-21 to 2025-12-10.
 - On the 140 reservoir-days that İBB also covers, İSKİ and İBB agree to 0.01
   points.
 - No open licence for İSKİ's figures was found. The raw files stay in
-  `data/iski/`; only the figures matched to a satellite scene (52 in
-  `results/iski_check.csv`, and the same pairs for the U-Net and MNDWI runs)
-  are reproduced, credited to İSKİ, for comparison.
+  `data/iski/`. Reproduced, credited to İSKİ, for comparison: the figures
+  matched to a satellite scene (52 in `results/iski_check.csv`, and the same
+  pairs for the U-Net and MNDWI runs) and one figure per reservoir and day
+  after 2024-02-19 in `results/iski_series.csv`, which the page draws.
 - Not used: news articles. They repeat İSKİ's figures but one checked article
   printed each reservoir's share of total storage as its occupancy.
 

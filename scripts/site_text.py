@@ -33,7 +33,7 @@ EN = {
     "grid_p": "Each dot is one cloud-free Sentinel-2 scene turned into an occupancy estimate. Until 19 February 2024 the curve was fitted against İBB's daily figures; after that the dots are satellite-only and are checked against the İSKİ figures we could collect. Hover a chart for values and the 90% error bar. Dots far below the line, mostly in May and June, are scenes where algae hide the water from NDWI; they are kept on the charts.",
     "legend_sat": "Satellite estimate",
     "legend_ibb": "Reported occupancy (İBB, weekly mean)",
-    "legend_iski": "Reported occupancy (İSKİ, 2024–2026)",
+    "legend_iski": "Reported occupancy (İSKİ, collected figures)",
     "how_h": "How it works",
     "steps": [
         "Every Sentinel-2 L2A scene of the three tiles over Istanbul's reservoirs from 2017 on is clipped to each reservoir, and clouds are masked with the scene classification layer.",
@@ -54,7 +54,7 @@ EN = {
     "credits": [
         '<b>Reservoir occupancy to 19 February 2024:</b> <a href="https://data.ibb.gov.tr/dataset/istanbul-barajlari-gunluk-doluluk-oranlari">İstanbul Barajları Günlük Doluluk Oranları</a>, İBB Açık Veri Portalı, under the <a href="https://data.ibb.gov.tr/license">İBB Open Data License</a>. Atıf 4.0 Uluslararası (CC BY 4.0) kapsamında lisanslanan kamu sektörü bilgilerini içerir.',
         "<b>Imagery:</b> Contains modified Copernicus Sentinel data 2017–2026, accessed through the Microsoft Planetary Computer.",
-        '<b>Occupancy after February 2024:</b> İSKİ, <a href="https://iski.istanbul/baraj-doluluk/">iski.istanbul/baraj-doluluk</a>, collected from the page and from Wayback Machine copies.',
+        '<b>Occupancy after February 2024:</b> İSKİ, <a href="https://iski.istanbul/baraj-doluluk/">iski.istanbul/baraj-doluluk</a>, collected from the page and from Wayback Machine copies and shown on the charts with this credit. The page is read once a day.',
         'Code and full results: <a href="https://github.com/Esquetta/baraj-aynasi">github.com/Esquetta/baraj-aynasi</a> (MIT licence). Built by Furkan Tasci.',
     ],
     "footer": "Satellite estimates with error bars. Not affiliated with İBB or İSKİ.",
@@ -106,7 +106,7 @@ TR = {
     "grid_p": "Her nokta, doluluk tahminine çevrilmiş bulutsuz bir Sentinel-2 sahnesi. 19 Şubat 2024'e kadar eğri İBB'nin günlük rakamlarına göre kuruldu; o tarihten sonraki noktalar yalnızca uydudan geliyor ve toplayabildiğimiz İSKİ rakamlarıyla karşılaştırılıyor. Değerler ve %90 hata payı için grafiğin üzerine gelin. Çizginin çok altında kalan noktalar, çoğu Mayıs ve Haziran'da, alglerin suyu NDWI'den gizlediği sahneler; grafiklerde bırakıldı.",
     "legend_sat": "Uydu tahmini",
     "legend_ibb": "Açıklanan doluluk (İBB, haftalık ortalama)",
-    "legend_iski": "Açıklanan doluluk (İSKİ, 2024–2026)",
+    "legend_iski": "Açıklanan doluluk (İSKİ, toplanan rakamlar)",
     "how_h": "Nasıl çalışıyor",
     "steps": [
         "İstanbul barajlarının üzerindeki üç karonun 2017'den bu yana çekilen her Sentinel-2 L2A sahnesi baraj baraj kırpılıyor; bulutlar, sahne sınıflandırma katmanıyla ayıklanıyor.",
@@ -127,7 +127,7 @@ TR = {
     "credits": [
         '<b>19 Şubat 2024\'e kadar doluluk:</b> <a href="https://data.ibb.gov.tr/dataset/istanbul-barajlari-gunluk-doluluk-oranlari">İstanbul Barajları Günlük Doluluk Oranları</a>, İBB Açık Veri Portalı, <a href="https://data.ibb.gov.tr/license">İBB Açık Veri Lisansı</a> kapsamında. Atıf 4.0 Uluslararası (CC BY 4.0) kapsamında lisanslanan kamu sektörü bilgilerini içerir.',
         "<b>Görüntüler:</b> Contains modified Copernicus Sentinel data 2017–2026 (değiştirilmiş Copernicus Sentinel verisi içerir); Microsoft Planetary Computer üzerinden.",
-        '<b>Şubat 2024 sonrası doluluk:</b> İSKİ, <a href="https://iski.istanbul/baraj-doluluk/">iski.istanbul/baraj-doluluk</a>; sayfadan ve Wayback Machine kopyalarından toplandı.',
+        '<b>Şubat 2024 sonrası doluluk:</b> İSKİ, <a href="https://iski.istanbul/baraj-doluluk/">iski.istanbul/baraj-doluluk</a>; sayfadan ve Wayback Machine kopyalarından toplanıp bu atıfla grafiklerde gösteriliyor. Sayfa günde bir kez okunuyor.',
         'Kod ve tüm sonuçlar: <a href="https://github.com/Esquetta/baraj-aynasi">github.com/Esquetta/baraj-aynasi</a> (MIT lisansı). Hazırlayan: Furkan Tasci.',
     ],
     "footer": "Hata paylı uydu tahminleri. İBB veya İSKİ ile bağlantılı değildir.",

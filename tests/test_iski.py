@@ -2,7 +2,15 @@ import json
 
 import pandas as pd
 
-from baraj_aynasi.iski import match_nearest, one_per_scene, parse_daily_summary, parse_page_windows, pick_by_priority
+from baraj_aynasi.iski import (
+    load_collected,
+    match_nearest,
+    one_per_scene,
+    parse_daily_summary,
+    parse_page_windows,
+    pick_by_priority,
+    series,
+)
 
 
 def test_match_nearest_within_window():
@@ -73,3 +81,26 @@ def test_one_per_scene_keeps_closest_iski_day():
     )
     out = one_per_scene(pairs)
     assert out.iski_date.tolist() == ["2026-10-22"] and out.gap_days.tolist() == [0]
+
+
+def test_series_keeps_after_cutoff_best_source(tmp_path):
+    (tmp_path / "wayback").mkdir()
+    (tmp_path / "wayback" / "a.json").write_text(
+        json.dumps({"data": [{"baraj": "Omerli", "tarih": "01.03.2024", "yuzde": 80.0}]}), encoding="utf-8"
+    )
+    (tmp_path / "live_2026-10-31.json").write_text(
+        json.dumps(
+            {
+                "Omerli": {
+                    "ayson": [{"dolulukOrani": 79.0, "tarih": "31.10.2026"}],
+                    "ondort": [{"dolulukOrani": 78.99, "tarih": "31.10.2026"}],
+                    "onyil": [{"oran": 41.0, "tarih": "31.10.2016"}, {"oran": 16.9, "tarih": "31.10.2025"}],
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    out = series(load_collected(tmp_path), pd.Timestamp("2024-02-19"))
+    assert out.date.dt.strftime("%Y-%m-%d").tolist() == ["2024-03-01", "2025-10-31", "2026-10-31"]
+    assert out.occupancy_pct.tolist() == [80.0, 16.9, 78.99]
+    assert out.source.tolist() == ["daily_summary", "same_day_10y", "last_14_days"]

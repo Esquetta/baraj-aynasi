@@ -22,18 +22,11 @@ import pandas as pd
 from baraj_aynasi import ibb
 from baraj_aynasi.dams import DAMS
 from baraj_aynasi.fit import metrics
-from baraj_aynasi.iski import match_nearest, one_per_scene, parse_daily_summary, parse_page_windows, pick_by_priority
+from baraj_aynasi.iski import load_collected, match_nearest, one_per_scene, series
 
 IN = Path("data/iski")
 RESULTS = Path("results")
 MAX_DAYS = 1  # occupancy can move several points a day after heavy rain
-PRIORITY = ["daily_summary", "last_14_days", "month_end", "same_day_10y"]
-
-
-def load_iski() -> pd.DataFrame:
-    frames = [parse_daily_summary(p) for p in sorted((IN / "wayback").glob("*.json"))]
-    frames += [parse_page_windows(p) for p in sorted(IN.glob("live_*.json"))]
-    return pd.concat(frames, ignore_index=True)
 
 
 def check_against_ibb(iski: pd.DataFrame) -> None:
@@ -50,9 +43,9 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", type=Path, default=RESULTS, help="folder with estimates_2024_2026.csv")
     RESULTS = ap.parse_args().results
-    iski = load_iski()
+    iski = load_collected(IN)
     check_against_ibb(iski)
-    after = pick_by_priority(iski[iski.date > ibb.END], PRIORITY)
+    after = series(iski, ibb.END)
 
     # Some days have two scenes of the same tile (relative orbits R007 and R107);
     # average them into one measurement per day.

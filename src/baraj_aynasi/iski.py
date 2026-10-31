@@ -46,6 +46,22 @@ def parse_page_windows(path: Path) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=["dam", "date", "occupancy_pct", "source"])
 
 
+PRIORITY = ["daily_summary", "last_14_days", "month_end", "same_day_10y"]
+
+
+def load_collected(root: Path) -> pd.DataFrame:
+    """Every İSKİ figure collected under root: Wayback copies in root/wayback and page windows in root/live_*.json."""
+    frames = [parse_daily_summary(p) for p in sorted((root / "wayback").glob("*.json"))]
+    frames += [parse_page_windows(p) for p in sorted(root.glob("live_*.json"))]
+    return pd.concat(frames, ignore_index=True)
+
+
+def series(obs: pd.DataFrame, after: pd.Timestamp) -> pd.DataFrame:
+    """One figure per dam and day after `after`, best source first, sorted."""
+    out = pick_by_priority(obs[obs.date > after], PRIORITY)
+    return out.sort_values(["dam", "date"], ignore_index=True)[["dam", "date", "occupancy_pct", "source"]]
+
+
 def pick_by_priority(obs: pd.DataFrame, priority: list[str]) -> pd.DataFrame:
     """One figure per dam and date: the source listed first in `priority` wins."""
     rank = obs.source.map(priority.index)

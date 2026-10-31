@@ -116,7 +116,8 @@ figcaption { font-size: 0.88rem; color: var(--muted); max-width: 70ch; }
 .legend span { display: inline-flex; align-items: center; gap: 8px; }
 .sw-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--sat); }
 .sw-line { width: 18px; height: 2px; background: var(--rep); }
-.sw-ring { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--rep); }
+.sw-step { width: 18px; height: 2px; background: var(--rep); position: relative; }
+.sw-step::after { content: ""; position: absolute; left: 6px; top: -2px; width: 6px; height: 6px; border-radius: 50%; background: var(--rep); }
 .group { display: grid; gap: 14px; }
 .group-head { display: grid; gap: 4px; }
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
@@ -204,7 +205,7 @@ footer { color: var(--muted); font-size: 0.82rem; }
       <div class="legend">
         <span><i class="sw-dot"></i>{{legend_sat}}</span>
         <span><i class="sw-line"></i>{{legend_ibb}}</span>
-        <span><i class="sw-ring"></i>{{legend_iski}}</span>
+        <span><i class="sw-step"></i>{{legend_iski}}</span>
       </div>
     </div>
     <div class="group">
@@ -309,7 +310,16 @@ function drawChart(box, d) {
   const g = el("g", { fill: "var(--sat)" }, svg);
   const r = range === ALL ? 2 : 3;
   for (const [s, v] of d.sat) if (inRange(s)) el("circle", { cx: sx(t(s)).toFixed(1), cy: sy(v).toFixed(1), r }, g);
-  for (const [s, v] of d.iski) if (inRange(s)) el("circle", { cx: sx(t(s)), cy: sy(v), r: 4.5, fill: "var(--surface)", stroke: "var(--rep)", "stroke-width": 2 }, svg);
+  // İSKİ figures are sparse (month ends, recent days): join them only across gaps under 35 days.
+  const iski = d.iski.filter(([s]) => inRange(s));
+  let run = [];
+  const flush = () => { if (run.length > 1) el("polyline", { points: run.join(" "), fill: "none", stroke: "var(--rep)", "stroke-width": 1.5, "stroke-linejoin": "round" }, svg); run = []; };
+  iski.forEach(([s, v], i) => {
+    if (i && t(s) - t(iski[i - 1][0]) > 35 * 864e5) flush();
+    run.push(`${sx(t(s)).toFixed(1)},${sy(v).toFixed(1)}`);
+  });
+  flush();
+  for (const [s, v] of iski) el("circle", { cx: sx(t(s)).toFixed(1), cy: sy(v).toFixed(1), r: 2.5, fill: "var(--rep)" }, svg);
   const cross = el("line", { y1: M.t, y2: H - M.b, stroke: "var(--ink-2)", "stroke-width": 1, visibility: "hidden" }, svg);
   const bar = el("line", { stroke: "var(--sat)", "stroke-width": 3, "stroke-linecap": "round", visibility: "hidden", opacity: 0.5 }, svg);
   const dot = el("circle", { r: 5, fill: "var(--sat)", stroke: "var(--surface)", "stroke-width": 2, visibility: "hidden" }, svg);

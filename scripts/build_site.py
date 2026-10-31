@@ -1,7 +1,9 @@
 """Build the static project page in site/ (English) and site/tr/ (Turkish)
 from the committed results only, so it also runs in GitHub Actions. Page copy
 lives in scripts/site_text.py. İBB's weekly means are read from
-results/ibb_weekly.csv, which is written from the İBB file on first use.
+results/ibb_weekly.csv, which is written from the İBB file on first use. İSKİ's
+figures after İBB's series ends come from results/iski_series.csv, which
+scripts/iski_publish.py rewrites from the collected files.
 
     uv run python scripts/build_site.py
 """
@@ -45,7 +47,7 @@ def main() -> None:
     curves = json.loads(Path("results/curves.json").read_text(encoding="utf-8"))
     held = pd.read_csv("results/heldout_metrics.csv").set_index("dam")
     iski_m = pd.read_csv("results/iski_metrics.csv").set_index("dam")
-    iski_pairs = pd.read_csv("results/iski_check.csv", parse_dates=["iski_date"])
+    iski_series = pd.read_csv("results/iski_series.csv", parse_dates=["date"])
     unet = pd.read_csv("results/unet/comparison.csv").set_index("dam")
     areas = pd.read_csv("results/areas.csv", parse_dates=["date"])
     weekly = ibb_weekly()
@@ -57,8 +59,8 @@ def main() -> None:
         sat = [[d.strftime("%Y-%m-%d"), round(float(e), 1)] for d, e in zip(df.date, est)]
         w = weekly[weekly.ibb_column == dam.ibb_column]
         reported = [[d.strftime("%Y-%m-%d"), float(v)] for d, v in zip(w.date, w.occupancy_pct)]
-        p = iski_pairs[iski_pairs.dam == dam.key]
-        iski = [[d.strftime("%Y-%m-%d"), round(float(v), 1)] for d, v in zip(p.iski_date, p.iski_pct)]
+        p = iski_series[iski_series.dam == dam.key]
+        iski = [[d.strftime("%Y-%m-%d"), float(v)] for d, v in zip(p.date, p.occupancy_pct)]
         last = df.iloc[-1]
         dams.append(
             {

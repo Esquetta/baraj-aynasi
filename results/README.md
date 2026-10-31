@@ -158,6 +158,9 @@ untouched-test section above.
 - `figures/crops_<dam>.png`: true colour with the NDWI outline at high and low water.
 - `iski_check.csv`, `iski_metrics.csv`, `figures/iski_check.png`: the untouched
   test. Occupancy figures in these files are İSKİ's, cited from iski.istanbul.
+- `iski_series.csv`: every İSKİ figure collected after 2024-02-19, one per
+  reservoir and day (`source` says which page view it came from), drawn on the
+  project page. Rewritten daily by `scripts/iski_publish.py`.
 
 Contains modified Copernicus Sentinel data 2017–2026. Occupancy: İBB Açık Veri
 Portalı, İBB Open Data License; after 2024-02-19, İSKİ (iski.istanbul).
