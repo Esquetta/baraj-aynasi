@@ -1,0 +1,22 @@
+{
+ "buyukcekmece_high": {
+  "date": "2022-04-24",
+  "occupancy_pct": 97.5,
+  "water_km2": 23.85
+ },
+ "buyukcekmece_low": {
+  "date": "2023-10-14",
+  "occupancy_pct": 4.1,
+  "water_km2": 12.15
+ },
+ "darlik_high": {
+  "date": "2022-03-25",
+  "occupancy_pct": 100.0,
+  "water_km2": 5.42
+ },
+ "darlik_low": {
+  "date": "2023-01-09",
+  "occupancy_pct": 28.6,
+  "water_km2": 2.91
+ }
+}

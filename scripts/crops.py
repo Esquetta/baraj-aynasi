@@ -1,9 +1,14 @@
 """Before/after crops: true colour plus the NDWI water outline on a high- and a low-water date.
 
+Writes a captioned comparison figure (crops_<dam>.png) and, for the project
+page, the two panels as plain images (crop_<dam>_high.jpg, crop_<dam>_low.jpg)
+with their dates and figures in crops_meta.json.
+
     uv run python scripts/crops.py --dam omerli --dam darlik
 """
 
 import argparse
+import json
 from pathlib import Path
 
 import matplotlib
@@ -15,6 +20,7 @@ import pandas as pd
 import planetary_computer
 import pystac_client
 import rasterio
+from scipy import ndimage
 
 from baraj_aynasi import ibb
 from baraj_aynasi.chips import GDAL_ENV, double, scl_window
@@ -53,15 +59,21 @@ def main() -> None:
     ap.add_argument("--dam", action="append", required=True)
     args = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
+    meta_path = OUT / "crops_meta.json"
+    meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
     for key in args.dam:
         dam = BY_KEY[key]
         aoi = rasterize_aoi(load_aoi(AOI, key), load_grid(CHIPS, key))[0]
         rows, cols = np.nonzero(aoi)
         r0, r1, c0, c1 = rows.min(), rows.max() + 1, cols.min(), cols.max() + 1
         fig, axs = plt.subplots(1, 2, figsize=(12, 6.5))
-        for ax, (_, s) in zip(axs, pick_dates(dam).iterrows()):
+        for ax, (_, s), which in zip(axs, pick_dates(dam).iterrows(), ("high", "low")):
             rgb = true_colour(s.item_id, dam)[r0:r1, c0:c1]
             water = load_masks(CHIPS / key / f"{s.item_id}.npz")[0][2][r0:r1, c0:c1] & aoi[r0:r1, c0:c1]
+            save_panel(rgb, water, OUT / f"crop_{key}_{which}.jpg")
+            meta[f"{key}_{which}"] = {
+                "date": f"{s.date:%Y-%m-%d}", "occupancy_pct": round(float(s.occupancy_pct), 1), "water_km2": round(float(s.water_km2), 2),
+            }
             ax.imshow(np.clip(rgb.astype(float) * 1.6 / 255, 0, 1))
             ax.contour(water, levels=[0.5], colors="cyan", linewidths=0.6)
             ax.set_title(f"{s.date:%Y-%m-%d}: İBB {s.occupancy_pct:.0f}%, NDWI water {s.water_km2:.2f} km²", fontsize=10)
@@ -72,6 +84,16 @@ def main() -> None:
         fig.savefig(OUT / f"crops_{key}.png", dpi=80)
         plt.close(fig)
         print(f"wrote crops_{key}.png")
+    meta_path.write_text(json.dumps(meta, indent=1), encoding="utf-8")
+
+
+def save_panel(rgb: np.ndarray, water: np.ndarray, path: Path) -> None:
+    """True colour with a one-pixel cyan water outline, enlarged 2x, as JPEG."""
+    img = np.clip(rgb.astype(float) * 1.6, 0, 255).astype(np.uint8)
+    edge = water & ~ndimage.binary_erosion(water)
+    img[edge] = (0, 229, 255)
+    img = img.repeat(2, axis=0).repeat(2, axis=1)
+    plt.imsave(path, img, format="jpg", pil_kwargs={"quality": 82})
 
 
 if __name__ == "__main__":

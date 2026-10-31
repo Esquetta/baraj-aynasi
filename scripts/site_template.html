@@ -5,21 +5,22 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: a reading column for the argument, widened to a two-column grid for the ten reservoir charts. */
+/* Layout: a reading column for the argument, widened to grids for the estimates, the ten charts and the table. */
 :root {
   --bg: #f4f6f6;
   --surface: #fcfcfb;
   --ink: #142120;
   --ink-2: #3c4c49;
-  --muted: #64746f;
+  --muted: #5f6f6a;
   --line: #d8e0de;
   --grid: #e6ecea;
   --sat: #0085a3;
   --rep: #c0560c;
+  --track: #e3ebe9;
   --pill-ok: #1f7a46;
   --pill-warn: #9a5a00;
   --pill-bad: #a3341f;
-  --pill-out: #64746f;
+  --pill-out: #5f6f6a;
   --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
@@ -27,130 +28,214 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0e1515; --surface: #1a1a19; --ink: #e5ecea; --ink-2: #c3d0cc; --muted: #93a6a1; --line: #2d3a38; --grid: #26302e;
-    --sat: #2398ad; --rep: #c97a22; --pill-ok: #5fcb8b; --pill-warn: #e9a743; --pill-bad: #f08a72; --pill-out: #93a6a1;
+    --sat: #2398ad; --rep: #c97a22; --track: #26302e; --pill-ok: #5fcb8b; --pill-warn: #e9a743; --pill-bad: #f08a72; --pill-out: #93a6a1;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0e1515; --surface: #1a1a19; --ink: #e5ecea; --ink-2: #c3d0cc; --muted: #93a6a1; --line: #2d3a38; --grid: #26302e;
-  --sat: #2398ad; --rep: #c97a22; --pill-ok: #5fcb8b; --pill-warn: #e9a743; --pill-bad: #f08a72; --pill-out: #93a6a1;
+  --sat: #2398ad; --rep: #c97a22; --track: #26302e; --pill-ok: #5fcb8b; --pill-warn: #e9a743; --pill-bad: #f08a72; --pill-out: #93a6a1;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
-  background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body);
+  background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body); margin: 0;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 28px 56px;
+  padding-block: 0 56px;
 }
-.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 56px; }
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; gap: 64px; }
 .col { max-width: 720px; display: grid; gap: 14px; }
-h1 { font: 800 clamp(2.4rem, 7vw, 4.2rem)/0.95 var(--display); letter-spacing: -0.02em; margin: 0; }
-h2 { font: 700 1.55rem/1.2 var(--display); margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
-h3 { font: 700 1.1rem/1.25 var(--display); margin: 0; }
+h1 { font: 800 clamp(2.6rem, 8vw, 4.4rem)/0.95 var(--display); letter-spacing: -0.02em; margin: 0; }
+h2 { font: 700 1.6rem/1.2 var(--display); margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h3 { font: 700 1.12rem/1.25 var(--display); margin: 0; }
 p { margin: 0; }
-.topline { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.lang { font: 500 0.85rem var(--mono); }
-.eyebrow { font: 500 0.78rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-.lede { font-size: 1.2rem; line-height: 1.5; color: var(--ink-2); max-width: 34ch; text-wrap: balance; }
-.muted { color: var(--muted); }
-.mono, .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+section { scroll-margin-top: 72px; }
 a { color: var(--sat); }
-.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 32px; align-items: end; }
-.hero figure { margin: 0; display: grid; gap: 8px; }
-.hero img, figure img { width: 100%; height: auto; max-width: 100%; border-radius: 6px; border: 1px solid var(--line); background: #fff; }
-figcaption { font-size: 0.85rem; color: var(--muted); max-width: 70ch; }
-.disclaim { border-left: 3px solid var(--rep); padding: 2px 0 2px 12px; color: var(--ink-2); font-size: 0.95rem; }
-.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 12px; }
-.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: grid; gap: 4px; align-content: start; }
-.tile .big { font: 800 2.2rem/1 var(--display); font-variant-numeric: tabular-nums; }
-.tile .big small { font: 500 0.95rem var(--mono); color: var(--muted); margin-left: 4px; }
-.tile .when { font-size: 0.82rem; color: var(--muted); }
-.pill { display: inline-flex; align-items: center; gap: 6px; font: 500 0.75rem var(--mono); letter-spacing: 0.04em; text-transform: uppercase; }
-.pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--sat); outline-offset: 2px; border-radius: 4px; }
+.muted { color: var(--muted); }
+
+/* Top bar */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg);
+  border-bottom: 1px solid var(--line); margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding: 10px max(16px, env(safe-area-inset-right, 0px)) 10px max(16px, env(safe-area-inset-left, 0px));
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.top-in { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; gap: 8px 20px; flex-wrap: wrap; }
+.brand { font: 800 1rem var(--display); color: var(--ink); text-decoration: none; letter-spacing: -0.01em; }
+.top nav { display: flex; flex-wrap: wrap; gap: 4px 16px; flex: 1 1 auto; }
+.top nav a { color: var(--ink-2); text-decoration: none; font-size: 0.92rem; }
+.top nav a:hover { color: var(--sat); }
+.langs { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; font: 500 0.82rem var(--mono); }
+.langs a, .langs span { padding: 4px 12px; text-decoration: none; color: var(--ink-2); }
+.langs span[aria-current] { background: var(--ink); color: var(--bg); }
+@media (max-width: 640px) { .top nav { display: none; } .top-in { justify-content: space-between; } }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 36px; align-items: center; padding-top: 40px; }
+.eyebrow { font: 500 0.78rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 1.22rem; line-height: 1.5; color: var(--ink-2); max-width: 32ch; text-wrap: balance; }
+.disclaim { border-left: 3px solid var(--rep); padding: 2px 0 2px 12px; color: var(--ink-2); font-size: 0.95rem; max-width: 46ch; }
+.pair { margin: 0; display: grid; gap: 10px; }
+.pair-imgs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.panel { margin: 0; display: grid; gap: 6px; align-content: start; }
+.panel img { width: 100%; height: auto; max-width: 100%; aspect-ratio: 5 / 8; object-fit: cover; border-radius: 6px; display: block; background: var(--track); }
+.panel span { font: 500 0.78rem/1.4 var(--mono); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+figcaption { font-size: 0.88rem; color: var(--muted); max-width: 70ch; }
+
+/* Estimate tiles */
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: grid; gap: 8px; align-content: start; }
+.tile h3 { font-size: 1rem; }
+.big { font: 800 2.3rem/1 var(--display); font-variant-numeric: tabular-nums; }
+.big small { font: 500 0.95rem var(--mono); color: var(--muted); margin-left: 6px; }
+.gauge { position: relative; height: 10px; border-radius: 5px; background: var(--track); overflow: hidden; }
+.gauge i { position: absolute; top: 0; bottom: 0; display: block; }
+.gauge .band { background: color-mix(in srgb, var(--sat) 30%, transparent); }
+.gauge .fill { left: 0; background: var(--sat); border-radius: 5px; }
+.when { font-size: 0.82rem; color: var(--muted); }
+
+/* Status pills */
+.pill { display: inline-flex; align-items: center; gap: 6px; font: 500 0.74rem var(--mono); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
+.pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
 .s-offered { color: var(--pill-ok); }
 .s-provisional { color: var(--pill-warn); }
 .s-failed { color: var(--pill-bad); }
 .s-out { color: var(--pill-out); }
-.legend { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 0.88rem; color: var(--ink-2); }
+
+/* Charts */
+.controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.seg button { border: 0; background: transparent; color: var(--ink-2); font: 500 0.85rem var(--body); padding: 5px 14px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 0.88rem; color: var(--ink-2); }
 .legend span { display: inline-flex; align-items: center; gap: 8px; }
 .sw-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--sat); }
 .sw-line { width: 18px; height: 2px; background: var(--rep); }
-.sw-ring { width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--rep); }
+.sw-ring { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--rep); }
+.group { display: grid; gap: 14px; }
+.group-head { display: grid; gap: 4px; }
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.dam { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 14px 12px; display: grid; gap: 8px; min-width: 0; }
+.dam { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 14px 12px; display: grid; gap: 10px; min-width: 0; align-content: start; }
 .dam header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
-.dam .cap { font-size: 0.8rem; color: var(--muted); }
+.cap { font-size: 0.82rem; color: var(--muted); }
 .chart { position: relative; }
-.chart svg { width: 100%; height: auto; display: block; overflow: visible; }
-.chart text { fill: var(--muted); font: 10px var(--mono); }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; touch-action: pan-y; }
+.chart text { fill: var(--muted); font: 11px var(--mono); }
 .tip {
   position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
-  padding: 6px 8px; font: 12px/1.4 var(--mono); color: var(--ink); box-shadow: 0 2px 10px rgba(0,0,0,.12); white-space: nowrap; z-index: 2;
+  padding: 6px 8px; font: 12px/1.45 var(--mono); color: var(--ink); box-shadow: 0 2px 10px rgba(0,0,0,.14); white-space: nowrap; z-index: 2;
 }
-.facts { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 0.82rem; color: var(--ink-2); }
-.facts b { font-family: var(--mono); font-weight: 500; }
-.note { font-size: 0.85rem; color: var(--muted); }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.facts div { display: grid; gap: 2px; min-width: 0; }
+.facts dt { font-size: 0.76rem; color: var(--muted); }
+.facts dd { margin: 0; font: 500 0.92rem var(--mono); font-variant-numeric: tabular-nums; }
+.note { font-size: 0.86rem; color: var(--muted); }
+
+/* Method, limits */
 ol.steps { margin: 0; padding-left: 22px; display: grid; gap: 10px; max-width: 70ch; }
 ol.steps li::marker { font-family: var(--mono); color: var(--muted); }
-.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.tablewrap { overflow-x: auto; }
-table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
-th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
-th { font: 500 0.75rem var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+
+/* Table */
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0; }
+th { font: 600 0.8rem/1.3 var(--body); color: var(--muted); vertical-align: bottom; white-space: normal; min-width: 80px; }
 td.num, th.num { text-align: right; }
-.credits { display: grid; gap: 10px; max-width: 75ch; font-size: 0.92rem; color: var(--ink-2); }
+td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { position: sticky; left: 0; background: var(--surface); font-weight: 600; z-index: 1; }
+td.flag { color: var(--pill-bad); font-weight: 600; }
+.credits { display: grid; gap: 10px; max-width: 75ch; font-size: 0.93rem; color: var(--ink-2); }
 footer { color: var(--muted); font-size: 0.82rem; }
-@media (max-width: 760px) { .hero, .grid, .two { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 760px) {
+  .hero, .grid, .two { grid-template-columns: minmax(0, 1fr); }
+  .hero { padding-top: 24px; gap: 24px; }
+  .wrap { gap: 48px; }
+}
 </style>
 
-<div class="wrap">
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#top">Baraj Aynası</a>
+    <nav aria-label="{{title}}">{{nav_html}}</nav>
+    <div class="langs" role="group" aria-label="{{lang_label}}">{{langs_html}}</div>
+  </div>
+</header>
+
+<div class="wrap" id="top">
   <section class="hero">
     <div class="col">
-      <div class="topline"><span class="eyebrow">İstanbul · Sentinel-2 · 2017–2026</span><a class="lang" href="{{path_other}}" hreflang="{{other_lang}}" lang="{{other_lang}}">{{other}}</a></div>
+      <span class="eyebrow">İstanbul · Sentinel-2 · 2017–2026</span>
       <h1>Baraj Aynası</h1>
       <p class="lede">{{lede}}</p>
       <p class="disclaim">{{disclaim}}</p>
     </div>
-    <figure>
-      <img src="{{img}}crops_buyukcekmece.png" alt="{{hero_alt}}">
+    <figure class="pair">
+      <div class="pair-imgs">
+        <div class="panel"><img src="{{img}}crop_buyukcekmece_high.jpg" alt="{{hero_alt}}" width="627" height="1004"><span>{{bc_high}}</span></div>
+        <div class="panel"><img src="{{img}}crop_buyukcekmece_low.jpg" alt="" width="627" height="1004"><span>{{bc_low}}</span></div>
+      </div>
       <figcaption>{{hero_caption}}</figcaption>
     </figure>
   </section>
 
-  <section class="col" style="max-width:none">
+  <section id="estimates" class="col" style="max-width:none">
     <h2>{{latest_h}}</h2>
     <p class="muted" id="latestNote"></p>
     <div class="tiles" id="tiles"></div>
   </section>
 
-  <section style="display:grid;gap:16px">
+  <section id="reservoirs" style="display:grid;gap:22px">
     <div class="col">
       <h2>{{grid_h}}</h2>
       <p class="muted">{{grid_p}}</p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="{{range_label}}">
+        <button type="button" id="rAll" aria-pressed="true">{{range_all}}</button>
+        <button type="button" id="rRecent" aria-pressed="false">{{range_recent}}</button>
+      </div>
       <div class="legend">
         <span><i class="sw-dot"></i>{{legend_sat}}</span>
         <span><i class="sw-line"></i>{{legend_ibb}}</span>
         <span><i class="sw-ring"></i>{{legend_iski}}</span>
       </div>
     </div>
-    <div class="grid" id="grid"></div>
+    <div class="group">
+      <div class="group-head"><h3>{{group_offered}}</h3><p class="muted">{{group_offered_p}}</p></div>
+      <div class="grid" id="gridOffered"></div>
+    </div>
+    <div class="group">
+      <div class="group-head"><h3>{{group_other}}</h3><p class="muted">{{group_other_p}}</p></div>
+      <div class="grid" id="gridOther"></div>
+    </div>
   </section>
 
-  <section class="col">
+  <section id="method" class="col">
     <h2>{{how_h}}</h2>
     <ol class="steps">{{steps_html}}</ol>
   </section>
 
-  <section style="display:grid;gap:16px">
+  <section id="limits" style="display:grid;gap:20px">
     <div class="col">
       <h2>{{falls_h}}</h2>
       <p>{{falls_p1}}</p>
       <p>{{falls_p2}}</p>
     </div>
     <div class="two">
-      <figure><img src="{{img}}crops_darlik.png" alt="{{darlik_alt}}"><figcaption>{{darlik_caption}}</figcaption></figure>
-      <div class="col" style="align-content:start">
+      <figure class="pair">
+        <div class="pair-imgs">
+          <div class="panel"><img src="{{img}}crop_darlik_high.jpg" alt="{{darlik_alt}}" width="627" height="1004" loading="lazy"><span>{{dk_high}}</span></div>
+          <div class="panel"><img src="{{img}}crop_darlik_low.jpg" alt="" width="627" height="1004" loading="lazy"><span>{{dk_low}}</span></div>
+        </div>
+        <figcaption>{{darlik_caption}}</figcaption>
+      </figure>
+      <div class="col">
         <h3>{{unet_h}}</h3>
         <p>{{unet_p}}</p>
       </div>
@@ -164,7 +249,7 @@ footer { color: var(--muted); font-size: 0.82rem; }
     <p class="note">{{table_note}}</p>
   </section>
 
-  <section class="credits">
+  <section id="data" class="credits">
     <h2>{{credits_h}}</h2>
     {{credits_html}}
   </section>
@@ -176,20 +261,24 @@ footer { color: var(--muted); font-size: 0.82rem; }
 const DATA = __DATA__;
 const T = DATA.t;
 const STATUS = T.status;
-const X0 = Date.UTC(2017, 0, 1), X1 = Date.UTC(2027, 0, 1);
-const W = 560, H = 190, M = { l: 30, r: 8, t: 10, b: 22 };
+const LARGEST = ["omerli", "terkos", "buyukcekmece", "darlik"];
+const ALL = [Date.UTC(2017, 0, 1), Date.UTC(2027, 0, 1)], RECENT = [Date.UTC(2024, 0, 1), Date.UTC(2027, 0, 1)];
+let range = ALL;
+const W = 560, H = 210, M = { l: 34, r: 8, t: 10, b: 24 };
 const t = (s) => Date.parse(s + "T00:00:00Z");
 const fmtDate = (s) => new Date(t(s)).toLocaleDateString(T.locale, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+const num = (v) => v.toLocaleString(T.locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const pct = (v) => (T.locale.startsWith("tr") ? "%" + Math.round(v) : Math.round(v) + "%");
 const el = (tag, attrs = {}, parent) => {
   const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
   for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
   if (parent) parent.appendChild(n);
   return n;
 };
-const num = (v) => v.toLocaleString(T.locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const html = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
-const sx = (ms) => M.l + (ms - X0) / (X1 - X0) * (W - M.l - M.r);
+const sx = (ms) => M.l + (ms - range[0]) / (range[1] - range[0]) * (W - M.l - M.r);
 const sy = (v) => M.t + (100 - v) / 100 * (H - M.t - M.b);
+const inRange = (s) => { const ms = t(s); return ms >= range[0] && ms < range[1]; };
 
 function nearest(arr, ms) {
   let lo = 0, hi = arr.length - 1;
@@ -198,90 +287,125 @@ function nearest(arr, ms) {
   return Math.abs(t(arr[lo][0]) - ms) <= Math.abs(t(arr[hi][0]) - ms) ? arr[lo] : arr[hi];
 }
 
-function chart(d) {
-  const box = html("div", "chart");
+function drawChart(box, d) {
+  box.textContent = "";
   const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": T.aria.replace("{name}", d.name) }, box);
-  for (const v of [0, 50, 100]) {
+  for (const v of [0, 25, 50, 75, 100]) {
     el("line", { x1: M.l, x2: W - M.r, y1: sy(v), y2: sy(v), stroke: "var(--grid)", "stroke-width": 1 }, svg);
-    el("text", { x: M.l - 6, y: sy(v) + 3, "text-anchor": "end" }, svg).textContent = v + "%";
+    if (v % 50 === 0) el("text", { x: M.l - 6, y: sy(v) + 4, "text-anchor": "end" }, svg).textContent = pct(v);
   }
-  for (let y = 2017; y <= 2026; y += 3) el("text", { x: sx(Date.UTC(y, 0, 1)), y: H - 6, "text-anchor": "start" }, svg).textContent = y;
+  const y0 = new Date(range[0]).getUTCFullYear(), y1 = new Date(range[1]).getUTCFullYear();
+  const step = y1 - y0 > 5 ? 2 : 1;
+  for (let y = y0; y < y1; y += step) {
+    const x = sx(Date.UTC(y, 0, 1));
+    el("line", { x1: x, x2: x, y1: H - M.b, y2: H - M.b + 4, stroke: "var(--muted)" }, svg);
+    el("text", { x, y: H - 6, "text-anchor": "middle" }, svg).textContent = y;
+  }
   const xe = sx(t(DATA.ibb_end));
-  el("line", { x1: xe, x2: xe, y1: M.t, y2: H - M.b, stroke: "var(--muted)", "stroke-dasharray": "3 3", "stroke-width": 1 }, svg);
-  el("polyline", { points: d.reported.map(([s, v]) => `${sx(t(s)).toFixed(1)},${sy(v).toFixed(1)}`).join(" "), fill: "none", stroke: "var(--rep)", "stroke-width": 2, "stroke-linejoin": "round" }, svg);
+  if (xe >= M.l) el("line", { x1: xe, x2: xe, y1: M.t, y2: H - M.b, stroke: "var(--muted)", "stroke-dasharray": "3 3", "stroke-width": 1 }, svg);
+  const rep = d.reported.filter(([s]) => inRange(s));
+  if (rep.length) el("polyline", { points: rep.map(([s, v]) => `${sx(t(s)).toFixed(1)},${sy(v).toFixed(1)}`).join(" "), fill: "none", stroke: "var(--rep)", "stroke-width": 2, "stroke-linejoin": "round" }, svg);
   const g = el("g", { fill: "var(--sat)" }, svg);
-  for (const [s, v] of d.sat) el("circle", { cx: sx(t(s)).toFixed(1), cy: sy(v).toFixed(1), r: 1.9 }, g);
-  for (const [s, v] of d.iski) el("circle", { cx: sx(t(s)), cy: sy(v), r: 4, fill: "var(--surface)", stroke: "var(--rep)", "stroke-width": 2 }, svg);
+  const r = range === ALL ? 2 : 3;
+  for (const [s, v] of d.sat) if (inRange(s)) el("circle", { cx: sx(t(s)).toFixed(1), cy: sy(v).toFixed(1), r }, g);
+  for (const [s, v] of d.iski) if (inRange(s)) el("circle", { cx: sx(t(s)), cy: sy(v), r: 4.5, fill: "var(--surface)", stroke: "var(--rep)", "stroke-width": 2 }, svg);
   const cross = el("line", { y1: M.t, y2: H - M.b, stroke: "var(--ink-2)", "stroke-width": 1, visibility: "hidden" }, svg);
   const bar = el("line", { stroke: "var(--sat)", "stroke-width": 3, "stroke-linecap": "round", visibility: "hidden", opacity: 0.5 }, svg);
-  const dot = el("circle", { r: 4.5, fill: "var(--sat)", stroke: "var(--surface)", "stroke-width": 2, visibility: "hidden" }, svg);
+  const dot = el("circle", { r: 5, fill: "var(--sat)", stroke: "var(--surface)", "stroke-width": 2, visibility: "hidden" }, svg);
   const hit = el("rect", { x: M.l, y: M.t, width: W - M.l - M.r, height: H - M.t - M.b, fill: "transparent" }, svg);
   const tip = html("div", "tip"); tip.hidden = true; box.appendChild(tip);
+  const sat = d.sat.filter(([s]) => inRange(s));
   const move = (ev) => {
-    const r = svg.getBoundingClientRect();
-    const px = (ev.clientX - r.left) / r.width * W;
-    const ms = X0 + (px - M.l) / (W - M.l - M.r) * (X1 - X0);
-    const s = nearest(d.sat, ms);
+    const rect = svg.getBoundingClientRect();
+    const px = (ev.clientX - rect.left) / rect.width * W;
+    const ms = range[0] + (px - M.l) / (W - M.l - M.r) * (range[1] - range[0]);
+    const s = nearest(sat, ms);
     if (!s) return;
     const x = sx(t(s[0]));
-    const rep = nearest(t(s[0]) <= t(DATA.ibb_end) ? d.reported : d.iski, t(s[0]));
+    const other = nearest(t(s[0]) <= t(DATA.ibb_end) ? d.reported : d.iski, t(s[0]));
     for (const n of [cross, bar, dot]) n.setAttribute("visibility", "visible");
     cross.setAttribute("x1", x); cross.setAttribute("x2", x);
     bar.setAttribute("x1", x); bar.setAttribute("x2", x);
     bar.setAttribute("y1", sy(Math.min(100, s[1] + d.bar))); bar.setAttribute("y2", sy(Math.max(0, s[1] - d.bar)));
     dot.setAttribute("cx", x); dot.setAttribute("cy", sy(s[1]));
     tip.textContent = "";
-    tip.append(html("div", null, fmtDate(s[0])), html("div", null, `${T.tip_sat} ${s[1].toFixed(0)}% ± ${d.bar.toFixed(0)}`));
-    if (rep && Math.abs(t(rep[0]) - t(s[0])) <= 8 * 864e5) tip.append(html("div", null, `${T.tip_rep} ${rep[1].toFixed(0)}% (${fmtDate(rep[0])})`));
+    tip.append(html("div", null, fmtDate(s[0])), html("div", null, `${T.tip_sat} ${pct(s[1])} ± ${Math.round(d.bar)}`));
+    if (other && Math.abs(t(other[0]) - t(s[0])) <= 8 * 864e5) tip.append(html("div", null, `${T.tip_rep} ${pct(other[1])} (${fmtDate(other[0])})`));
     tip.hidden = false;
-    const left = x / W * r.width;
-    tip.style.left = Math.min(Math.max(0, left + 10), r.width - tip.offsetWidth) + "px";
+    const left = x / W * rect.width;
+    tip.style.left = Math.min(Math.max(0, left + 10), rect.width - tip.offsetWidth) + "px";
     tip.style.top = "4px";
   };
   hit.addEventListener("pointermove", move);
   hit.addEventListener("pointerdown", move);
   hit.addEventListener("pointerleave", () => { for (const n of [cross, bar, dot]) n.setAttribute("visibility", "hidden"); tip.hidden = true; });
-  return box;
 }
 
+const charts = [];
+function card(d) {
+  const c = html("article", "dam");
+  const head = html("header");
+  const left = html("div");
+  left.append(html("h3", null, d.name), html("div", "cap", `${num(d.capacity)} ${T.capacity}`));
+  head.append(left, html("span", `pill s-${d.status}`, STATUS[d.status]));
+  const box = html("div", "chart");
+  charts.push([box, d]);
+  const facts = html("dl", "facts");
+  const fact = (label, val) => { const w = html("div"); w.append(html("dt", null, label), html("dd", null, val)); return w; };
+  facts.append(
+    fact(T.f_heldout, `${num(d.heldout_mae)} ${T.pts}`),
+    fact(T.f_iski, `${num(d.iski_mae)} ${T.pts} · ${d.iski_n} ${T.f_dates}`),
+    fact(T.f_bar, `± ${num(d.bar)}`),
+  );
+  c.append(head, box, facts);
+  if (d.note) c.append(html("p", "note", d.note));
+  return c;
+}
+
+function redraw() { for (const [box, d] of charts) drawChart(box, d); }
+
 function render() {
-  const shown = DATA.dams.filter((d) => d.status === "offered");
-  const lastDate = shown.map((d) => d.latest.date).sort().at(-1);
+  const offered = DATA.dams.filter((d) => d.status === "offered").sort((a, b) => b.capacity - a.capacity);
+  const others = DATA.dams.filter((d) => d.status !== "offered").sort((a, b) => b.capacity - a.capacity);
+  const lastDate = offered.map((d) => d.latest.date).sort().at(-1);
   document.getElementById("latestNote").textContent = T.latest_note.replace("{date}", fmtDate(lastDate));
   const tiles = document.getElementById("tiles");
-  for (const d of shown) {
+  for (const d of offered) {
     const tl = html("div", "tile");
-    tl.append(html("span", `pill s-${d.status}`, d.name));
-    const big = html("div", "big", `${Math.round(d.latest.pct)}%`);
+    const big = html("div", "big", pct(d.latest.pct));
     big.append(html("small", null, `± ${Math.round(d.bar)}`));
-    tl.append(big, html("span", "when", `${fmtDate(d.latest.date)} ${T.scene}`));
+    const gauge = html("div", "gauge");
+    gauge.setAttribute("role", "img");
+    gauge.setAttribute("aria-label", T.gauge.replace("{name}", d.name).replace("{pct}", pct(d.latest.pct)).replace("{bar}", Math.round(d.bar)));
+    const lo = Math.max(0, d.latest.pct - d.bar), hi = Math.min(100, d.latest.pct + d.bar);
+    const band = html("i", "band"); band.style.left = lo + "%"; band.style.width = hi - lo + "%";
+    const fill = html("i", "fill"); fill.style.width = d.latest.pct + "%";
+    gauge.append(band, fill);
+    tl.append(html("h3", null, d.name), big, gauge, html("span", "when", `${fmtDate(d.latest.date)} ${T.scene}`));
     tiles.appendChild(tl);
   }
-  const grid = document.getElementById("grid");
-  for (const d of DATA.dams) {
-    const card = html("article", "dam");
-    const head = html("header");
-    const left = html("div");
-    left.append(html("h3", null, d.name), html("span", "cap", `${num(d.capacity)} ${T.capacity}`));
-    head.append(left, html("span", `pill s-${d.status}`, STATUS[d.status]));
-    const facts = html("div", "facts");
-    const fact = (label, val) => { const s = html("span", null, label + " "); s.append(html("b", null, val)); return s; };
-    facts.append(
-      fact(T.f_heldout, `${num(d.heldout_mae)} ${T.pts}`),
-      fact(T.f_iski, `${num(d.iski_mae)} ${T.pts} (${d.iski_n} ${T.f_dates})`),
-      fact(T.f_bar, `± ${num(d.bar)}`),
-    );
-    card.append(head, chart(d), facts);
-    if (d.note) card.append(html("p", "note", d.note));
-    grid.appendChild(card);
-  }
+  for (const d of offered) document.getElementById("gridOffered").appendChild(card(d));
+  for (const d of others) document.getElementById("gridOther").appendChild(card(d));
+  redraw();
   const body = document.getElementById("table");
-  for (const d of DATA.dams) {
+  for (const d of [...offered, ...others]) {
     const tr = document.createElement("tr");
-    const cells = [d.name, STATUS[d.status], num(d.capacity), num(d.heldout_mae), num(d.iski_mae), d.iski_n, "± " + num(d.bar), num(d.unet_mae)];
-    cells.forEach((c, i) => { const td = html("td", i >= 2 ? "num" : null, c); if (i === 1) td.className = `s-${d.status}`; tr.appendChild(td); });
+    const statusTd = html("td"); statusTd.append(html("span", `pill s-${d.status}`, STATUS[d.status]));
+    const over = LARGEST.includes(d.key) && d.heldout_mae > 10;
+    const testTd = html("td", "num" + (over ? " flag" : ""), (over ? "▲ " : "") + num(d.heldout_mae));
+    tr.append(html("td", null, d.name), statusTd, html("td", "num", num(d.capacity)), testTd, html("td", "num", num(d.iski_mae)),
+      html("td", "num", String(d.iski_n)), html("td", "num", "± " + num(d.bar)), html("td", "num", num(d.unet_mae)));
     body.appendChild(tr);
   }
 }
+
+function setRange(r) {
+  range = r;
+  document.getElementById("rAll").setAttribute("aria-pressed", String(r === ALL));
+  document.getElementById("rRecent").setAttribute("aria-pressed", String(r === RECENT));
+  redraw();
+}
+document.getElementById("rAll").addEventListener("click", () => setRange(ALL));
+document.getElementById("rRecent").addEventListener("click", () => setRange(RECENT));
 render();
 </script>

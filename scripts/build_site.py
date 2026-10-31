@@ -65,8 +65,12 @@ def main() -> None:
         )
     SITE.mkdir(exist_ok=True)
     (SITE / "img").mkdir(exist_ok=True)
+    for old in (SITE / "img").glob("crops_*.png"):
+        old.unlink()
     for key in ("buyukcekmece", "darlik"):
-        shutil.copy(f"results/figures/crops_{key}.png", SITE / "img" / f"crops_{key}.png")
+        for which in ("high", "low"):
+            shutil.copy(f"results/figures/crop_{key}_{which}.jpg", SITE / "img" / f"crop_{key}_{which}.jpg")
+    crops = json.loads(Path("results/figures/crops_meta.json").read_text(encoding="utf-8"))
     table = pd.read_csv("labels/patches.csv").merge(pd.read_csv("labels/review.csv"), on="pid")
     numbers = {
         "n_train": int(((table.split == "train") & (table.choice != "reject")).sum()),
@@ -76,7 +80,7 @@ def main() -> None:
     template = TEMPLATE.read_text(encoding="utf-8")
     for text, folder, img in ((EN, SITE, "img/"), (TR, SITE / "tr", "../img/")):
         folder.mkdir(exist_ok=True)
-        html = render(template, text, img, numbers, dams)
+        html = render(template, text, img, numbers, dams, crops)
         head, body = html.split("</style>", 1)
         page = (
             f'<!doctype html>\n<html lang="{text["lang"]}">\n<head>\n<meta charset="utf-8">\n'
@@ -96,7 +100,22 @@ def fmt(value: float, text: dict) -> str:
     return s.replace(".", ",") if text["lang"] == "tr" else s
 
 
-def render(template: str, text: dict, img: str, numbers: dict, dams: list[dict]) -> str:
+MONTHS = {
+    "en": "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(),
+    "tr": "Oca Şub Mar Nis May Haz Tem Ağu Eyl Eki Kas Ara".split(),
+}
+NAV_IDS = ["estimates", "reservoirs", "method", "limits", "data"]
+
+
+def panel_label(meta: dict, text: dict) -> str:
+    y, m, d = (int(x) for x in meta["date"].split("-"))
+    date = f"{d} {MONTHS[text['lang']][m - 1]} {y}"
+    pct = round(meta["occupancy_pct"])
+    pct = f"%{pct}" if text["lang"] == "tr" else f"{pct}%"
+    return text["panel"].format(date=date, pct=pct, km2=fmt(meta["water_km2"], text))
+
+
+def render(template: str, text: dict, img: str, numbers: dict, dams: list[dict], crops: dict) -> str:
     nums = {k: (fmt(v, text) if isinstance(v, float) else str(v)) for k, v in numbers.items()}
     fill = lambda s: s.format(**nums)  # noqa: E731
     page_dams = [{**d, "note": fill(text["notes"].get(d["key"], ""))} for d in dams]
@@ -107,9 +126,19 @@ def render(template: str, text: dict, img: str, numbers: dict, dams: list[dict])
         unet_p=fill(text["unet_p"]),
         steps_html="".join(f"<li>{s}</li>" for s in text["steps"]),
         credits_html="\n    ".join(f"<p>{c}</p>" for c in text["credits"]),
+        nav_html="".join(f'<a href="#{i}">{label}</a>' for i, label in zip(NAV_IDS, text["nav"])),
+        langs_html=(
+            '<span aria-current="page">EN</span><a href="tr/" hreflang="tr" lang="tr">TR</a>'
+            if text["lang"] == "en"
+            else '<a href="../" hreflang="en" lang="en">EN</a><span aria-current="page">TR</span>'
+        ),
+        bc_high=panel_label(crops["buyukcekmece_high"], text),
+        bc_low=panel_label(crops["buyukcekmece_low"], text),
+        dk_high=panel_label(crops["darlik_high"], text),
+        dk_low=panel_label(crops["darlik_low"], text),
         th_html="".join(('<th class="num">' if i >= 2 else "<th>") + h + "</th>" for i, h in enumerate(text["th"])),
     )
-    js = {k: text[k] for k in ("status", "capacity", "f_heldout", "f_iski", "f_dates", "f_bar", "pts", "tip_sat", "tip_rep", "aria", "latest_note", "scene", "locale")}
+    js = {k: text[k] for k in ("status", "capacity", "f_heldout", "f_iski", "f_dates", "f_bar", "pts", "tip_sat", "tip_rep", "aria", "latest_note", "scene", "locale", "gauge")}
     out = template.replace("__DATA__", json.dumps({"dams": page_dams, "ibb_end": str(ibb.END.date()), "t": js}, ensure_ascii=False))
     for k, v in keys.items():
         out = out.replace("{{" + k + "}}", v)
