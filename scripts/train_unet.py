@@ -7,8 +7,10 @@ with the lowest validation loss is kept, and training stops after 30 epochs
 without improvement (or at 200). Test patches are not touched here.
 
     uv run python scripts/train_unet.py
+    uv run python scripts/unet_seeds.py      # several seeds, see that script
 """
 
+import argparse
 import json
 from pathlib import Path
 
@@ -51,9 +53,10 @@ def augment(x, y, ig):
     return x, y, ig
 
 
-def main() -> None:
-    torch.manual_seed(SEED)
-    rng = np.random.default_rng(SEED)
+def train(seed: int, model_path: Path) -> list[dict]:
+    """Train one model, save the best epoch to model_path and return the loss history."""
+    torch.manual_seed(seed)
+    rng = np.random.default_rng(seed)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     rows = load("train")
     scenes = rows.item_id.unique()
@@ -61,7 +64,7 @@ def main() -> None:
     val = rows.item_id.isin(val_scenes)
     train_ds = TensorDataset(*tensors(rows[~val]))
     xv, yv, iv = (t.to(device) for t in tensors(rows[val]))
-    loader = DataLoader(train_ds, batch_size=16, shuffle=True, generator=torch.Generator().manual_seed(SEED))
+    loader = DataLoader(train_ds, batch_size=16, shuffle=True, generator=torch.Generator().manual_seed(seed))
 
     model = UNet().to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=1e-3, weight_decay=1e-4)
@@ -82,11 +85,19 @@ def main() -> None:
         history.append({"epoch": epoch, "train_loss": total / len(train_ds), "val_loss": val_loss})
         if val_loss < best:
             best, best_epoch = val_loss, epoch
-            MODEL.parent.mkdir(parents=True, exist_ok=True)
-            torch.save(model.state_dict(), MODEL)
+            model_path.parent.mkdir(parents=True, exist_ok=True)
+            torch.save(model.state_dict(), model_path)
         if epoch - best_epoch >= PATIENCE:
             break
     print(f"device {device}; {len(train_ds)} train / {int(val.sum())} val patches; best val loss {best:.4f} at epoch {best_epoch}")
+    return history
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--seed", type=int, default=SEED)
+    args = ap.parse_args()
+    history = train(args.seed, MODEL)
     Path("results/unet").mkdir(parents=True, exist_ok=True)
     Path("results/unet/training_history.json").write_text(json.dumps(history), encoding="utf-8")
 

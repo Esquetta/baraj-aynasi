@@ -26,6 +26,22 @@ OUT = Path("results/unet")
 MIN_CLEAR = 0.98
 
 
+def scene_bands(dam_key: str, item_id: str, aois: list[np.ndarray]):
+    """For each AOI part of one scene: (aoi, green, red, nir, swir, clear) as reflectance at 10 m."""
+    chip = load_chip(CHIPS / dam_key / f"{item_id}.npz")
+    extra = load_chip(extra_path(CHIPS / dam_key / f"{item_id}.npz"))
+    off = boa_offset(str(chip["baseline"]))
+    for j, aoi in enumerate(aois):
+        if not aoi.any():
+            continue
+        green = reflectance(chip[f"b03_{j}"], off)
+        nir = reflectance(chip[f"b08_{j}"], off)
+        red = reflectance(extra[f"b04_{j}"], off)
+        swir = upsample2(reflectance(extra[f"b11_{j}"], off))[: green.shape[0], : green.shape[1]]
+        clear = clear_mask(upsample2(chip[f"scl_{j}"]))[: green.shape[0], : green.shape[1]] & np.isfinite(green) & np.isfinite(nir)
+        yield aoi, green, red, nir, swir, clear
+
+
 def main() -> None:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = UNet().to(device)
@@ -37,18 +53,8 @@ def main() -> None:
         aois = rasterize_aoi(load_aoi(AOI, dam.key), load_grid(CHIPS, dam.key))
         rows = base[base.dam == dam.key]
         for r in rows.itertuples():
-            chip = load_chip(CHIPS / dam.key / f"{r.item_id}.npz")
-            extra = load_chip(extra_path(CHIPS / dam.key / f"{r.item_id}.npz"))
-            off = boa_offset(str(chip["baseline"]))
             area = {"mndwi": 0.0, "unet": 0.0}
-            for j, aoi in enumerate(aois):
-                if not aoi.any():
-                    continue
-                green = reflectance(chip[f"b03_{j}"], off)
-                nir = reflectance(chip[f"b08_{j}"], off)
-                red = reflectance(extra[f"b04_{j}"], off)
-                swir = upsample2(reflectance(extra[f"b11_{j}"], off))[: green.shape[0], : green.shape[1]]
-                clear = clear_mask(upsample2(chip[f"scl_{j}"]))[: green.shape[0], : green.shape[1]] & np.isfinite(green) & np.isfinite(nir)
+            for aoi, green, red, nir, swir, clear in scene_bands(dam.key, r.item_id, aois):
                 with np.errstate(invalid="ignore"):
                     area["mndwi"] += water_area_km2((mndwi(green, swir) > 0) & clear, aoi)
                 prob = predict(model, input_stack(green, red, nir, swir), device)

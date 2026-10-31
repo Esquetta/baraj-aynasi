@@ -84,14 +84,13 @@ def main() -> None:
         sys.exit(1)
     harvest_failed = False
     if not args.no_harvest:
-        harvest_failed = subprocess.run([sys.executable, "scripts/iski_harvest.py"]).returncode != 0
+        harvest_failed = subprocess.run([sys.executable, "scripts/iski_harvest.py"], check=False).returncode != 0
     build()
-    if not args.no_push:
-        # A daily update run may have pushed in between; rebuild on top of it once.
+    # A daily update run may have pushed in between; rebuild on top of it once.
+    if not args.no_push and not commit_and_push():
+        build()
         if not commit_and_push():
-            build()
-            if not commit_and_push():
-                sys.exit(1)
+            sys.exit(1)
     if harvest_failed:
         sys.exit(1)
 

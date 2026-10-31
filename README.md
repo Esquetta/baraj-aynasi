@@ -22,11 +22,12 @@ dates each). Kazandere is provisional after 17- and 23-point misses in summer
 A small U-Net, trained on 236 patches labelled by AI agents (60 more held out
 for testing; 56 of the labels spot-checked by the owner), was tried as an
 alternative water mask. It handles the late-spring scenes where NDWI misses
-algal water without a hand-made filter: Darlık's held-out error drops from 11.7
-to 5.1 and its error bar from ±24 to ±14, while removing those scenes from the
-NDWI series gives about the same error. Its numbers move by a few points between
-training runs, it is slightly worse on a few reservoirs, and Terkos and
-Büyükçekmece still miss the stop line. The served estimates stay on NDWI. See
+algal water without a hand-made filter: over five training runs Darlık's
+held-out error drops from 11.7 to 5.3 on average (4.9–5.7) and its error bar
+from ±24 to ±12, while removing those scenes from the NDWI series gives about
+the same error. It beats NDWI in every run on Ömerli, Darlık, Terkos,
+Istrancalar and Elmalı, is worse in every run on Sazlıdere and Kazandere, and
+Terkos and Büyükçekmece still miss the stop line in every run. The served estimates stay on NDWI. See
 [results/unet/README.md](results/unet/README.md).
 
 ## How it works

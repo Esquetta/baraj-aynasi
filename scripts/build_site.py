@@ -49,6 +49,7 @@ def main() -> None:
     iski_m = pd.read_csv("results/iski_metrics.csv").set_index("dam")
     iski_series = pd.read_csv("results/iski_series.csv", parse_dates=["date"])
     unet = pd.read_csv("results/unet/comparison.csv").set_index("dam")
+    unet_runs = pd.read_csv("results/unet/seeds.csv").groupby("dam").test_mae.mean()
     areas = pd.read_csv("results/areas.csv", parse_dates=["date"])
     weekly = ibb_weekly()
     dams = []
@@ -72,7 +73,7 @@ def main() -> None:
                 "heldout_mae": round(float(held.loc[dam.key, "test_mae"]), 1),
                 "iski_mae": round(float(iski_m.loc[dam.key, "mae"]), 1),
                 "iski_n": int(iski_m.loc[dam.key, "n"]),
-                "unet_mae": round(float(unet.loc[dam.key, "test_mae_unet"]), 1),
+                "unet_mae": round(float(unet_runs[dam.key]), 1),
                 "latest": {"date": last.date.strftime("%Y-%m-%d"), "pct": round(float(est[-1]), 1)},
                 "sat": sat,
                 "reported": reported,
@@ -91,7 +92,7 @@ def main() -> None:
     numbers = {
         "n_train": int(((table.split == "train") & (table.choice != "reject")).sum()),
         "darlik_ndwi": float(unet.loc["darlik", "test_mae_ndwi"]),
-        "darlik_unet": float(unet.loc["darlik", "test_mae_unet"]),
+        "darlik_unet": float(unet_runs["darlik"]),
     }
     template = TEMPLATE.read_text(encoding="utf-8")
     for text, folder, img in ((EN, SITE, "img/"), (TR, SITE / "tr", "../img/")):

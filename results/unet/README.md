@@ -37,8 +37,9 @@ NDWI; the U-Net is an alternative under test.
   236 training-period patches (204 train, 32 validation by scene). Loss is binary
   cross-entropy plus Dice, skipping cloud and no-data pixels; flips and 90°
   rotations; AdamW; the epoch with the lowest validation loss (197 of 200) is
-  kept. About 1.5 minutes on an RTX 4070 Ti. The numbers below are from one
+  kept. About 1.5 minutes on an RTX 4070 Ti. The table below is from one
   run after the owner's correction; the model was not changed after testing.
+  Five more runs with different seeds follow in [Run-to-run spread](#run-to-run-spread).
 
 ## Pixel test (60 held-out patches)
 
@@ -89,9 +90,8 @@ outlier filter, so scene counts differ slightly; see [comparison.csv](comparison
 - **One run is not enough to rank the methods closely.** The first U-Net run
   (237 patches) and this one (236, one label removed) differ by more than the
   label change explains: Terkos's held-out error went from 22.9 to 15.0,
-  Ömerli's from 4.1 to 4.7, Elmalı's from 13.7 to 13.0. GPU training is not
-  deterministic, so U-Net numbers carry a few points of run-to-run spread on
-  their own; differences smaller than that should not be read as real.
+  Ömerli's from 4.1 to 4.7, Elmalı's from 13.7 to 13.0. The five-seed runs
+  below measure that spread.
 - Ömerli, Alibey, Istrancalar and Elmalı also improve on held-out error;
   Elmalı stays out because it is too small.
 - **The U-Net is slightly worse on some reservoirs**: held-out error on
@@ -111,10 +111,47 @@ outlier filter, so scene counts differ slightly; see [comparison.csv](comparison
 - The İSKİ column has very few pairs per reservoir; differences of one or two
   points there are noise.
 
+## Run-to-run spread
+
+`scripts/unet_seeds.py` trains the same U-Net five more times (seeds 0–4: the
+seed sets the validation scenes, batch order and starting weights; GPU
+training adds its own noise), measures the same scenes as the single run and
+scores each run the same way. Mean, standard deviation and range of the
+held-out MAE over the five runs, next to NDWI:
+
+| Reservoir | NDWI | U-Net mean ± sd | U-Net range | U-Net beats NDWI |
+| --- | ---: | ---: | ---: | --- |
+| **Ömerli** | 5.33 | 3.88 ± 0.47 | 3.29–4.50 | every run |
+| **Darlık** | 11.71 | 5.28 ± 0.33 | 4.87–5.67 | every run |
+| **Terkos** | 22.98 | 16.39 ± 2.92 | 14.40–21.51 | every run |
+| **Büyükçekmece** | 11.50 | 11.10 ± 0.06 | 11.03–11.19 | every run, by under 0.5 |
+| Alibey | 3.16 | 2.97 ± 0.35 | 2.45–3.39 | 4 of 5 |
+| Sazlıdere | 1.14 | 1.96 ± 0.10 | 1.86–2.08 | never |
+| Kazandere | 5.61 | 6.16 ± 0.25 | 5.90–6.53 | never |
+| Pabuçdere | 1.34 | 1.37 ± 0.22 | 1.13–1.61 | 3 of 5 |
+| Istrancalar | 5.18 | 3.58 ± 0.27 | 3.34–3.96 | every run |
+| Elmalı | 16.95 | 13.78 ± 1.29 | 12.51–15.60 | every run |
+
+- The Darlık and Ömerli gains hold in every run; Terkos moves the most
+  (14.4 to 21.5), so the single run's 15.0 was near its best case.
+- Sazlıdere and Kazandere are worse than NDWI in every run, by 0.3 to 0.9
+  points.
+- The 90% bar is narrower than NDWI's in every run on all ten reservoirs, but
+  it still covers fewer held-out scenes than nominal on Büyükçekmece (78% in
+  every run), Terkos (83% on average), Sazlıdere (86%) and Elmalı (86%).
+- Against İSKİ the spread is large where there are few pairs: Kazandere
+  3.3–12.2 and Istrancalar 1.2–11.4 points over the five runs, so those
+  columns say little.
+
+Per-run numbers: [seeds.csv](seeds.csv). The page's U-Net column shows the
+five-run mean.
+
 ## Kill rule with U-Net masks
 
 The four-largest stop line (held-out MAE above 10 points) is still met for
 **Terkos (15.0) and Büyükçekmece (11.2)**; Darlık (5.1) and Ömerli (4.7) pass.
+The same holds in each of the five seed runs (Terkos at least 14.4,
+Büyükçekmece at least 11.0).
 The rule was set for the project, not per mask, so the outcome in
 [../README.md](../README.md) stands.
 
@@ -132,6 +169,7 @@ uv run python scripts/fit.py --areas results/unet/areas_mndwi.csv --out results/
 uv run python scripts/iski_check.py --results results/unet/unet
 uv run python scripts/iski_check.py --results results/unet/mndwi
 uv run python scripts/compare_methods.py
+uv run python scripts/unet_seeds.py      # five more runs -> seeds.csv
 ```
 
 GPU training is not bit-for-bit deterministic, so a retrained model can differ
