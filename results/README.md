@@ -119,7 +119,9 @@ This scope is a post-hoc choice made after the kill rule was met (see above).
 
 - Estimates with error bars are offered for **Ömerli, Alibey, Sazlıdere,
   Pabuçdere and Istrancalar**. Kazandere passed held-out but missed in summer
-  2026 on the untouched test; treat it as provisional.
+  2026 on the untouched test. It was first kept as provisional, then withdrawn
+  on 2026-11-01 when its estimates for late August and early September 2026
+  (35–42%) were about 20 points above İSKİ's figures (12–18%).
 - **Terkos** is out: it fails both tests by about 20 points.
 - **Darlık** failed held-out mainly at the 2023 record low; on 5 pairs in
   2024-2026 it stayed within 4 points on average. It stays labelled as failing.

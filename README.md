@@ -16,8 +16,9 @@ and Darlık; [results/README.md](results/README.md) is that write-up. Continuing
 with a narrower scope was a later decision: estimates are offered for Ömerli,
 Alibey, Sazlıdere, Pabuçdere and Istrancalar, which missed İSKİ's 2024-2026
 figures by 1.6 to 4.8 points on average in an untouched test (4 to 6 comparison
-dates each). Kazandere is provisional after 17- and 23-point misses in summer
-2026; Terkos is out, and Elmalı is too small.
+dates each). Kazandere was withdrawn after 17- and 23-point misses in summer
+2026 and estimates about 20 points above İSKİ's in August–September 2026;
+Terkos is out, and Elmalı is too small.
 
 A small U-Net, trained on 236 patches labelled by AI agents (60 more held out
 for testing; 56 of the labels spot-checked by the owner), was tried as an

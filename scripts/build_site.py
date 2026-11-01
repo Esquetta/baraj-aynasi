@@ -27,7 +27,7 @@ IBB_WEEKLY = Path("results/ibb_weekly.csv")
 TEMPLATE = Path("scripts/site_template.html")
 STATUS = {
     "omerli": "offered", "alibey": "offered", "sazlidere": "offered", "pabucdere": "offered", "istrancalar": "offered",
-    "kazandere": "provisional", "darlik": "failed", "buyukcekmece": "failed", "terkos": "out", "elmali": "out",
+    "kazandere": "withdrawn", "darlik": "failed", "buyukcekmece": "failed", "terkos": "out", "elmali": "out",
 }
 
 
