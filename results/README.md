@@ -158,6 +158,8 @@ untouched-test section above.
   Büyükçekmece, Darlık, Elmalı) failed the 10-point held-out check; do not use them.
 - `figures/fit_<dam>.png`: curve, held-out points and time series.
 - `figures/crops_<dam>.png`: true colour with the NDWI outline at high and low water.
+- `figures/og_en.jpg`, `figures/og_tr.jpg`: link preview images for the page
+  (`scripts/og_image.py`).
 - `iski_check.csv`, `iski_metrics.csv`, `figures/iski_check.png`: the untouched
   test. Occupancy figures in these files are İSKİ's, cited from iski.istanbul.
 - `iski_series.csv`: every İSKİ figure collected after 2024-02-19, one per

@@ -11,6 +11,7 @@ scripts/iski_publish.py rewrites from the collected files.
 import json
 import shutil
 import sys
+from html import escape
 from pathlib import Path
 
 import pandas as pd
@@ -23,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from site_text import EN, TR  # noqa: E402
 
 SITE = Path("site")
+URL = "https://esquetta.github.io/baraj-aynasi/"
 IBB_WEEKLY = Path("results/ibb_weekly.csv")
 TEMPLATE = Path("scripts/site_template.html")
 STATUS = {
@@ -87,6 +89,8 @@ def main() -> None:
     for key in ("buyukcekmece", "darlik"):
         for which in ("high", "low"):
             shutil.copy(f"results/figures/crop_{key}_{which}.jpg", SITE / "img" / f"crop_{key}_{which}.jpg")
+    for lang in ("en", "tr"):
+        shutil.copy(f"results/figures/og_{lang}.jpg", SITE / "img" / f"og_{lang}.jpg")
     crops = json.loads(Path("results/figures/crops_meta.json").read_text(encoding="utf-8"))
     table = pd.read_csv("labels/patches.csv").merge(pd.read_csv("labels/review.csv"), on="pid")
     numbers = {
@@ -102,6 +106,7 @@ def main() -> None:
         page = (
             f'<!doctype html>\n<html lang="{text["lang"]}">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
+            + share_tags(text)
             + head
             + "</style>\n</head>\n<body>"
             + body
@@ -109,6 +114,23 @@ def main() -> None:
         )
         (folder / "index.html").write_text(page, encoding="utf-8")
         print(f"wrote {folder / 'index.html'} ({(folder / 'index.html').stat().st_size // 1024} KB)")
+
+
+def share_tags(text: dict) -> str:
+    """Open Graph and Twitter card tags, so shared links show the preview image."""
+    lang = text["lang"]
+    tags = {
+        "og:type": "website",
+        "og:url": URL if lang == "en" else URL + "tr/",
+        "og:title": text["title"],
+        "og:description": text["meta_desc"],
+        "og:image": f"{URL}img/og_{lang}.jpg",
+        "og:image:width": "1200",
+        "og:image:height": "630",
+        "og:locale": "en_GB" if lang == "en" else "tr_TR",
+    }
+    out = "".join(f'<meta property="{k}" content="{escape(v)}">\n' for k, v in tags.items())
+    return out + '<meta name="twitter:card" content="summary_large_image">\n'
 
 
 def fmt(value: float, text: dict) -> str:
