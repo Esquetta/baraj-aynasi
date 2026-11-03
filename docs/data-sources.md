@@ -80,8 +80,9 @@ shown next to them on the project page.
   year since 2016. The page's API token was not
   used outside the page.
 - From 2026-10-31, `scripts/iski_harvest.py` repeats that page visit once a
-  day in a headless browser (Playwright, installed with `uv sync --extra
-  harvest`) and saves `data/iski/live_<date>.json`. Because the page shows the
+  day in headless Microsoft Edge with its sandbox on (driven by Playwright,
+  installed with `uv sync --extra harvest`; Edge itself must be on the machine)
+  and saves `data/iski/live_<date>.json`. Because the page shows the
   same calendar day for the past ten years, a year of daily visits fills in
   every day of 2024–2026. It runs once a day after about 09:30 Istanbul time,
   when İSKİ updates the page, from a scheduled task on the author's machine
