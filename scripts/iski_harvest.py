@@ -40,7 +40,9 @@ READ_STATE = """(name) => {
 def harvest() -> dict:
     out = {}
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        # A third-party page: use the installed Edge, which gets security updates,
+        # with its sandbox on. Playwright's pinned Chromium lags and runs without one.
+        browser = p.chromium.launch(channel="msedge", chromium_sandbox=True)
         page = browser.new_page(locale="tr-TR")
         page.goto(URL, wait_until="networkidle")
         decline = page.get_by_role("button", name="Reddet")
