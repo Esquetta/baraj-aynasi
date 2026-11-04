@@ -9,6 +9,7 @@ import pandas as pd
 STOP_LINE = 10.0  # occupancy points, the project's stop rule on held-out error
 RECENT_PAIRS = 5
 MAX_AGE_DAYS = 2
+RADAR_MAX_AGE_DAYS = 21
 PAGE_TITLE = "Live page differs from main"
 
 
@@ -44,11 +45,24 @@ def page_differs(url: str, live: bytes, built: bytes) -> dict[str, str]:
     return {f"{PAGE_TITLE}: {url}": "The last deploy may have failed. Check the Deploy site workflow."}
 
 
-def recent_error(pairs: pd.DataFrame, names: dict[str, str]) -> dict[str, str]:
+def radar_stale(estimates: pd.DataFrame, names: dict[str, str], today: pd.Timestamp) -> dict[str, str]:
+    """Radar passes come every five or six days and the radar step may fail without failing the update."""
+    last = estimates[estimates.dam.isin(names)].groupby("dam").date.max().min()
+    if (today - last).days <= RADAR_MAX_AGE_DAYS:
+        return {}
+    return {
+        "Radar estimates have stopped updating": (
+            f"At least one offered reservoir's last radar estimate is from {last:%Y-%m-%d}. "
+            "Check the radar step in the Update estimates workflow."
+        )
+    }
+
+
+def recent_error(pairs: pd.DataFrame, names: dict[str, str], label: str = "Recent error") -> dict[str, str]:
     """Offered reservoirs (key -> name) whose latest pairs with İSKİ miss by more than the stop line."""
     out = {}
     for key, name in names.items():
-        title = f"Recent error above the stop line: {name}"
+        title = f"{label} above the stop line: {name}"
         last = pairs[pairs.dam == key].sort_values("iski_date").tail(RECENT_PAIRS)
         if last.empty:
             out[title] = "This reservoir has no comparisons with İSKİ, so its error cannot be checked."

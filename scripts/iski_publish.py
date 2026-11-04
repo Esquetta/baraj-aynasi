@@ -2,8 +2,8 @@
 
 Reads today's figures from İSKİ's occupancy page (scripts/iski_harvest.py),
 rewrites results/iski_series.csv (one figure per reservoir and day after İBB's
-series ends), rescores the frozen estimates (scripts/iski_check.py), rebuilds the
-page and pushes the results if they changed. The push touches site/, so GitHub
+series ends), rescores the frozen optical and radar estimates (scripts/iski_check.py),
+rebuilds the page and pushes the results if they changed. The push touches site/, so GitHub
 Pages redeploys. The raw page reads stay in data/iski/.
 
 The harvest comes first and only writes to data/iski/, so a day's figures are kept
@@ -25,7 +25,8 @@ from baraj_aynasi.iski import load_collected, series
 
 IN = Path("data/iski")
 OUT = Path("results/iski_series.csv")
-PUBLISHED = ["results/iski_series.csv", "results/iski_check.csv", "results/iski_metrics.csv", "site"]
+RADAR = "results/radar/vv_fixed"
+PUBLISHED = ["results/iski_series.csv", "results/iski_check.csv", "results/iski_metrics.csv", f"{RADAR}/iski_check.csv", f"{RADAR}/iski_metrics.csv", "site"]
 
 
 def git(*args: str, check: bool = True) -> subprocess.CompletedProcess:
@@ -42,6 +43,7 @@ def write_series() -> None:
 def build() -> None:
     write_series()
     subprocess.run([sys.executable, "scripts/iski_check.py", "--no-plot"], check=True)
+    subprocess.run([sys.executable, "scripts/iski_check.py", "--no-plot", "--results", RADAR], check=True)
     subprocess.run([sys.executable, "scripts/build_site.py"], check=True)
 
 

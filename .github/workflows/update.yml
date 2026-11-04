@@ -25,6 +25,10 @@ jobs:
         run: uv sync --frozen
       - name: Measure new Sentinel-2 scenes
         run: uv run python scripts/update.py
+      - name: Measure new Sentinel-1 passes
+        run: uv run python scripts/radar_update.py
+        timeout-minutes: 12
+        continue-on-error: true # a radar outage shouldn't hold back the optical update; health.yml watches it
       - name: Rebuild page
         run: uv run python scripts/build_site.py
       - name: Commit if anything changed
@@ -36,5 +40,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add results site
-          git commit -m "Update estimates with new Sentinel-2 scenes"
+          git commit -m "Update estimates with new satellite scenes"
           git push

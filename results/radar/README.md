@@ -79,8 +79,91 @@ any held-out year was scored. Per-pass areas are in `areas_vv_otsu.csv` and
 ten reservoirs and loses the median by 0.27 points, so this is a narrow call made by the
 rule, not a clear win. Per-scene VV isn't scored on the held-out years.
 
+## Result
+
+Average miss in occupancy points, VV with the fixed threshold. Held-out: July 2022 to
+February 2024 against İBB, curves fitted on training years. İSKİ: 2024–2026, curves
+frozen at 2024-02-19, passes within a day of a figure, as of 2026-11-04. The bar is the
+90% error bar of the final curve. Optical is the same held-out test on the NDWI series,
+for reference; its scenes fall on different dates.
+
+| Reservoir | Held-out | Vs İSKİ | İSKİ pairs | Bar | Rule 3 | Optical held-out |
+| --- | ---: | ---: | ---: | ---: | --- | ---: |
+| **Ömerli** | 6.4 | 4.8 | 16 | ±12.4 | pass | 5.3 |
+| **Sazlıdere** | 4.3 | 3.7 | 27 | ±9.5 | pass | 1.1 |
+| **Pabuçdere** | 6.8 | 7.0 | 27 | ±14.6 | pass | 1.3 |
+| **Alibey** | 6.5 | 4.4 | 27 | ±17.9 | pass | 3.2 |
+| **Istrancalar** | 6.1 | 5.3 | 27 | ±13.6 | pass | 5.2 |
+| Darlık | 9.8 | 9.6 | 15 | ±21.1 | pass | 11.7 |
+| Kazandere | 10.0 (9.99) | 8.8 | 27 | ±23.3 | pass | 5.6 |
+| Büyükçekmece | 10.9 | 13.5 | 26 | ±26.7 | fail | 11.5 |
+| Elmalı | 10.9 | 5.3 | 27 | ±23.4 | fail | 17.0 |
+| Terkos | 11.1 | 11.9 | 26 | ±21.4 | fail | 23.0 |
+
+- **All five offered reservoirs pass**, so their radar estimates go on the page as a
+  separate series with their own bars. Radar is less precise than a clear optical scene
+  on all five. Its value is being there when clouds aren't letting optical through.
+- **Darlık and Kazandere also pass, narrowly, and stay not offered.** Under rule 4 that
+  is the author's separate decision. Bars above ±20 points also make them of little use.
+- **Terkos and Büyükçekmece stay above the line.** Radar halves Terkos's held-out error,
+  but its last five İSKİ pairs still read about 23 points high. Elmalı fails on held-out
+  error alone (10.9); its 5.3 against İSKİ doesn't change that.
+- The 90% bars held on the held-out years at 84% to 100%, with Ömerli and Pabuçdere
+  lowest at 84%.
+
+### When the optical estimate is old
+
+After the rule, as an exploration: on each day İSKİ published a figure, compare the
+latest estimate of each series so far. These are the days when the optical estimate was
+more than 14 days old (`freshness.csv`).
+
+| Reservoir | Days | Median age, optical | Median age, radar | Miss, optical | Miss, radar |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Ömerli | 12 | 29 | 3.5 | 14.8 | 4.2 |
+| Sazlıdere | 21 | 21 | 2 | 8.0 | 4.1 |
+| Pabuçdere | 31 | 48 | 2 | 8.6 | 3.7 |
+| Alibey | 10 | 36 | 2.5 | 11.0 | 3.8 |
+| Istrancalar | 31 | 47 | 2 | 25.9 | 12.0 |
+
+Read this with care. It wasn't part of the rule, and the days aren't independent: many
+fall in the same few weeks of autumn 2026. Istrancalar's small stream reservoirs can
+move several points a day after rain, so even a two-day-old estimate can lag.
+
+### Known weakness: orbits disagree
+
+Radar sees the same reservoir from different angles, and on the held-out years relative
+orbit 138 reads high where orbit 58 doesn't: Ömerli +9.0 against +0.1, Darlık +15.2
+against +0.1, Elmalı +17.0 against +0.7 (`orbit_bias.csv`). Passes of the same day are
+averaged, as in the optical series, but the dots still scatter. A curve per orbit might
+help. The held-out years have now been seen, so that would need new data to judge
+fairly, and it hasn't been done.
+
+## Reproduce
+
+```bash
+uv run python scripts/radar_download.py      # chips for every pass, about 10 GB
+uv run python scripts/radar_areas.py         # areas per pass and thresholds, from the chips only
+uv run python scripts/radar_pick_mask.py     # rule 2, training years only
+uv run python scripts/fit.py --areas results/radar/areas_vv_fixed.csv --out results/radar/vv_fixed
+uv run python scripts/iski_check.py --results results/radar/vv_fixed   # needs data/iski/
+uv run python scripts/radar_compare.py       # freshness.csv, orbit_bias.csv
+```
+
+`scripts/radar_update.py` runs daily in `.github/workflows/update.yml`. On the 64 recent
+passes checked, it gave the same water area as the archive run, and it left all 3,386
+estimates unchanged. `vv_fixed/estimates_2024_2026.csv` gets its new passes from it, and
+`vv_fixed/iski_check.csv` and `vv_fixed/iski_metrics.csv` are rescored daily by
+`scripts/iski_publish.py`, so they will move on from the table above. The curves stay
+frozen.
+
+The numbers here were fitted from `areas_vv_fixed.csv` as committed in `c174074`. The
+robust fit samples points by row position, so row order matters a little: sorting the
+same rows moved held-out errors by up to 0.14 points and training errors by up to 0.1,
+and changed no decision. Daily passes are added at the end of the file for this reason.
+
 ## Data
 
 Sentinel-1 RTC from Microsoft Planetary Computer, processed by Catalyst (CC BY 4.0).
-Contains modified Copernicus Sentinel data. Chips stay in `data/radar/` and aren't
-committed.
+Contains modified Copernicus Sentinel data 2017–2026. Chips stay in `data/radar/` and
+aren't committed. Occupancy: İBB Açık Veri Portalı, İBB Open Data License; after
+2024-02-19, İSKİ (iski.istanbul).

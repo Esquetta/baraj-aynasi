@@ -27,6 +27,7 @@ SITE = Path("site")
 URL = "https://esquetta.github.io/baraj-aynasi/"
 IBB_WEEKLY = Path("results/ibb_weekly.csv")
 TEMPLATE = Path("scripts/site_template.html")
+RADAR = Path("results/radar/vv_fixed")
 STATUS = {
     "omerli": "offered", "alibey": "offered", "sazlidere": "offered", "pabucdere": "offered", "istrancalar": "offered",
     "kazandere": "withdrawn", "darlik": "failed", "buyukcekmece": "failed", "terkos": "out", "elmali": "out",
@@ -54,6 +55,10 @@ def main() -> None:
     unet_runs = pd.read_csv("results/unet/seeds.csv").groupby("dam").test_mae.mean()
     areas = pd.read_csv("results/areas.csv", parse_dates=["date"])
     weekly = ibb_weekly()
+    radar_curves = json.loads((RADAR / "curves.json").read_text(encoding="utf-8"))
+    radar_held = pd.read_csv(RADAR / "heldout_metrics.csv").set_index("dam")
+    radar_iski = pd.read_csv(RADAR / "iski_metrics.csv").set_index("dam")
+    radar_est = pd.read_csv(RADAR / "estimates_2024_2026.csv", parse_dates=["date"]).groupby(["dam", "date"], as_index=False).occupancy_est.mean()
     dams = []
     for dam in DAMS:
         curve = curve_from_json(curves[dam.key])
@@ -65,6 +70,8 @@ def main() -> None:
         p = iski_series[iski_series.dam == dam.key]
         iski = [[d.strftime("%Y-%m-%d"), float(v)] for d, v in zip(p.date, p.occupancy_pct)]
         last = df.iloc[-1]
+        r = radar_est[radar_est.dam == dam.key]
+        radar = [[d.strftime("%Y-%m-%d"), round(float(v), 1)] for d, v in zip(r.date, r.occupancy_est)] if STATUS[dam.key] == "offered" else []
         dams.append(
             {
                 "key": dam.key,
@@ -80,6 +87,11 @@ def main() -> None:
                 "sat": sat,
                 "reported": reported,
                 "iski": iski,
+                "radar": radar,
+                "radar_bar": round(radar_curves[dam.key]["error_bar_90"], 1),
+                "radar_heldout_mae": round(float(radar_held.loc[dam.key, "test_mae"]), 1),
+                "radar_iski_mae": round(float(radar_iski.loc[dam.key, "mae"]), 1),
+                "radar_iski_n": int(radar_iski.loc[dam.key, "n"]),
             }
         )
     SITE.mkdir(exist_ok=True)
@@ -177,7 +189,7 @@ def render(template: str, text: dict, img: str, numbers: dict, dams: list[dict],
         dk_low=panel_label(crops["darlik_low"], text),
         th_html="".join(('<th class="num">' if i >= 2 else "<th>") + h + "</th>" for i, h in enumerate(text["th"])),
     )
-    js = {k: text[k] for k in ("status", "capacity", "f_heldout", "f_iski", "f_dates", "f_bar", "pts", "tip_sat", "tip_rep", "aria", "latest_note", "scene", "ago", "iski_now", "locale", "gauge")}
+    js = {k: text[k] for k in ("status", "capacity", "f_heldout", "f_iski", "f_dates", "f_bar", "pts", "tip_sat", "tip_rep", "aria", "latest_note", "scene", "ago", "iski_now", "locale", "gauge", "radar_now", "radar_fact", "tip_radar")}
     out = template.replace("__DATA__", json.dumps({"dams": page_dams, "ibb_end": str(ibb.END.date()), "t": js}, ensure_ascii=False))
     for k, v in keys.items():
         out = out.replace("{{" + k + "}}", v)

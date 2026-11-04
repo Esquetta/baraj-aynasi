@@ -44,6 +44,19 @@ local, git-ignored `data/` folder and are not redistributed.
   next to the derived tables state it:
   > Contains modified Copernicus Sentinel data [years].
 
+## Copernicus Sentinel-1 RTC radar
+
+- Collection `sentinel-1-rtc` on the
+  [Microsoft Planetary Computer](https://planetarycomputer.microsoft.com/dataset/sentinel-1-rtc),
+  read with the same anonymous token as above. The band used is VV, 10 m,
+  radiometrically terrain corrected.
+- Terms: the collection's licence is CC BY 4.0, with Catalyst and Microsoft as
+  providers, and the Copernicus notice above applies to the source data. Every
+  published use credits both.
+- `scripts/radar_download.py` keeps local chips in `data/radar/` for measuring the
+  archive (about 10 GB); they aren't committed. `scripts/radar_update.py` reads the
+  newest passes directly and keeps nothing but the derived water areas.
+
 ## Reservoir areas of interest (AOI)
 
 `aoi/reservoirs.geojson` holds one polygon set per reservoir. They were drawn
@@ -96,8 +109,9 @@ shown next to them on the project page.
   count, maximum and median of this comparison on every run.
 - No open licence for İSKİ's figures was found. The raw files stay in
   `data/iski/`. Reproduced, credited to İSKİ, for comparison: the figures
-  matched to a satellite scene (`results/iski_check.csv`, refreshed daily, and
-  the pairs from the U-Net and MNDWI runs) and one figure per reservoir and day
+  matched to a satellite scene (`results/iski_check.csv` and
+  `results/radar/vv_fixed/iski_check.csv`, refreshed daily, and the pairs from the
+  U-Net and MNDWI runs) and one figure per reservoir and day
   after 2024-02-19 in `results/iski_series.csv`, which the page draws.
 - Not used: news articles. They repeat İSKİ's figures but one checked article
   printed each reservoir's share of total storage as its occupancy.

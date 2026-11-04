@@ -32,6 +32,12 @@ Istrancalar and Elmalı, is worse in every run on Sazlıdere and Kazandere, and
 Terkos and Büyükçekmece still miss the stop line in every run. The served estimates stay on NDWI. See
 [results/unet/README.md](results/unet/README.md).
 
+Clouds can leave an optical estimate weeks old, so Sentinel-1 radar gives a second,
+separate estimate every five or six days. It was judged by a rule committed before any
+scoring: the five offered reservoirs pass, and on those the radar series is shown
+next to the optical one, never merged into it. It is less precise than a clear optical
+scene on all five. See [results/radar/README.md](results/radar/README.md).
+
 ## How it works
 
 1. `scripts/search.py` caches Sentinel-2 L2A STAC items for tiles 35TPF, 35TQF
@@ -60,22 +66,23 @@ uv run --extra harvest python scripts/iski_publish.py   # harvest + rescore agai
 uv run python scripts/update.py       # new scenes -> results/areas.csv and estimates, frozen curves
 ```
 
-A GitHub Actions workflow (`.github/workflows/update.yml`) runs `update.py` and
-`build_site.py` every morning and commits any new estimates; the page then
-redeploys. Estimates appear only when a new scene of a reservoir is at least 98%
-cloud-free, so the page can stay unchanged for days in cloudy weather.
+A GitHub Actions workflow (`.github/workflows/update.yml`) runs `update.py`,
+`radar_update.py` and `build_site.py` every morning and commits any new estimates; the
+page then redeploys. Optical estimates appear only when a new scene of a reservoir is
+at least 98% cloud-free, so they can stay unchanged for days in cloudy weather.
 
 `.github/workflows/health.yml` runs `scripts/health.py` every evening. It opens an
-issue labelled `health` when İSKİ figures stop updating, the satellite update fails
-or stops running, the live page differs from `main`, or an offered reservoir's last
-five comparisons with İSKİ miss by more than 10 points on average, and closes the
-issue once the problem is gone. Running the workflow by hand with `test_alert` on
-opens a test issue to confirm that alerts arrive.
+issue labelled `health` when İSKİ figures or radar estimates stop updating, the
+satellite update fails or stops running, the live page differs from `main`, or an
+offered reservoir's last five comparisons with İSKİ miss by more than 10 points on
+average, for either series, and closes the issue once the problem is gone. Running the
+workflow by hand with `test_alert` on opens a test issue to confirm that alerts arrive.
 
-The U-Net steps are listed in [results/unet/README.md](results/unet/README.md). `uv run python scripts/build_site.py` builds the static project page in
+The U-Net steps are listed in [results/unet/README.md](results/unet/README.md), the
+radar steps in [results/radar/README.md](results/radar/README.md). `uv run python scripts/build_site.py` builds the static project page in
 `site/` from the committed results.
 
-Raw imagery is cached under `data/` (about 30 GB) and is not committed.
+Raw imagery is cached under `data/` (about 40 GB) and is not committed.
 
 ## Data and attribution
 
@@ -84,6 +91,8 @@ Raw imagery is cached under `data/` (about 30 GB) and is not committed.
   Atıf 4.0 Uluslararası (CC BY 4.0) kapsamında lisanslanan kamu sektörü bilgilerini içerir.
 - Imagery: Contains modified Copernicus Sentinel data 2017–2026, accessed through
   the Microsoft Planetary Computer.
+- Radar: Sentinel-1 RTC, processed by Catalyst and hosted on the Microsoft Planetary
+  Computer, under CC BY 4.0.
 - 2024–2026 comparison figures: İSKİ, [iski.istanbul/baraj-doluluk](https://iski.istanbul/baraj-doluluk/).
 
 Details, terms and the AOI drawing method are in

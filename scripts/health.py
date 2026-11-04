@@ -1,9 +1,9 @@
 """Daily health report, run by .github/workflows/health.yml.
 
 Opens a GitHub issue (label `health`, assigned to the owner) for each problem it
-finds and closes the issue once the problem is gone: İSKİ figures that stopped
-updating, a failed or missing satellite update, a live page that differs from
-main, and offered reservoirs whose recent error passed the stop line.
+finds and closes the issue once the problem is gone: İSKİ figures or radar estimates
+that stopped updating, a failed or missing satellite update, a live page that differs
+from main, and offered reservoirs whose recent error passed the stop line.
 
     uv run python -X utf8 scripts/health.py --dry-run     # print problems only
     uv run python scripts/health.py --test-alert          # also open a test issue
@@ -25,6 +25,7 @@ from baraj_aynasi.health import (
     iski_stale,
     page_differs,
     plan,
+    radar_stale,
     recent_error,
     update_unhealthy,
 )
@@ -65,6 +66,8 @@ def problems() -> tuple[dict[str, str], tuple[str, ...]]:
         **update_unhealthy(runs[0] if runs else None, today),
         **(pages or {}),
         **recent_error(pd.read_csv("results/iski_check.csv"), offered),
+        **radar_stale(pd.read_csv("results/radar/vv_fixed/estimates_2024_2026.csv", parse_dates=["date"]), offered, today),
+        **recent_error(pd.read_csv("results/radar/vv_fixed/iski_check.csv"), offered, "Recent radar error"),
     }
     return found, (PAGE_TITLE,) if pages is None else ()
 

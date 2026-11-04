@@ -11,6 +11,7 @@ from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import planetary_computer
 import pystac
 import rasterio
@@ -96,6 +97,21 @@ def despeckle(db: np.ndarray) -> np.ndarray:
 def aoi_values(smooth: list[np.ndarray], valid: list[np.ndarray], aois: list[np.ndarray]) -> np.ndarray:
     """A dam's AOI pixels with data, over all its boxes."""
     return np.concatenate([s[v & a] for s, v, a in zip(smooth, valid, aois)])
+
+
+def pass_values(coded: list[np.ndarray], aois: list[np.ndarray]) -> tuple[np.ndarray, float]:
+    """A pass's despeckled AOI pixels, from encoded boxes, and the share of the AOI it covers."""
+    decoded = [decode_db(c) for c in coded]
+    values = aoi_values([despeckle(d) for d in decoded], [np.isfinite(d) for d in decoded], aois)
+    return values, values.size / sum(np.count_nonzero(a) for a in aois)
+
+
+def replace_passes(areas: pd.DataFrame, new: pd.DataFrame) -> pd.DataFrame:
+    """Add `new` rows at the end. A pass measured again replaces its old row, so items that arrive late count.
+    Other rows keep their place: the robust fit samples by row position, so reordering would shift its results."""
+    fresh = set(zip(new.dam, new.date, new.orbit))
+    old = areas[[k not in fresh for k in zip(areas.dam, areas.date, areas.orbit)]]
+    return pd.concat([old, new], ignore_index=True)
 
 
 def db_histogram(values: np.ndarray) -> np.ndarray:

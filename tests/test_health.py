@@ -4,11 +4,19 @@ from baraj_aynasi.health import (
     iski_stale,
     page_differs,
     plan,
+    radar_stale,
     recent_error,
     update_unhealthy,
 )
 
 TODAY = pd.Timestamp("2026-11-04")
+
+
+def test_radar_stale_looks_at_offered_reservoirs_only():
+    est = pd.DataFrame({"dam": ["x", "y"], "date": pd.to_datetime(["2026-10-31", "2026-01-01"])})
+    assert radar_stale(est, {"x": "X"}, TODAY) == {}
+    assert list(radar_stale(est, {"x": "X", "y": "Y"}, TODAY)) == ["Radar estimates have stopped updating"]
+    assert radar_stale(est, {"x": "X"}, TODAY + pd.Timedelta(days=30))
 
 
 def test_iski_stale_after_two_days():
@@ -46,6 +54,10 @@ def test_recent_error_uses_only_the_latest_pairs():
     # Old misses have passed out of the window; misses in both directions count.
     assert recent_error(_pairs([40, 40, 2, -2, 2, -2, 2]), {"x": "X"}) == {}
     assert list(recent_error(_pairs([0, 0, 20, -20, 20, -20, 20]), {"x": "X"})) == ["Recent error above the stop line: X"]
+
+
+def test_recent_error_titles_the_series_it_checks():
+    assert list(recent_error(_pairs([20] * 5), {"x": "X"}, "Recent radar error")) == ["Recent radar error above the stop line: X"]
 
 
 def test_recent_error_exactly_on_the_line_is_not_a_problem():

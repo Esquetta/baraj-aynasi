@@ -16,6 +16,7 @@
   --grid: #e6ecea;
   --sat: #0085a3;
   --rep: #c0560c;
+  --radar: #6d3fc4;
   --track: #e3ebe9;
   --pill-ok: #1f7a46;
   --pill-warn: #9a5a00;
@@ -28,13 +29,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0e1515; --surface: #1a1a19; --ink: #e5ecea; --ink-2: #c3d0cc; --muted: #93a6a1; --line: #2d3a38; --grid: #26302e;
-    --sat: #2398ad; --rep: #c97a22; --track: #26302e; --pill-ok: #5fcb8b; --pill-warn: #e9a743; --pill-bad: #f08a72; --pill-out: #93a6a1;
+    --sat: #2398ad; --rep: #c97a22; --radar: #b197f5; --track: #26302e; --pill-ok: #5fcb8b; --pill-warn: #e9a743; --pill-bad: #f08a72; --pill-out: #93a6a1;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0e1515; --surface: #1a1a19; --ink: #e5ecea; --ink-2: #c3d0cc; --muted: #93a6a1; --line: #2d3a38; --grid: #26302e;
-  --sat: #2398ad; --rep: #c97a22; --track: #26302e; --pill-ok: #5fcb8b; --pill-warn: #e9a743; --pill-bad: #f08a72; --pill-out: #93a6a1;
+  --sat: #2398ad; --rep: #c97a22; --radar: #b197f5; --track: #26302e; --pill-ok: #5fcb8b; --pill-warn: #e9a743; --pill-bad: #f08a72; --pill-out: #93a6a1;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
@@ -116,6 +117,7 @@ figcaption { font-size: 0.88rem; color: var(--muted); max-width: 70ch; }
 .legend { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 0.88rem; color: var(--ink-2); }
 .legend span { display: inline-flex; align-items: center; gap: 8px; }
 .sw-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--sat); }
+.sw-radar { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid var(--radar); }
 .sw-line { width: 18px; height: 2px; background: var(--rep); }
 .sw-step { width: 18px; height: 2px; background: var(--rep); position: relative; }
 .sw-step::after { content: ""; position: absolute; left: 6px; top: -2px; width: 6px; height: 6px; border-radius: 50%; background: var(--rep); }
@@ -173,7 +175,7 @@ footer { color: var(--muted); font-size: 0.82rem; }
 <div class="wrap" id="top">
   <section class="hero">
     <div class="col">
-      <span class="eyebrow">İstanbul · Sentinel-2 · 2017–2026</span>
+      <span class="eyebrow">İstanbul · Sentinel-2 + 1 · 2017–2026</span>
       <h1>Baraj Aynası</h1>
       <p class="lede">{{lede}}</p>
       <p class="disclaim">{{disclaim}}</p>
@@ -205,6 +207,7 @@ footer { color: var(--muted); font-size: 0.82rem; }
       </div>
       <div class="legend">
         <span><i class="sw-dot"></i>{{legend_sat}}</span>
+        <span><i class="sw-radar"></i>{{legend_radar}}</span>
         <span><i class="sw-line"></i>{{legend_ibb}}</span>
         <span><i class="sw-step"></i>{{legend_iski}}</span>
       </div>
@@ -311,6 +314,8 @@ function drawChart(box, d) {
   const g = el("g", { fill: "var(--sat)" }, svg);
   const r = range === ALL ? 2 : 3;
   for (const [s, v] of d.sat) if (inRange(s)) el("circle", { cx: sx(t(s)).toFixed(1), cy: sy(v).toFixed(1), r }, g);
+  const gr = el("g", { fill: "none", stroke: "var(--radar)", "stroke-width": 1 }, svg);
+  for (const [s, v] of d.radar) if (inRange(s)) el("circle", { cx: sx(t(s)).toFixed(1), cy: sy(v).toFixed(1), r }, gr);
   // İSKİ figures are sparse (month ends, recent days): join them only across gaps under 35 days.
   const iski = d.iski.filter(([s]) => inRange(s));
   let run = [];
@@ -342,6 +347,8 @@ function drawChart(box, d) {
     dot.setAttribute("cx", x); dot.setAttribute("cy", sy(s[1]));
     tip.textContent = "";
     tip.append(html("div", null, fmtDate(s[0])), html("div", null, `${T.tip_sat} ${pct(s[1])} ± ${Math.round(d.bar)}`));
+    const rd = nearest(d.radar, ms);
+    if (rd && Math.abs(t(rd[0]) - ms) <= 8 * 864e5) tip.append(html("div", null, `${T.tip_radar} ${pct(rd[1])} ± ${Math.round(d.radar_bar)} (${fmtDate(rd[0])})`));
     if (other && Math.abs(t(other[0]) - t(s[0])) <= 8 * 864e5) tip.append(html("div", null, `${T.tip_rep} ${pct(other[1])} (${fmtDate(other[0])})`));
     tip.hidden = false;
     const left = x / W * rect.width;
@@ -370,6 +377,7 @@ function card(d) {
     fact(T.f_bar, `± ${num(d.bar)}`),
   );
   c.append(head, box, facts);
+  if (d.radar.length) c.append(html("p", "note", T.radar_fact.replace("{heldout}", num(d.radar_heldout_mae)).replace("{iski}", num(d.radar_iski_mae)).replace("{n}", d.radar_iski_n).replace("{bar}", num(d.radar_bar))));
   if (d.note) c.append(html("p", "note", d.note));
   return c;
 }
@@ -397,7 +405,10 @@ function render() {
     const when = html("span", days > 30 ? "when old" : "when", `${fmtDate(d.latest.date)} ${T.scene} · ${T.ago.replace("{days}", days)}`);
     const [iskiDate, iskiPct] = d.iski.at(-1);
     const iski = html("span", "when", T.iski_now.replace("{pct}", pct(iskiPct)).replace("{date}", fmtDate(iskiDate)));
-    tl.append(html("h3", null, d.name), big, gauge, when, iski);
+    const [radarDate, radarPct] = d.radar.at(-1);
+    const radarDays = Math.floor((Date.now() - t(radarDate)) / 864e5);
+    const radar = html("span", radarDays > 30 ? "when old" : "when", T.radar_now.replace("{pct}", pct(radarPct)).replace("{bar}", Math.round(d.radar_bar)).replace("{date}", fmtDate(radarDate)));
+    tl.append(html("h3", null, d.name), big, gauge, when, radar, iski);
     tiles.appendChild(tl);
   }
   for (const d of offered) document.getElementById("gridOffered").appendChild(card(d));
@@ -410,7 +421,7 @@ function render() {
     const over = LARGEST.includes(d.key) && d.heldout_mae > 10;
     const testTd = html("td", "num" + (over ? " flag" : ""), (over ? "▲ " : "") + num(d.heldout_mae));
     tr.append(html("td", null, d.name), statusTd, html("td", "num", num(d.capacity)), testTd, html("td", "num", num(d.iski_mae)),
-      html("td", "num", String(d.iski_n)), html("td", "num", "± " + num(d.bar)), html("td", "num", num(d.unet_mae)));
+      html("td", "num", String(d.iski_n)), html("td", "num", "± " + num(d.bar)), html("td", "num", num(d.radar_heldout_mae)), html("td", "num", num(d.radar_iski_mae)), html("td", "num", num(d.unet_mae)));
     body.appendChild(tr);
   }
 }

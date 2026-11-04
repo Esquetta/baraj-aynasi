@@ -1,0 +1,21 @@
+dam,group,n,median_age_optical,median_age_radar,mae_optical,mae_radar,radar_closer_share
+omerli,all figures,52,7.0,3.0,8.26,4.22,0.73
+omerli,optical older than 14 days,12,29.0,3.5,14.82,4.16,1.0
+darlik,all figures,52,8.5,3.0,9.15,9.23,0.44
+darlik,optical older than 14 days,18,27.0,3.5,12.63,7.55,0.61
+elmali,all figures,48,5.5,2.0,11.76,7.36,0.54
+elmali,optical older than 14 days,8,29.0,3.5,9.53,9.99,0.12
+terkos,all figures,47,41.0,2.0,17.39,16.19,0.55
+terkos,optical older than 14 days,29,48.0,2.0,17.51,18.5,0.38
+alibey,all figures,48,6.5,2.0,11.15,4.77,0.85
+alibey,optical older than 14 days,10,36.0,2.5,11.04,3.82,1.0
+buyukcekmece,all figures,48,8.5,2.0,14.44,15.62,0.56
+buyukcekmece,optical older than 14 days,17,20.0,3.0,17.91,15.89,0.76
+sazlidere,all figures,52,11.0,2.0,5.35,3.8,0.67
+sazlidere,optical older than 14 days,21,21.0,2.0,8.01,4.06,0.86
+kazandere,all figures,52,36.0,2.0,17.28,5.91,0.69
+kazandere,optical older than 14 days,31,47.0,2.0,23.82,4.39,0.84
+pabucdere,all figures,52,29.5,2.0,6.43,4.85,0.67
+pabucdere,optical older than 14 days,31,48.0,2.0,8.58,3.7,0.87
+istrancalar,all figures,52,35.0,2.0,21.05,9.7,0.71
+istrancalar,optical older than 14 days,31,47.0,2.0,25.89,11.99,0.77

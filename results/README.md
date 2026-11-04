@@ -143,6 +143,11 @@ The Darlık gain shows that point 4 above (late-spring NDWI dropouts, through
 their effect on the training curve) explained much of Darlık's gap, more than
 point 1 suggested. The scope above was set before that run.
 
+## Later: Sentinel-1 radar
+
+Radar estimates fill the cloudy gaps on the five offered reservoirs, as a separate
+series under a rule committed before scoring; see [radar/README.md](radar/README.md).
+
 ## How the method changed
 
 The first run used plain least-squares polynomials without a monotone

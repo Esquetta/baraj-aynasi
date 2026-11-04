@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 from baraj_aynasi.radar import (
     aoi_values,
@@ -8,6 +9,8 @@ from baraj_aynasi.radar import (
     encode_db,
     group_passes,
     km2_below,
+    pass_values,
+    replace_passes,
 )
 
 
@@ -45,6 +48,26 @@ def test_aoi_values_skip_invalid_and_outside_aoi_across_boxes():
     aoi = np.array([[True, True], [True, False]])
     out = aoi_values([a, a * 10], [valid, valid], [aoi, aoi])
     assert sorted(out.tolist()) == [2.0, 3.0, 20.0, 30.0]
+
+
+def test_pass_values_reports_the_share_of_the_aoi_covered():
+    db = np.full((9, 9), -20.0)
+    db[:, :3] = np.nan
+    aoi = np.ones((9, 9), bool)
+    values, covered = pass_values([encode_db(db)], [aoi])
+    assert covered == 54 / 81
+    assert values.size == 54
+
+
+def test_replace_passes_lets_a_later_reading_win_and_keeps_the_rest():
+    row = {"dam": "x", "item_id": "a", "datetime": "2026-10-31T16:00:00Z", "date": "2026-10-31", "orbit": 58, "clear_frac": 0.5, "water_km2": 1.0}
+    other_orbit = {**row, "item_id": "b", "orbit": 138}
+    other_dam = {**row, "item_id": "d", "dam": "y"}
+    areas = pd.DataFrame([row, other_orbit, other_dam])
+    late = pd.DataFrame([{**row, "item_id": "c", "clear_frac": 1.0, "water_km2": 2.0}])
+    out = replace_passes(areas, late)
+    assert out.item_id.tolist() == ["b", "d", "c"]
+    assert out[out.item_id == "c"].water_km2.iloc[0] == 2.0
 
 
 def test_km2_below_counts_pixels_darker_than_the_threshold():
