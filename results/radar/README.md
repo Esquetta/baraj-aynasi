@@ -54,6 +54,31 @@ continues. VH is clearly worse on these years and is dropped, which also halves 
 download. The two VV medians are too close to separate on 40 passes, so rule 2 is
 applied to all training-year passes.
 
+## Mask choice
+
+Same measure on all clean training-year passes, from
+[`scripts/radar_pick_mask.py`](../../scripts/radar_pick_mask.py), recorded here before
+any held-out year was scored. Per-pass areas are in `areas_vv_otsu.csv` and
+`areas_vv_fixed.csv`, thresholds in `thresholds.json`.
+
+| Reservoir | VV, per scene | VV, fixed |
+| --- | ---: | ---: |
+| **Ömerli** | 4.7 | 6.2 |
+| **Sazlıdere** | 3.5 | 4.3 |
+| **Pabuçdere** | 6.5 | 7.3 |
+| **Alibey** | 7.9 | 8.5 |
+| **Istrancalar** | 9.6 | 6.5 |
+| Darlık | 9.4 | 10.2 |
+| Terkos | 10.1 | 11.5 |
+| Büyükçekmece | 10.3 | 13.1 |
+| Kazandere | 16.9 | 12.0 |
+| Elmalı | 28.3 | 9.9 |
+| Median | 9.47 | 9.20 |
+
+**VV with a fixed per-dam threshold is the mask.** Per-scene VV wins on seven of the
+ten reservoirs and loses the median by 0.27 points, so this is a narrow call made by the
+rule, not a clear win. Per-scene VV isn't scored on the held-out years.
+
 ## Data
 
 Sentinel-1 RTC from Microsoft Planetary Computer, processed by Catalyst (CC BY 4.0).
