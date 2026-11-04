@@ -150,8 +150,9 @@ uv run python scripts/radar_compare.py       # freshness.csv, orbit_bias.csv
 ```
 
 `scripts/radar_update.py` runs daily in `.github/workflows/update.yml`. On the 64 recent
-passes checked, it gave the same water area as the archive run, and it left all 3,386
-estimates unchanged. `vv_fixed/estimates_2024_2026.csv` gets its new passes from it, and
+passes checked it left all 3,386 estimates unchanged. Its water areas equal the archive
+run's on Windows; on the Linux runner, 6 of the 64 differ by one pixel (0.0001 km²).
+`vv_fixed/estimates_2024_2026.csv` gets its new passes from it, and
 `vv_fixed/iski_check.csv` and `vv_fixed/iski_metrics.csv` are rescored daily by
 `scripts/iski_publish.py`, so they will move on from the table above. The curves stay
 frozen.
