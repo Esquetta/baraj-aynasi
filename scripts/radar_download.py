@@ -1,4 +1,4 @@
-"""Download clipped Sentinel-1 RTC chips (VV, VH) for each dam from Planetary Computer.
+"""Download clipped Sentinel-1 RTC chips for each dam from Planetary Computer.
 
 Chips go to data/radar/chips/<dam>/<first item id>.npz and aren't committed. Finished
 chips are skipped, so a stopped run can be restarted.

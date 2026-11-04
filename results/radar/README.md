@@ -29,6 +29,31 @@ covers.
    passes rule 3 is reported here, and being offered from radar is a separate decision
    by the author.
 
+## Pilot result
+
+Leave-one-year-out error in occupancy points, training years only. NDWI uses all its
+clean training scenes, the radar masks about 40 passes each. "–" means no increasing
+curve could be fitted.
+
+| Reservoir | VV, per scene | VV, fixed | VH, per scene | VH, fixed | NDWI |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| **Ömerli** | 5.7 | 10.4 | 13.9 | 18.2 | 7.8 |
+| **Sazlıdere** | 2.8 | 5.0 | 8.1 | 15.1 | 2.3 |
+| **Pabuçdere** | 4.9 | 6.4 | 21.7 | 16.1 | 3.6 |
+| **Alibey** | 9.3 | 8.9 | 20.7 | 15.6 | 4.9 |
+| **Istrancalar** | 11.2 | 6.3 | 8.5 | 10.0 | 5.8 |
+| Darlık | 20.5 | 9.9 | 22.8 | 26.9 | 11.1 |
+| Terkos | 10.0 | 13.3 | 9.1 | 11.6 | 11.7 |
+| Büyükçekmece | 10.8 | 21.7 | 17.6 | 20.3 | 10.9 |
+| Kazandere | 19.0 | 9.9 | 25.1 | 17.6 | 10.8 |
+| Elmalı | 35.8 | 15.3 | – | 30.9 | 15.0 |
+| Median | 10.4 | 9.9 | 17.6 | 16.8 | |
+
+Rule 1 is met: each VV mask misses 10 points on one offered reservoir, so the work
+continues. VH is clearly worse on these years and is dropped, which also halves the
+download. The two VV medians are too close to separate on 40 passes, so rule 2 is
+applied to all training-year passes.
+
 ## Data
 
 Sentinel-1 RTC from Microsoft Planetary Computer, processed by Catalyst (CC BY 4.0).

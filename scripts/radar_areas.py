@@ -1,6 +1,6 @@
 """Water area per reservoir and radar pass, for each candidate mask.
 
-Candidates: VV or VH, split per scene (Otsu) or at one fixed threshold per dam,
+Candidates: each band in radar.BANDS, split per scene (Otsu) or at one fixed threshold per dam,
 the median of that dam's per-scene splits up to TRAIN_END, so the held-out years
 don't set it. Writes <out>/areas_<mask>.csv with the columns scripts/fit.py reads.
 clear_frac here is the share of the AOI the radar pass covers.

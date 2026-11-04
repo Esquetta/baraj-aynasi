@@ -22,7 +22,7 @@ from scipy.ndimage import median_filter
 from .chips import CRS, GDAL_ENV
 
 COLLECTION = "sentinel-1-rtc"
-BANDS = ("vv", "vh")
+BANDS = ("vv",)  # VH was clearly worse in the pilot, see results/radar/README.md
 GDAL = {**GDAL_ENV, "CPL_VSIL_CURL_ALLOWED_EXTENSIONS": ".tif,.tiff"}  # RTC files end in .tiff
 DB_MIN, DB_STEP, DB_NODATA = -40.0, 0.2, 255
 HIST_EDGES = DB_MIN - DB_STEP / 2 + DB_STEP * np.arange(DB_NODATA + 1)
