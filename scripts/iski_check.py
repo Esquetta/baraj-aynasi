@@ -1,9 +1,11 @@
 """Score the frozen 2024-2026 satellite estimates against İSKİ's reported occupancy.
 
 The estimates in results/estimates_2024_2026.csv were committed before any İSKİ
-figure after 2024-02-19 was collected, so this is an untouched test. Inputs (not
-committed): Wayback Machine copies of İSKİ's daily summary in data/iski/wayback/
-and the per-dam windows read from İSKİ's occupancy page in data/iski/live_*.json.
+figure after 2024-02-19 was collected, so this is an untouched test. The curves
+stay frozen; scripts/iski_publish.py reruns the scoring daily as scenes and figures
+accumulate. Inputs (not committed): Wayback Machine copies of İSKİ's daily summary
+in data/iski/wayback/ and the per-dam windows read from İSKİ's occupancy page in
+data/iski/live_*.json.
 
     uv run python scripts/iski_check.py
     uv run python scripts/iski_check.py --results results/unet/unet
@@ -16,7 +18,6 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 
 from baraj_aynasi import ibb
@@ -42,7 +43,9 @@ def main() -> None:
     global RESULTS
     ap = argparse.ArgumentParser()
     ap.add_argument("--results", type=Path, default=RESULTS, help="folder with estimates_2024_2026.csv")
-    RESULTS = ap.parse_args().results
+    ap.add_argument("--no-plot", action="store_true", help="leave figures/iski_check.png as it is")
+    args = ap.parse_args()
+    RESULTS = args.results
     iski = load_collected(IN)
     check_against_ibb(iski)
     after = series(iski, ibb.END)
@@ -107,7 +110,8 @@ def main() -> None:
     table.round(2).to_csv(RESULTS / "iski_metrics.csv", index=False)
     print(table.round(2).to_string(index=False))
     print(f"\nPairs: {len(pairs)} (scene within {MAX_DAYS} day of an ISKI figure)")
-    plot(est, after, pairs)
+    if not args.no_plot:
+        plot(est, after, pairs)
 
 
 def plot(est: pd.DataFrame, after: pd.DataFrame, pairs: pd.DataFrame) -> None:

@@ -86,15 +86,18 @@ shown next to them on the project page.
   same calendar day for the past ten years, a year of daily visits fills in
   every day of 2024–2026. It runs once a day after about 09:30 Istanbul time,
   when İSKİ updates the page, from a scheduled task on the author's machine
-  that calls `scripts/iski_publish.py` (harvest, rebuild, push).
+  that calls `scripts/iski_publish.py` (harvest, rescore, rebuild, push).
 - Wayback Machine copies of the page's daily summary (`gunlukOzet`) cover 20
   dates from 2024-01-21 to 2025-12-10.
-- On the 140 reservoir-days that İBB also covers, İSKİ and İBB agree to 0.01
-  points.
+- On the 380 reservoir-days that İBB also covered as of 2026-11-04, 362 agree to
+  within 0.05 points. The other 18 are six reservoirs on 2023-10-31, 2023-11-03
+  and 2023-11-04, in the page's ten-year window, and differ by up to 2.7 points
+  (Kazandere). The cause is not known. `scripts/iski_check.py` prints the
+  count, maximum and median of this comparison on every run.
 - No open licence for İSKİ's figures was found. The raw files stay in
   `data/iski/`. Reproduced, credited to İSKİ, for comparison: the figures
-  matched to a satellite scene (52 in `results/iski_check.csv`, and the same
-  pairs for the U-Net and MNDWI runs) and one figure per reservoir and day
+  matched to a satellite scene (`results/iski_check.csv`, refreshed daily, and
+  the pairs from the U-Net and MNDWI runs) and one figure per reservoir and day
   after 2024-02-19 in `results/iski_series.csv`, which the page draws.
 - Not used: news articles. They repeat İSKİ's figures but one checked article
   printed each reservoir's share of total storage as its occupancy.

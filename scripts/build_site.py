@@ -177,7 +177,7 @@ def render(template: str, text: dict, img: str, numbers: dict, dams: list[dict],
         dk_low=panel_label(crops["darlik_low"], text),
         th_html="".join(('<th class="num">' if i >= 2 else "<th>") + h + "</th>" for i, h in enumerate(text["th"])),
     )
-    js = {k: text[k] for k in ("status", "capacity", "f_heldout", "f_iski", "f_dates", "f_bar", "pts", "tip_sat", "tip_rep", "aria", "latest_note", "scene", "locale", "gauge")}
+    js = {k: text[k] for k in ("status", "capacity", "f_heldout", "f_iski", "f_dates", "f_bar", "pts", "tip_sat", "tip_rep", "aria", "latest_note", "scene", "ago", "iski_now", "locale", "gauge")}
     out = template.replace("__DATA__", json.dumps({"dams": page_dams, "ibb_end": str(ibb.END.date()), "t": js}, ensure_ascii=False))
     for k, v in keys.items():
         out = out.replace("{{" + k + "}}", v)

@@ -98,6 +98,7 @@ figcaption { font-size: 0.88rem; color: var(--muted); max-width: 70ch; }
 .gauge .band { background: color-mix(in srgb, var(--sat) 30%, transparent); }
 .gauge .fill { left: 0; background: var(--sat); border-radius: 5px; }
 .when { font-size: 0.82rem; color: var(--muted); }
+.when.old { color: var(--pill-warn); }
 
 /* Status pills */
 .pill { display: inline-flex; align-items: center; gap: 6px; font: 500 0.74rem var(--mono); letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap; }
@@ -392,7 +393,11 @@ function render() {
     const band = html("i", "band"); band.style.left = lo + "%"; band.style.width = hi - lo + "%";
     const fill = html("i", "fill"); fill.style.width = d.latest.pct + "%";
     gauge.append(band, fill);
-    tl.append(html("h3", null, d.name), big, gauge, html("span", "when", `${fmtDate(d.latest.date)} ${T.scene}`));
+    const days = Math.floor((Date.now() - t(d.latest.date)) / 864e5);
+    const when = html("span", days > 30 ? "when old" : "when", `${fmtDate(d.latest.date)} ${T.scene} · ${T.ago.replace("{days}", days)}`);
+    const [iskiDate, iskiPct] = d.iski.at(-1);
+    const iski = html("span", "when", T.iski_now.replace("{pct}", pct(iskiPct)).replace("{date}", fmtDate(iskiDate)));
+    tl.append(html("h3", null, d.name), big, gauge, when, iski);
     tiles.appendChild(tl);
   }
   for (const d of offered) document.getElementById("gridOffered").appendChild(card(d));

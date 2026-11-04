@@ -74,6 +74,12 @@ Elmalı (9.6 million m³, under 1 km² of water) is too small for this method.
 
 ## Untouched test: İSKİ figures, 2024-03-25 to 2026-10-22
 
+This section records the first scoring. `scripts/iski_publish.py` now reruns the
+same scoring daily with the same frozen curves and rules as scenes and figures
+accumulate, so [iski_metrics.csv](iski_metrics.csv) and
+[iski_check.csv](iski_check.csv) move on from the table below, and the project page
+reads them. [figures/iski_check.png](figures/iski_check.png) stays as first drawn.
+
 The estimates file was committed (`b88fc36`) before any İSKİ figure after
 2024-02-19 was collected, and the curves were not changed afterwards. Each scene
 is paired with the İSKİ figure at most one day away; when two scenes of the same
@@ -84,8 +90,8 @@ come from Wayback Machine copies of İSKİ's daily summary (20 dates, 14 after
 2024-02-19) and from the windows İSKİ's occupancy page showed on 2026-10-28
 (month ends from 2025-10-31 to 2026-09-30, the last 14 days, and 28 October of
 each year). On the 140 dam-days
-that İBB also covers, the two series agree to 0.01 points, so they are the same
-measurements.
+that İBB also covers, the two series agreed to 0.01 points. Later page reads widened
+that overlap and found exceptions: see [docs/data-sources.md](../docs/data-sources.md).
 
 | Reservoir | Held-out check | Pairs | MAE | Bias | Inside 90% bar |
 | --- | --- | ---: | ---: | ---: | ---: |
@@ -160,8 +166,9 @@ untouched-test section above.
 - `figures/crops_<dam>.png`: true colour with the NDWI outline at high and low water.
 - `figures/og_en.jpg`, `figures/og_tr.jpg`: link preview images for the page
   (`scripts/og_image.py`).
-- `iski_check.csv`, `iski_metrics.csv`, `figures/iski_check.png`: the untouched
-  test. Occupancy figures in these files are İSKİ's, cited from iski.istanbul.
+- `iski_check.csv`, `iski_metrics.csv`: the untouched test, refreshed daily.
+  `figures/iski_check.png`: the same test as first drawn. Occupancy figures in
+  these files are İSKİ's, cited from iski.istanbul.
 - `iski_series.csv`: every İSKİ figure collected after 2024-02-19, one per
   reservoir and day (`source` says which page view it came from), drawn on the
   project page. Rewritten daily by `scripts/iski_publish.py`.

@@ -15,10 +15,11 @@ occupancy points, publish the gap and stop") was met for Terkos, Büyükçekmece
 and Darlık; [results/README.md](results/README.md) is that write-up. Continuing
 with a narrower scope was a later decision: estimates are offered for Ömerli,
 Alibey, Sazlıdere, Pabuçdere and Istrancalar, which missed İSKİ's 2024-2026
-figures by 1.6 to 4.8 points on average in an untouched test (4 to 6 comparison
-dates each). Kazandere was withdrawn after 17- and 23-point misses in summer
-2026 and estimates about 20 points above İSKİ's in August–September 2026;
-Terkos is out, and Elmalı is too small.
+figures by 1.6 to 4.8 points on average at the first scoring of an untouched test
+(4 to 6 comparison dates each); the page shows the current score, refreshed daily.
+Kazandere was withdrawn after 17- and 23-point misses in summer 2026 and estimates
+about 20 points above İSKİ's in August–September 2026; Terkos is out, and Elmalı is
+too small.
 
 A small U-Net, trained on 236 patches labelled by AI agents (60 more held out
 for testing; 56 of the labels spot-checked by the owner), was tried as an
@@ -55,7 +56,7 @@ uv run python scripts/areas.py
 uv run python scripts/fit.py
 uv run python scripts/iski_check.py   # needs data/iski/, see docs/data-sources.md
 uv run --extra harvest python scripts/iski_harvest.py   # once a day, saves İSKİ's page windows
-uv run --extra harvest python scripts/iski_publish.py   # harvest + results/iski_series.csv + page, then push
+uv run --extra harvest python scripts/iski_publish.py   # harvest + rescore against İSKİ + page, then push
 uv run python scripts/update.py       # new scenes -> results/areas.csv and estimates, frozen curves
 ```
 
@@ -63,6 +64,13 @@ A GitHub Actions workflow (`.github/workflows/update.yml`) runs `update.py` and
 `build_site.py` every morning and commits any new estimates; the page then
 redeploys. Estimates appear only when a new scene of a reservoir is at least 98%
 cloud-free, so the page can stay unchanged for days in cloudy weather.
+
+`.github/workflows/health.yml` runs `scripts/health.py` every evening. It opens an
+issue labelled `health` when İSKİ figures stop updating, the satellite update fails
+or stops running, the live page differs from `main`, or an offered reservoir's last
+five comparisons with İSKİ miss by more than 10 points on average, and closes the
+issue once the problem is gone. Running the workflow by hand with `test_alert` on
+opens a test issue to confirm that alerts arrive.
 
 The U-Net steps are listed in [results/unet/README.md](results/unet/README.md). `uv run python scripts/build_site.py` builds the static project page in
 `site/` from the committed results.

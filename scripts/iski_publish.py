@@ -2,11 +2,13 @@
 
 Reads today's figures from İSKİ's occupancy page (scripts/iski_harvest.py),
 rewrites results/iski_series.csv (one figure per reservoir and day after İBB's
-series ends), rebuilds the page and pushes the two if they changed. The push
-touches site/, so GitHub Pages redeploys. The raw page reads stay in data/iski/.
+series ends), rescores the frozen estimates (scripts/iski_check.py), rebuilds the
+page and pushes the results if they changed. The push touches site/, so GitHub
+Pages redeploys. The raw page reads stay in data/iski/.
 
-It only publishes from a clean main that matches origin/main, so it never
-pushes or discards the author's own work.
+The harvest comes first and only writes to data/iski/, so a day's figures are kept
+even when publishing has to wait. Publishing needs a clean main that matches
+origin/main, so it never pushes or discards the author's own work.
 
     uv run --extra harvest python scripts/iski_publish.py
     uv run python scripts/iski_publish.py --no-harvest --no-push
@@ -23,7 +25,7 @@ from baraj_aynasi.iski import load_collected, series
 
 IN = Path("data/iski")
 OUT = Path("results/iski_series.csv")
-PUBLISHED = ["results/iski_series.csv", "site"]
+PUBLISHED = ["results/iski_series.csv", "results/iski_check.csv", "results/iski_metrics.csv", "site"]
 
 
 def git(*args: str, check: bool = True) -> subprocess.CompletedProcess:
@@ -39,21 +41,29 @@ def write_series() -> None:
 
 def build() -> None:
     write_series()
+    subprocess.run([sys.executable, "scripts/iski_check.py", "--no-plot"], check=True)
     subprocess.run([sys.executable, "scripts/build_site.py"], check=True)
 
 
-def ready_to_publish() -> bool:
+def main_is_clean(*allowed: str) -> bool:
+    """On main, with no commits beyond origin/main and no changes outside the `allowed` paths."""
     if git("rev-parse", "--abbrev-ref", "HEAD").stdout.strip() != "main":
         print("not on main, not publishing")
         return False
-    if git("status", "--porcelain").stdout.strip():
+    if git("status", "--porcelain", "--", ".", *[f":(exclude){p}" for p in allowed]).stdout.strip():
         print("working tree has changes, not publishing")
         return False
-    git("pull", "--ff-only")
     if git("rev-list", "--count", "origin/main..HEAD").stdout.strip() != "0":
         print("local commits not on origin/main, not publishing")
         return False
     return True
+
+
+def ready_to_publish() -> bool:
+    if not main_is_clean():
+        return False
+    git("pull", "--ff-only")
+    return main_is_clean()
 
 
 def commit_and_push() -> bool:
@@ -61,16 +71,20 @@ def commit_and_push() -> bool:
     if not git("status", "--porcelain", "--", *PUBLISHED).stdout.strip():
         print("nothing new to publish")
         return True
+    # The author may have started work while the page was building.
+    if not main_is_clean(*PUBLISHED):
+        sys.exit(1)
     git("add", "--", *PUBLISHED)
-    git("commit", "-m", f"Add İSKİ figures for {date.today():%Y-%m-%d}")
-    pushed = git("push", check=False)
+    git("commit", "-m", f"Add İSKİ figures for {date.today():%Y-%m-%d}", "--", *PUBLISHED)
+    pushed = git("push", "origin", "main", check=False)
     if pushed.returncode == 0:
         print("pushed")
         return True
     print(f"push failed: {pushed.stderr.strip()}")
-    # Only this script's commit sits on top of origin/main (checked above).
+    # Only this script's commit sits on top of origin/main (checked above). --keep
+    # drops it but stops rather than overwrite anything else changed since.
     git("fetch")
-    git("reset", "--hard", "origin/main")
+    git("reset", "--keep", "origin/main")
     return False
 
 
@@ -80,11 +94,11 @@ def main() -> None:
     ap.add_argument("--no-push", action="store_true", help="rebuild locally, do not commit or push")
     args = ap.parse_args()
     print(f"--- {date.today()}")
-    if not args.no_push and not ready_to_publish():
-        sys.exit(1)
     harvest_failed = False
     if not args.no_harvest:
         harvest_failed = subprocess.run([sys.executable, "scripts/iski_harvest.py"], check=False).returncode != 0
+    if not args.no_push and not ready_to_publish():
+        sys.exit(1)
     build()
     # A daily update run may have pushed in between; rebuild on top of it once.
     if not args.no_push and not commit_and_push():
