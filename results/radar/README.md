@@ -104,7 +104,8 @@ for reference; its scenes fall on different dates.
   separate series with their own bars. Radar is less precise than a clear optical scene
   on all five. Its value is being there when clouds aren't letting optical through.
 - **Darlık and Kazandere also pass, narrowly, and stay not offered.** Under rule 4 that
-  is the author's separate decision. Bars above ±20 points also make them of little use.
+  was the author's separate decision, made on 2026-11-05: bars above ±20 points make
+  their estimates of little use.
 - **Terkos and Büyükçekmece stay above the line.** Radar halves Terkos's held-out error,
   but its last five İSKİ pairs still read about 23 points high. Elmalı fails on held-out
   error alone (10.9); its 5.3 against İSKİ doesn't change that.
