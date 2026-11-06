@@ -10,6 +10,8 @@ the shared curve. Writes results/radar/vv_fixed_orbit/:
 - heldout_metrics.csv: training leave-one-year-out error for the shared curve, a shared
   curve with a per-orbit offset, and per-orbit curves (the choice between the last two
   was made on this), and held-out error for the shared and per-orbit curves.
+- train_bias.csv: the shared curve's median training miss per orbit (predicted minus
+  observed, leave-one-year-out).
 
 The candidate is judged on new İSKİ figures by scripts/radar_orbit_check.py, under the
 rule in results/radar/README.md.
@@ -47,13 +49,14 @@ def loyo_misses(df: pd.DataFrame) -> pd.Series:
 def main() -> None:
     areas = pd.read_csv(AREAS, parse_dates=["date"])
     gt = ibb.load()
-    curves, rows = {}, []
+    curves, rows, bias = {}, [], []
     for dam in DAMS:
         labels = gt[gt.ibb_column == dam.ibb_column][["date", "occupancy_pct"]]
         lab = clean_scenes(areas, dam.key).merge(labels, on="date").dropna(subset=["occupancy_pct"])
         train, test = lab[lab.date <= TRAIN_END], lab[lab.date > TRAIN_END]
         shared_loyo = loyo_misses(train)
         offset_loyo = shared_loyo - shared_loyo.groupby(train.orbit).transform("median")
+        bias += [{"dam": dam.key, "orbit": o, "median_miss": m} for o, m in shared_loyo.groupby(train.orbit).median().items()]
         shared, _ = fit_curve(*arrays(train))
         pred = pd.Series(shared.predict(test.water_km2.to_numpy()), index=test.index)
         lo, hi = shared.interval(test.water_km2.to_numpy())
@@ -94,6 +97,7 @@ def main() -> None:
     (OUT / "curves.json").write_text(json.dumps(curves, indent=1), encoding="utf-8")
     table = pd.DataFrame(rows).round(2)
     table.to_csv(OUT / "heldout_metrics.csv", index=False)
+    pd.DataFrame(bias).round(2).to_csv(OUT / "train_bias.csv", index=False)
     print(table.to_string(index=False))
     print("\nmedian:", table.drop(columns=["dam", "n_test"]).median().round(2).to_dict())
 

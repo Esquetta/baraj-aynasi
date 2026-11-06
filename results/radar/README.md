@@ -149,7 +149,7 @@ on all passes up to 2024-02-19 and frozen in `vv_fixed_orbit/curves.json`
 ([`scripts/radar_orbit_fit.py`](../../scripts/radar_orbit_fit.py)). An orbit with fewer
 than 100 training passes keeps the shared curve; today every orbit has 213 or more.
 The orbit bias is there in the training years too: in leave-one-year-out, orbit 138
-reads 4 to 10 points high and orbit 58 about 2 to 7 low on most reservoirs. Of two
+reads 4 to 10 points high on most reservoirs, and orbit 58 reads 1 to 7 low on all of them. Of two
 fixes, one curve per orbit beat a shared curve with a per-orbit offset on training
 years (median leave-one-year-out error 6.09 against 7.64; the shared curve is 9.20).
 That choice was made on training years. The held-out years were already spent on the
@@ -163,15 +163,22 @@ result above and were looked at while exploring, so their numbers below aren't a
 | **Alibey** | 6.5 | 3.3 | ±15 to ±16 |
 | **Istrancalar** | 6.1 | 5.5 | ±12 to ±13 |
 
-Terkos and Büyükçekmece don't improve; orbit isn't what holds them back.
+Terkos gets slightly worse (11.1 to 11.5) and Büyükçekmece barely moves (10.9 to
+10.6); orbit isn't what holds them back. Per-orbit training misses are in
+`vv_fixed_orbit/train_bias.csv`. The curves were fitted from `areas_vv_fixed.csv` as
+committed in `aeb7080`. Passes added later change the scene filter's scale a little, so a
+refit wouldn't match them exactly, and the frozen file is what counts.
 
-**Test.** İSKİ figures that aren't in `results/iski_series.csv` at the commit that adds
-[`scripts/radar_orbit_check.py`](../../scripts/radar_orbit_check.py). Each daily read adds
-that day and the same day in 2024 and 2025. Pairs are made as in `scripts/iski_check.py`:
-a reservoir's clean passes averaged per day, within a day of a figure. Both curve sets
-are scored on the same pairs, for the five offered reservoirs.
+**Test.** İSKİ figures that are in `results/iski_series.csv` as committed by the end of
+the decision date (Istanbul time) but weren't at `aeb7080`, the commit that set this
+rule ([`scripts/radar_orbit_check.py`](../../scripts/radar_orbit_check.py)). Each daily
+read adds that day and the same day in 2024 and 2025. Pairs are made like
+`scripts/iski_check.py`, from the new figures only: a reservoir's clean passes averaged
+per day, within a day of a figure. Both curve sets are scored on the same pairs, for the
+five offered reservoirs.
 
-**Decision, on 2026-12-21.** Runs of the script before that date don't count.
+**Decision, on the series as of 2026-12-21**, run from 2026-12-22. Earlier runs don't
+count.
 
 1. A reservoir counts if it has at least 15 new pairs.
 2. The per-orbit curves replace the shared radar curves for the five offered
@@ -179,7 +186,8 @@ are scored on the same pairs, for the five offered reservoirs.
    points less on average, they miss less on at least three counted reservoirs, and no
    counted reservoir averages above 10. Otherwise the shared curves stay.
 3. If fewer than three reservoirs count on 2026-12-21, wait once until 2027-01-31 and
-   apply the same rule; if still fewer than three, the shared curves stay.
+   apply the same rule to the series as committed by then; if still fewer than three,
+   the shared curves stay.
 4. Either way the result is written here. The other reservoirs are only reported.
    Errors by satellite (Sentinel-1A, against 1C and 1D, which the curves never saw in
    training) are reported and don't change the decision.
