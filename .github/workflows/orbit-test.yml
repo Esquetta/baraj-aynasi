@@ -1,0 +1,43 @@
+name: Orbit test
+
+# Scores the per-orbit radar curves under the rule in results/radar/README.md
+# ("Orbit correction") and opens an issue with the result for the owner.
+on:
+  schedule:
+    - cron: "0 9 22 12 *" # the decision, on the series as of 2026-12-21
+    - cron: "0 9 1 2 *" # the rule's one fallback, on the series as of 2027-01-31
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # the script reads the İSKİ series at the commit that set the rule
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - name: Install
+        run: uv sync --frozen
+      - name: Score
+        shell: bash
+        run: uv run python scripts/radar_orbit_check.py | tee result.txt
+      - name: Open an issue with the result
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo 'Output of `scripts/radar_orbit_check.py` under the rule in `results/radar/README.md` ("Orbit correction"):'
+            echo
+            echo '```'
+            cat result.txt
+            echo '```'
+          } > body.md
+          gh issue create --title "Orbit test result, $(date -u +%Y-%m-%d)" --body-file body.md --assignee Esquetta

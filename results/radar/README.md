@@ -178,7 +178,8 @@ per day, within a day of a figure. Both curve sets are scored on the same pairs,
 five offered reservoirs.
 
 **Decision, on the series as of 2026-12-21**, run from 2026-12-22. Earlier runs don't
-count.
+count. `.github/workflows/orbit-test.yml` runs the script on 2026-12-22 and 2027-02-01
+and opens an issue with its output.
 
 1. A reservoir counts if it has at least 15 new pairs.
 2. The per-orbit curves replace the shared radar curves for the five offered
