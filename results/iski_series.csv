@@ -12,6 +12,7 @@ alibey,2024-11-03,6.1,same_day_10y
 alibey,2024-11-04,6.1,same_day_10y
 alibey,2024-11-05,6.1,same_day_10y
 alibey,2024-11-06,6.07,same_day_10y
+alibey,2024-11-07,6.0,same_day_10y
 alibey,2025-03-01,63.49,daily_summary
 alibey,2025-03-02,63.95,daily_summary
 alibey,2025-07-07,46.21,daily_summary
@@ -23,6 +24,7 @@ alibey,2025-11-03,11.04,same_day_10y
 alibey,2025-11-04,11.12,same_day_10y
 alibey,2025-11-05,11.12,same_day_10y
 alibey,2025-11-06,11.3,same_day_10y
+alibey,2025-11-07,11.87,same_day_10y
 alibey,2025-11-30,11.04,month_end
 alibey,2025-12-08,12.69,daily_summary
 alibey,2025-12-10,13.33,daily_summary
@@ -59,6 +61,7 @@ alibey,2026-11-03,70.87,last_14_days
 alibey,2026-11-04,72.12,last_14_days
 alibey,2026-11-05,78.29,last_14_days
 alibey,2026-11-06,79.68,last_14_days
+alibey,2026-11-07,80.08,last_14_days
 buyukcekmece,2024-02-25,73.08,daily_summary
 buyukcekmece,2024-02-29,73.26,daily_summary
 buyukcekmece,2024-03-12,73.82,daily_summary
@@ -72,6 +75,7 @@ buyukcekmece,2024-11-03,33.13,same_day_10y
 buyukcekmece,2024-11-04,32.96,same_day_10y
 buyukcekmece,2024-11-05,32.79,same_day_10y
 buyukcekmece,2024-11-06,32.46,same_day_10y
+buyukcekmece,2024-11-07,32.12,same_day_10y
 buyukcekmece,2025-03-01,72.53,daily_summary
 buyukcekmece,2025-03-02,72.71,daily_summary
 buyukcekmece,2025-07-07,58.83,daily_summary
@@ -83,6 +87,7 @@ buyukcekmece,2025-11-03,26.04,same_day_10y
 buyukcekmece,2025-11-04,25.88,same_day_10y
 buyukcekmece,2025-11-05,25.72,same_day_10y
 buyukcekmece,2025-11-06,25.55,same_day_10y
+buyukcekmece,2025-11-07,25.23,same_day_10y
 buyukcekmece,2025-11-30,19.88,month_end
 buyukcekmece,2025-12-08,18.77,daily_summary
 buyukcekmece,2025-12-10,18.46,daily_summary
@@ -119,6 +124,7 @@ buyukcekmece,2026-11-03,32.36,last_14_days
 buyukcekmece,2026-11-04,33.03,last_14_days
 buyukcekmece,2026-11-05,37.08,last_14_days
 buyukcekmece,2026-11-06,39.81,last_14_days
+buyukcekmece,2026-11-07,40.66,last_14_days
 darlik,2024-02-25,89.75,daily_summary
 darlik,2024-02-29,89.06,daily_summary
 darlik,2024-03-12,86.61,daily_summary
@@ -132,6 +138,7 @@ darlik,2024-11-03,33.02,same_day_10y
 darlik,2024-11-04,32.68,same_day_10y
 darlik,2024-11-05,32.43,same_day_10y
 darlik,2024-11-06,32.24,same_day_10y
+darlik,2024-11-07,32.1,same_day_10y
 darlik,2025-03-01,72.67,daily_summary
 darlik,2025-03-02,73.37,daily_summary
 darlik,2025-07-07,70.93,daily_summary
@@ -143,6 +150,7 @@ darlik,2025-11-03,33.93,same_day_10y
 darlik,2025-11-04,33.64,same_day_10y
 darlik,2025-11-05,33.37,same_day_10y
 darlik,2025-11-06,33.07,same_day_10y
+darlik,2025-11-07,32.78,same_day_10y
 darlik,2025-11-30,27.99,month_end
 darlik,2025-12-08,27.81,daily_summary
 darlik,2025-12-10,28.4,daily_summary
@@ -179,6 +187,7 @@ darlik,2026-11-03,90.23,last_14_days
 darlik,2026-11-04,90.34,last_14_days
 darlik,2026-11-05,93.52,last_14_days
 darlik,2026-11-06,95.19,last_14_days
+darlik,2026-11-07,95.41,last_14_days
 elmali,2024-02-25,89.46,daily_summary
 elmali,2024-02-29,89.54,daily_summary
 elmali,2024-03-12,89.38,daily_summary
@@ -192,6 +201,7 @@ elmali,2024-11-03,52.45,same_day_10y
 elmali,2024-11-04,52.24,same_day_10y
 elmali,2024-11-05,52.03,same_day_10y
 elmali,2024-11-06,51.93,same_day_10y
+elmali,2024-11-07,51.77,same_day_10y
 elmali,2025-03-01,89.71,daily_summary
 elmali,2025-03-02,92.62,daily_summary
 elmali,2025-07-07,78.54,daily_summary
@@ -203,6 +213,7 @@ elmali,2025-11-03,52.66,same_day_10y
 elmali,2025-11-04,52.55,same_day_10y
 elmali,2025-11-05,52.34,same_day_10y
 elmali,2025-11-06,52.14,same_day_10y
+elmali,2025-11-07,51.87,same_day_10y
 elmali,2025-11-30,49.32,month_end
 elmali,2025-12-08,53.91,daily_summary
 elmali,2025-12-10,54.48,daily_summary
@@ -239,6 +250,7 @@ elmali,2026-11-03,65.79,last_14_days
 elmali,2026-11-04,67.98,last_14_days
 elmali,2026-11-05,82.3,last_14_days
 elmali,2026-11-06,80.84,last_14_days
+elmali,2026-11-07,76.35,last_14_days
 istrancalar,2024-02-25,57.58,daily_summary
 istrancalar,2024-02-29,54.67,daily_summary
 istrancalar,2024-03-12,60.99,daily_summary
@@ -252,6 +264,7 @@ istrancalar,2024-11-03,33.1,same_day_10y
 istrancalar,2024-11-04,33.52,same_day_10y
 istrancalar,2024-11-05,33.89,same_day_10y
 istrancalar,2024-11-06,34.14,same_day_10y
+istrancalar,2024-11-07,33.11,same_day_10y
 istrancalar,2025-03-01,95.88,daily_summary
 istrancalar,2025-03-02,95.29,daily_summary
 istrancalar,2025-07-07,26.69,daily_summary
@@ -263,6 +276,7 @@ istrancalar,2025-11-03,19.47,same_day_10y
 istrancalar,2025-11-04,19.42,same_day_10y
 istrancalar,2025-11-05,19.34,same_day_10y
 istrancalar,2025-11-06,24.89,same_day_10y
+istrancalar,2025-11-07,31.4,same_day_10y
 istrancalar,2025-11-30,26.16,month_end
 istrancalar,2025-12-08,31.83,daily_summary
 istrancalar,2025-12-10,31.66,daily_summary
@@ -299,6 +313,7 @@ istrancalar,2026-11-03,61.25,last_14_days
 istrancalar,2026-11-04,59.77,last_14_days
 istrancalar,2026-11-05,100.0,last_14_days
 istrancalar,2026-11-06,98.04,last_14_days
+istrancalar,2026-11-07,94.28,last_14_days
 kazandere,2024-02-25,60.22,daily_summary
 kazandere,2024-02-29,60.44,daily_summary
 kazandere,2024-03-12,60.06,daily_summary
@@ -312,6 +327,7 @@ kazandere,2024-11-03,7.55,same_day_10y
 kazandere,2024-11-04,7.58,same_day_10y
 kazandere,2024-11-05,8.02,same_day_10y
 kazandere,2024-11-06,8.27,same_day_10y
+kazandere,2024-11-07,8.56,same_day_10y
 kazandere,2025-03-01,81.81,daily_summary
 kazandere,2025-03-02,81.98,daily_summary
 kazandere,2025-07-07,58.7,daily_summary
@@ -323,6 +339,7 @@ kazandere,2025-11-03,1.86,same_day_10y
 kazandere,2025-11-04,1.76,same_day_10y
 kazandere,2025-11-05,1.9,same_day_10y
 kazandere,2025-11-06,2.21,same_day_10y
+kazandere,2025-11-07,2.61,same_day_10y
 kazandere,2025-11-30,2.79,month_end
 kazandere,2025-12-08,2.4,daily_summary
 kazandere,2025-12-10,2.4,daily_summary
@@ -359,6 +376,7 @@ kazandere,2026-11-03,4.05,last_14_days
 kazandere,2026-11-04,4.32,last_14_days
 kazandere,2026-11-05,11.29,last_14_days
 kazandere,2026-11-06,11.55,last_14_days
+kazandere,2026-11-07,11.89,last_14_days
 omerli,2024-02-25,88.25,daily_summary
 omerli,2024-02-29,87.93,daily_summary
 omerli,2024-03-12,87.45,daily_summary
@@ -372,6 +390,7 @@ omerli,2024-11-03,27.38,same_day_10y
 omerli,2024-11-04,27.27,same_day_10y
 omerli,2024-11-05,26.99,same_day_10y
 omerli,2024-11-06,26.83,same_day_10y
+omerli,2024-11-07,26.6,same_day_10y
 omerli,2025-03-01,82.55,daily_summary
 omerli,2025-03-02,83.02,daily_summary
 omerli,2025-07-07,68.67,daily_summary
@@ -383,6 +402,7 @@ omerli,2025-11-03,18.18,same_day_10y
 omerli,2025-11-04,18.08,same_day_10y
 omerli,2025-11-05,18.13,same_day_10y
 omerli,2025-11-06,18.03,same_day_10y
+omerli,2025-11-07,17.98,same_day_10y
 omerli,2025-11-30,15.13,month_end
 omerli,2025-12-08,13.2,daily_summary
 omerli,2025-12-10,14.21,daily_summary
@@ -419,6 +439,7 @@ omerli,2026-11-03,78.35,last_14_days
 omerli,2026-11-04,78.83,last_14_days
 omerli,2026-11-05,82.3,last_14_days
 omerli,2026-11-06,83.11,last_14_days
+omerli,2026-11-07,83.36,last_14_days
 pabucdere,2024-02-25,59.26,daily_summary
 pabucdere,2024-02-29,59.49,daily_summary
 pabucdere,2024-03-12,59.67,daily_summary
@@ -432,6 +453,7 @@ pabucdere,2024-11-03,8.3,same_day_10y
 pabucdere,2024-11-04,8.05,same_day_10y
 pabucdere,2024-11-05,8.08,same_day_10y
 pabucdere,2024-11-06,7.95,same_day_10y
+pabucdere,2024-11-07,7.92,same_day_10y
 pabucdere,2025-03-01,80.88,daily_summary
 pabucdere,2025-03-02,81.2,daily_summary
 pabucdere,2025-07-07,60.27,daily_summary
@@ -443,6 +465,7 @@ pabucdere,2025-11-03,4.97,same_day_10y
 pabucdere,2025-11-04,4.8,same_day_10y
 pabucdere,2025-11-05,4.86,same_day_10y
 pabucdere,2025-11-06,4.75,same_day_10y
+pabucdere,2025-11-07,4.59,same_day_10y
 pabucdere,2025-11-30,2.88,month_end
 pabucdere,2025-12-08,2.5,daily_summary
 pabucdere,2025-12-10,2.48,daily_summary
@@ -479,6 +502,7 @@ pabucdere,2026-11-03,2.96,last_14_days
 pabucdere,2026-11-04,3.08,last_14_days
 pabucdere,2026-11-05,7.46,last_14_days
 pabucdere,2026-11-06,7.74,last_14_days
+pabucdere,2026-11-07,7.77,last_14_days
 sazlidere,2024-02-25,56.11,daily_summary
 sazlidere,2024-02-29,56.64,daily_summary
 sazlidere,2024-03-12,57.75,daily_summary
@@ -492,6 +516,7 @@ sazlidere,2024-11-03,42.47,same_day_10y
 sazlidere,2024-11-04,42.34,same_day_10y
 sazlidere,2024-11-05,42.1,same_day_10y
 sazlidere,2024-11-06,41.93,same_day_10y
+sazlidere,2024-11-07,41.68,same_day_10y
 sazlidere,2025-03-01,55.94,daily_summary
 sazlidere,2025-03-02,56.2,daily_summary
 sazlidere,2025-07-07,50.28,daily_summary
@@ -503,6 +528,7 @@ sazlidere,2025-11-03,23.43,same_day_10y
 sazlidere,2025-11-04,23.2,same_day_10y
 sazlidere,2025-11-05,22.91,same_day_10y
 sazlidere,2025-11-06,22.86,same_day_10y
+sazlidere,2025-11-07,22.65,same_day_10y
 sazlidere,2025-11-30,17.98,month_end
 sazlidere,2025-12-08,17.02,daily_summary
 sazlidere,2025-12-10,17.02,daily_summary
@@ -539,6 +565,7 @@ sazlidere,2026-11-03,33.86,last_14_days
 sazlidere,2026-11-04,34.64,last_14_days
 sazlidere,2026-11-05,39.44,last_14_days
 sazlidere,2026-11-06,40.75,last_14_days
+sazlidere,2026-11-07,41.77,last_14_days
 terkos,2024-02-25,72.64,daily_summary
 terkos,2024-02-29,73.53,daily_summary
 terkos,2024-03-12,77.14,daily_summary
@@ -552,6 +579,7 @@ terkos,2024-11-03,42.08,same_day_10y
 terkos,2024-11-04,41.61,same_day_10y
 terkos,2024-11-05,41.14,same_day_10y
 terkos,2024-11-06,40.67,same_day_10y
+terkos,2024-11-07,40.05,same_day_10y
 terkos,2025-03-01,77.51,daily_summary
 terkos,2025-03-02,78.24,daily_summary
 terkos,2025-07-07,66.55,daily_summary
@@ -563,6 +591,7 @@ terkos,2025-11-03,25.31,same_day_10y
 terkos,2025-11-04,25.05,same_day_10y
 terkos,2025-11-05,24.79,same_day_10y
 terkos,2025-11-06,24.79,same_day_10y
+terkos,2025-11-07,24.79,same_day_10y
 terkos,2025-11-30,20.59,month_end
 terkos,2025-12-08,20.47,daily_summary
 terkos,2025-12-10,20.09,daily_summary
@@ -599,3 +628,4 @@ terkos,2026-11-03,39.69,last_14_days
 terkos,2026-11-04,40.49,last_14_days
 terkos,2026-11-05,46.75,last_14_days
 terkos,2026-11-06,50.45,last_14_days
+terkos,2026-11-07,51.13,last_14_days
