@@ -421,7 +421,7 @@ function render() {
     const over = LARGEST.includes(d.key) && d.heldout_mae > 10;
     const testTd = html("td", "num" + (over ? " flag" : ""), (over ? "▲ " : "") + num(d.heldout_mae));
     tr.append(html("td", null, d.name), statusTd, html("td", "num", num(d.capacity)), testTd, html("td", "num", num(d.iski_mae)),
-      html("td", "num", String(d.iski_n)), html("td", "num", "± " + num(d.bar)), html("td", "num", num(d.radar_heldout_mae)), html("td", "num", num(d.radar_iski_mae)), html("td", "num", num(d.unet_mae)));
+      html("td", "num", String(d.iski_n)), html("td", "num", "± " + num(d.bar)), html("td", "num", num(d.radar_heldout_mae)), html("td", "num", num(d.radar_iski_mae)), html("td", "num", num(d.unet_mae)), html("td", "num", num(d.guess_mae)));
     body.appendChild(tr);
   }
 }

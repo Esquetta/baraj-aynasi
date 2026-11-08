@@ -44,3 +44,56 @@ series, because İSKİ publishes every day. The point of the satellite is to mea
 without the official figure, so that comparison says nothing. "Last year" has a year's
 head start that the satellite doesn't, so it is a forecast rather than a like-for-like
 measurement. It is kept because it is the obvious thing to try.
+
+## Result, as of 2026-11-08
+
+Average miss in occupancy points; lower is better. Files: `heldout.csv` and `iski.csv`
+([`scripts/baselines.py`](../../scripts/baselines.py)). The series errors equal the
+published held-out errors exactly: the script reads each series' areas as committed when
+those errors were published.
+
+### Held-out years, NDWI and radar
+
+| Reservoir | NDWI | Best guess | Radar | Best guess |
+| --- | ---: | ---: | ---: | ---: |
+| **Ömerli** | 5.3 | 7.8 season | 6.4 | 11.8 season |
+| **Sazlıdere** | 1.1 | 20.5 season | 4.3 | 21.5 season |
+| **Pabuçdere** | 1.3 | 38.0 season | 6.8 | 41.1 season |
+| **Alibey** | 3.2 | 19.6 season | 6.5 | 24.3 season |
+| **Istrancalar** | 5.2 | 25.7 season | 6.1 | 28.0 last year |
+| Darlık | 11.7 | 12.9 season | 9.8 | 17.0 season |
+| Kazandere | 5.6 | 39.6 season | 10.0 | 42.0 season |
+| Büyükçekmece | 11.5 | 25.4 season | 10.9 | 28.0 season |
+| Elmalı | 17.0 | 24.4 season | 10.9 | 25.9 season |
+| Terkos | 23.0 | 25.5 last year | 11.1 | 25.6 last year |
+
+- **Every series misses less on average than every guess, on all ten reservoirs.** This
+  holds for the U-Net too. On most reservoirs the gap is wide: the guesses can't follow
+  the 2023 drought, and the satellite can.
+- **Two margins are narrow.** NDWI on Darlık beats the season guess by 1.2 points, and is
+  closer on only 11 of 23 dates. NDWI on Terkos beats last year by 2.5 points over 22
+  dates. Treat both as near ties.
+
+### Against İSKİ, 2024–2026
+
+- **Radar beats every guess on all ten reservoirs**, on 17 to 31 dates each.
+  Büyükçekmece is a near tie with the season guess (13.2 against 13.8; radar closer on 10
+  of 28 dates). New pairs arrive daily, so that one could flip.
+- **NDWI and U-Net have too few dates to say:** 2 to 10 each, and 2 to 5 for the
+  last-year guess. On those few dates a guess does better on Terkos (season, 18.8 against
+  NDWI's 20.0, 2 dates) and Kazandere (last year, 1.8 against NDWI's 4.2 on 3 dates, and
+  2.6 against U-Net's 4.0 on 2).
+
+### A stronger guess, added after the rule
+
+An ML reviewer would ask about a smarter guess, so one was scored as an extra check. It
+isn't part of the rule's verdict. **Fading gap** takes the season guess plus the last
+figure's gap from it, shrinking with a 365-day time constant. On the held-out years, it
+beats the committed guesses on several reservoirs but no satellite series, most
+narrowly on Ömerli (NDWI 5.3 against 6.7, U-Net 4.7 against 6.6). Against İSKİ it beats
+NDWI and U-Net on Terkos (15.4 against 20.0 and 17.6, 2 dates), and nothing else.
+
+The season guess measures ±7 days around each calendar anniversary of the date (29
+February counts as 28 February in other years). A first draft counted days of the year
+instead. It was fixed before this write-up, and it moved no number by more than 0.11
+points.

@@ -53,6 +53,8 @@ def main() -> None:
     iski_series = pd.read_csv("results/iski_series.csv", parse_dates=["date"])
     unet = pd.read_csv("results/unet/comparison.csv").set_index("dam")
     unet_runs = pd.read_csv("results/unet/seeds.csv").groupby("dam").test_mae.mean()
+    guesses = pd.read_csv("results/baselines/heldout.csv").query("series == 'ndwi'").set_index("dam")
+    best_guess = guesses[["mae_season", "mae_unchanged", "mae_last_year"]].min(axis=1)
     areas = pd.read_csv("results/areas.csv", parse_dates=["date"])
     weekly = ibb_weekly()
     radar_curves = json.loads((RADAR / "curves.json").read_text(encoding="utf-8"))
@@ -83,6 +85,7 @@ def main() -> None:
                 "iski_mae": round(float(iski_m.loc[dam.key, "mae"]), 1),
                 "iski_n": int(iski_m.loc[dam.key, "n"]),
                 "unet_mae": round(float(unet_runs[dam.key]), 1),
+                "guess_mae": round(float(best_guess[dam.key]), 1),
                 "latest": {"date": last.date.strftime("%Y-%m-%d"), "pct": round(float(est[-1]), 1)},
                 "sat": sat,
                 "reported": reported,
