@@ -1,7 +1,9 @@
 # Baraj Aynası
 
+[![Tests](https://github.com/Esquetta/baraj-aynasi/actions/workflows/ci.yml/badge.svg)](https://github.com/Esquetta/baraj-aynasi/actions/workflows/ci.yml)
+
 Project page: [esquetta.github.io/baraj-aynasi](https://esquetta.github.io/baraj-aynasi/)
-([Türkçe](https://esquetta.github.io/baraj-aynasi/tr/))
+([Türkçe](https://esquetta.github.io/baraj-aynasi/tr/)) · One-page summary: [MODEL_CARD.md](MODEL_CARD.md)
 
 Satellite estimates, with error bars, of how full Istanbul's ten supply
 reservoirs are. The water surface of each reservoir is measured in Sentinel-2
